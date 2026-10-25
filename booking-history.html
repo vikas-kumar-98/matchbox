@@ -1,0 +1,3683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match-Box · Advanced Header, Auth & Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-charcoal: #101511;
+      --almost-black: #080B09;
+      --lime-green: #B7F34A;
+      --football-green: #285C35;
+      --white: #FFFFFF;
+      --light-bg: #F5F7F3;
+      --muted-grey: #777F78;
+      --font-primary: 'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --transition: 0.25s ease;
+      --header-height: 72px;
+      --announce-height: 38px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--light-bg);
+      color: var(--deep-charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========== REUSABLE ========== */
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+
+    .btn-lime {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-lime:hover {
+      background: #a4e03a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(183, 243, 74, 0.25);
+    }
+
+    .btn-outline-lime {
+      background: transparent;
+      color: var(--lime-green);
+      border: 1px solid var(--lime-green);
+    }
+
+    .btn-outline-lime:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-dark-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-dark-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    /* ========== ANNOUNCEMENT BAR — normal flow, at top ========== */
+    .announce-bar {
+      background: var(--football-green);
+      color: var(--white);
+      height: var(--announce-height);
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      width: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .announce-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .announce-bar span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .announce-bar a {
+      color: var(--lime-green);
+      font-weight: 700;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .announce-bar a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    /* ========== MAIN HEADER — in flow normally, becomes fixed on scroll ========== */
+    .main-header {
+      position: relative; /* in normal document flow at page load */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: var(--deep-charcoal);
+      display: flex;
+      align-items: center;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    /* When scrolled past the announcement bar: pin to top of viewport */
+    .main-header.is-fixed {
+      position: fixed;
+      top: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Placeholder that reserves header space when header becomes fixed */
+    .header-placeholder {
+      display: none;
+      height: var(--header-height);
+    }
+
+    .header-placeholder.active {
+      display: block;
+    }
+
+    .main-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* ----- Logo ----- */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--lime-green);
+      border-radius: 50%;
+      color: var(--almost-black);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .logo-text .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime-green);
+    }
+
+    /* ----- Desktop Navigation ----- */
+    .desktop-nav {
+      display: none;
+      height: 100%;
+    }
+
+    .desktop-nav ul {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0 0.9rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--lime-green);
+    }
+
+    .nav-link i {
+      font-size: 0.7rem;
+      transition: transform var(--transition);
+    }
+
+    .nav-item:hover .nav-link i {
+      transform: rotate(180deg);
+    }
+
+    .nav-link.active {
+      color: var(--lime-green);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: var(--lime-green);
+      border-radius: 2px;
+    }
+
+    /* ----- Dropdown Panel ----- */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 280px;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .nav-item:hover .dropdown-panel,
+    .nav-item:focus-within .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 0.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #e9ece9;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      gap: 12px;
+      padding: 0.65rem 1.5rem;
+      transition: background var(--transition);
+    }
+
+    .dropdown-item:hover {
+      background: #f0f5ec;
+    }
+
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--light-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--football-green);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .dropdown-text p {
+      font-size: 0.75rem;
+      color: var(--muted-grey);
+      line-height: 1.3;
+    }
+
+    /* ----- Header Actions (desktop) ----- */
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .auth-btn {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--lime-green);
+    }
+
+    .account-icon-btn {
+      color: var(--white);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+    }
+
+    .account-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .account-menu-wrapper {
+      position: relative;
+    }
+
+    .account-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      background: transparent;
+      padding: 4px 8px 4px 4px;
+      border-radius: 30px;
+      transition: background var(--transition);
+    }
+
+    .account-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .avatar-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .account-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 240px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .account-menu-wrapper.open .account-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .account-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--deep-charcoal);
+      transition: background var(--transition);
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f5ec;
+      color: var(--football-green);
+    }
+
+    .account-dropdown a i {
+      width: 16px;
+      color: var(--muted-grey);
+    }
+
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e9ece9;
+      margin: 0.4rem 1rem;
+    }
+
+    /* ----- Mobile Header Actions ----- */
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .mobile-book-btn {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hamburger {
+      color: var(--white);
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ----- Mobile Drawer ----- */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 88%;
+      max-width: 380px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--deep-charcoal);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem 1.25rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-drawer.open {
+      right: 0;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.75);
+      z-index: 2400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 12px;
+    }
+
+    .drawer-close {
+      color: var(--white);
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .drawer-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .drawer-nav {
+      flex: 1;
+    }
+
+    .drawer-nav > li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      width: 100%;
+      text-align: left;
+      transition: color var(--transition);
+    }
+
+    .drawer-link:hover {
+      color: var(--lime-green);
+    }
+
+    .drawer-link i {
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+
+    .drawer-sub {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 0.5rem;
+    }
+
+    .drawer-sub.open {
+      max-height: 500px;
+    }
+
+    .drawer-sub a {
+      display: block;
+      color: #b0b8b0;
+      font-size: 0.85rem;
+      padding: 0.6rem 0 0.6rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .drawer-sub a:hover {
+      color: var(--lime-green);
+      border-left-color: var(--lime-green);
+    }
+
+    .drawer-cta {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-auth .btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.85);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-grey);
+      font-size: 1.2rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--deep-charcoal);
+    }
+
+    .auth-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.25rem;
+      padding-right: 2rem;
+    }
+
+    .auth-modal .subtext {
+      font-size: 0.85rem;
+      color: var(--muted-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+      border: 1px solid #d4dcd4;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--football-green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 53, 0.15);
+    }
+
+    .input-wrapper input.error {
+      border-color: #d32f2f;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 10px;
+      background: none;
+      color: var(--muted-grey);
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color var(--transition);
+    }
+
+    .input-icon-right:hover {
+      color: var(--deep-charcoal);
+    }
+
+    .error-msg {
+      font-size: 0.7rem;
+      color: #d32f2f;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .checkbox-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--deep-charcoal);
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--football-green);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .link-text {
+      color: var(--football-green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+
+    .link-text:hover {
+      color: var(--lime-green);
+      text-decoration: underline;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-actions .btn {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted-grey);
+      margin-top: 1rem;
+    }
+
+    .auth-switch .link-text {
+      font-size: 0.8rem;
+    }
+
+    .message-area {
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .message-area.error {
+      display: block;
+      background: #fdecea;
+      color: #b71c1c;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .message-area.success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 3px solid #2e7d32;
+    }
+
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .strength-bar.weak { background: #e53935; }
+    .strength-bar.medium { background: #fbc02d; }
+    .strength-bar.strong { background: #43a047; }
+
+    .strength-text {
+      font-size: 0.7rem;
+      color: var(--muted-grey);
+      margin-top: 2px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--almost-black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--deep-charcoal);
+      color: var(--white);
+      padding-top: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .footer-cta {
+      background: var(--football-green);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-cta p {
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .footer-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-main {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-brand .logo-area {
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      max-width: 300px;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime-green);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--transition), padding-left var(--transition);
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .footer-col ul a:hover {
+      color: var(--lime-green);
+      padding-left: 4px;
+    }
+
+    .footer-contact-info li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.8rem;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    .footer-contact-info i {
+      color: var(--lime-green);
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .newsletter {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .newsletter h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .newsletter p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--lime-green);
+    }
+
+    .newsletter-form .btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .newsletter-msg {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .newsletter-msg.error {
+      display: block;
+      color: #ef9a9a;
+    }
+
+    .newsletter-msg.success {
+      display: block;
+      color: var(--lime-green);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--lime-green);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(183, 243, 74, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: #a4e03a;
+      transform: translateY(-3px);
+    }
+
+    /* ========== RESPONSIVE ========== */
+
+    /* Mobile & tablet: up to 1023px */
+    @media (max-width: 1023px) {
+      .desktop-nav { display: none !important; }
+      .header-actions { display: none !important; }
+      .mobile-header-actions { display: flex !important; }
+
+      .main-header .container { padding: 0 16px; gap: 8px; }
+      .logo-text .brand-name { font-size: 1.25rem; }
+      .logo-text .tagline { font-size: 0.5rem; }
+      .logo-icon { width: 32px; height: 32px; font-size: 1rem; }
+      .container { padding: 0 16px; }
+      .announce-bar .container { padding: 0 16px; gap: 6px; }
+      .announce-bar { font-size: 0.65rem; }
+      .announce-bar span { font-size: 0.65rem; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-cta { padding: 2rem 0; }
+      .footer-cta-btns .btn { width: 100%; max-width: 280px; }
+      .footer-cta p { font-size: 0.9rem; padding: 0 8px; }
+      .auth-modal { padding: 1.5rem 1.25rem; }
+      .auth-modal h2 { font-size: 1.5rem; }
+      .newsletter-form .btn { width: 100%; }
+    }
+
+    /* Very small mobile */
+    @media (max-width: 380px) {
+      .mobile-book-btn span { display: none; }
+      .mobile-book-btn { padding: 0.5rem 0.6rem; }
+      .logo-text .brand-name { font-size: 1.1rem; }
+      .main-header .container { padding: 0 10px; }
+    }
+
+    /* Desktop: 1024px and above */
+    @media (min-width: 1024px) {
+      .desktop-nav { display: block !important; }
+      .header-actions { display: flex !important; }
+      .mobile-header-actions { display: none !important; }
+
+      .footer-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;
+        gap: 2rem;
+      }
+      .footer-brand { grid-column: span 1; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .footer-cta-btns { gap: 1rem; }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* Desktop wide */
+    @media (min-width: 1440px) {
+      .container { padding: 0 40px; }
+      .desktop-nav .nav-link { font-size: 0.85rem; padding: 0 0.9rem; }
+      .header-actions { gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /*Booking Page goes here.............................*/
+
+        .mb-bookings-main {
+      --mb-bk-charcoal: #101511;
+      --mb-bk-deep: #080B09;
+      --mb-bk-lime: #B7F34A;
+      --mb-bk-forest: #285C35;
+      --mb-bk-white: #FFFFFF;
+      --mb-bk-light: #F5F7F2;
+      --mb-bk-border: #d9e0d9;
+      --mb-bk-muted: #6b7a6e;
+      --mb-bk-error: #c0392b;
+      --mb-bk-warn: #e0b83a;
+      --mb-bk-info: #3b82f6;
+      --mb-bk-success: #5cb85c;
+      --mb-bk-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.15);
+      --mb-bk-shadow-lg: 0 20px 40px -12px rgba(0,0,0,0.25);
+      --mb-bk-radius: 1.25rem;
+      --mb-bk-radius-btn: 3rem;
+      --mb-bk-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--mb-bk-white);
+      color: var(--mb-bk-charcoal);
+      font-family: var(--mb-bk-font);
+      line-height: 1.65;
+      overflow-x: clip;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .mb-bookings-main *,
+    .mb-bookings-main *::before,
+    .mb-bookings-main *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mb-bookings-container {
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 5vw, 4rem);
+    }
+
+    .mb-bookings-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+      padding: 0.8rem 1.7rem;
+      border-radius: var(--mb-bk-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+      background: transparent;
+      font-family: inherit;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .mb-bookings-btn:focus-visible { outline: 3px solid var(--mb-bk-lime); outline-offset: 3px; }
+    .mb-bookings-btn--primary { background: var(--mb-bk-lime); color: var(--mb-bk-deep); border-color: var(--mb-bk-lime); }
+    .mb-bookings-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+    .mb-bookings-btn--outline { border-color: rgba(255,255,255,0.4); color: var(--mb-bk-white); }
+    .mb-bookings-btn--outline:hover { border-color: var(--mb-bk-lime); color: var(--mb-bk-lime); }
+    .mb-bookings-btn--dark { background: var(--mb-bk-charcoal); color: var(--mb-bk-white); border-color: var(--mb-bk-charcoal); }
+    .mb-bookings-btn--dark:hover { background: #1f2a21; border-color: #1f2a21; }
+    .mb-bookings-btn--ghost { border-color: var(--mb-bk-border); color: var(--mb-bk-charcoal); background: var(--mb-bk-white); }
+    .mb-bookings-btn--ghost:hover { border-color: var(--mb-bk-forest); }
+    .mb-bookings-btn--full { width: 100%; }
+    .mb-bookings-btn--sm { padding: 0.6rem 1.1rem; font-size: 0.72rem; }
+    .mb-bookings-btn[disabled] { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .mb-bookings-hero {
+      position: relative;
+      background: var(--mb-bk-deep);
+      color: var(--mb-bk-white);
+      padding-block: clamp(2.5rem, 7vw, 4.5rem);
+      overflow: hidden;
+      overflow-x: clip;
+      width: 100%;
+      max-width: 100%;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .mb-bookings-hero__bg { position: absolute; inset: 0; z-index: 1; }
+    .mb-bookings-hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+
+    .mb-bookings-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(8,11,9,0.95) 0%, rgba(8,11,9,0.84) 55%, rgba(8,11,9,0.62) 100%);
+      z-index: 2;
+    }
+
+    .mb-bookings-hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -100px;
+      width: 320px;
+      height: 320px;
+      border: 2px solid rgba(183,243,74,0.14);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .mb-bookings-hero__inner { position: relative; z-index: 4; max-width: 900px; width: 100%; }
+
+    .mb-bookings-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183,243,74,0.13);
+      border-left: 4px solid var(--mb-bk-lime);
+      padding: 0.45rem 1.1rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-bk-lime);
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-bookings-hero__title {
+      font-size: clamp(1.9rem, 6.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      word-break: break-word;
+    }
+
+    .mb-bookings-hero__title span { color: var(--mb-bk-lime); }
+
+    .mb-bookings-hero__desc {
+      font-size: clamp(0.92rem, 3.4vw, 1.1rem);
+      color: rgba(255,255,255,0.87);
+      max-width: 62ch;
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+
+    .mb-bookings-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+
+    /* ============================================
+       SECTIONS
+       ============================================ */
+    .mb-bookings-section { padding-block: clamp(2.5rem, 6vw, 4rem); background: var(--mb-bk-white); }
+    .mb-bookings-section--light { background: var(--mb-bk-light); }
+
+    .mb-bookings-section__heading {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+      margin-bottom: 0.6rem;
+    }
+
+    .mb-bookings-section__desc {
+      font-size: 0.95rem;
+      color: #5a6a5e;
+      max-width: 65ch;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+
+    /* ============================================
+       LOOKUP FORM
+       ============================================ */
+    .mb-bookings-lookup {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      box-shadow: var(--mb-bk-shadow-sm);
+    }
+
+    .mb-bookings-lookup__tabs {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      background: var(--mb-bk-light);
+      padding: 0.35rem;
+      border-radius: 3rem;
+    }
+
+    .mb-bookings-lookup__tab {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border-radius: 3rem;
+      border: none;
+      background: transparent;
+      color: var(--mb-bk-charcoal);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+
+    .mb-bookings-lookup__tab:focus-visible { outline: 3px solid var(--mb-bk-lime); outline-offset: 2px; }
+    .mb-bookings-lookup__tab--active { background: var(--mb-bk-white); box-shadow: 0 2px 8px -2px rgba(0,0,0,0.1); color: var(--mb-bk-forest); }
+
+    .mb-bookings-field { margin-bottom: 1.1rem; }
+
+    .mb-bookings-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--mb-bk-charcoal);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .mb-bookings-field label .mb-bookings-required { color: var(--mb-bk-error); margin-left: 0.15rem; }
+
+    .mb-bookings-field input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 2px solid var(--mb-bk-border);
+      border-radius: 0.75rem;
+      font-size: 0.92rem;
+      font-family: inherit;
+      background: var(--mb-bk-white);
+      color: var(--mb-bk-charcoal);
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .mb-bookings-field input:focus { outline: none; border-color: var(--mb-bk-forest); }
+    .mb-bookings-field input.mb-bookings-input-error { border-color: var(--mb-bk-error); }
+
+    .mb-bookings-field-hint { font-size: 0.75rem; color: var(--mb-bk-muted); margin-top: 0.3rem; line-height: 1.4; }
+
+    .mb-bookings-error-msg {
+      display: none;
+      font-size: 0.75rem;
+      color: var(--mb-bk-error);
+      margin-top: 0.25rem;
+      font-weight: 600;
+    }
+
+    .mb-bookings-error-msg.visible { display: block; }
+
+    .mb-bookings-lookup__note {
+      font-size: 0.78rem;
+      color: var(--mb-bk-muted);
+      line-height: 1.55;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--mb-bk-light);
+      border-left: 3px solid var(--mb-bk-forest);
+      border-radius: 0 0.6rem 0.6rem 0;
+    }
+
+    /* ============================================
+       BOOKING RESULT CARD
+       ============================================ */
+    .mb-bookings-result { display: none; max-width: 900px; margin: 0 auto; }
+    .mb-bookings-result.visible { display: block; }
+
+    .mb-bookings-card {
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      box-shadow: var(--mb-bk-shadow-sm);
+      overflow: hidden;
+    }
+
+    .mb-bookings-card__header {
+      background: var(--mb-bk-charcoal);
+      color: var(--mb-bk-white);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .mb-bookings-card__ref { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mb-bk-lime); }
+    .mb-bookings-card__ref strong { color: var(--mb-bk-white); font-size: 0.92rem; letter-spacing: 0.04em; }
+
+    .mb-bookings-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 3rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mb-bookings-status--pending { background: rgba(224,184,58,0.2); color: #8a6a10; }
+    .mb-bookings-status--confirmed { background: rgba(92,184,92,0.18); color: #2e6b2e; }
+    .mb-bookings-status--cancellation { background: rgba(224,184,58,0.2); color: #8a6a10; }
+    .mb-bookings-status--cancelled { background: rgba(127,140,141,0.18); color: #4a5a5b; }
+    .mb-bookings-status--completed { background: rgba(16,21,17,0.08); color: #2e3a30; }
+    .mb-bookings-status--rejected { background: rgba(192,57,43,0.14); color: #a93226; }
+
+    .mb-bookings-card__body { padding: 1.5rem; }
+
+    .mb-bookings-card__title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      color: var(--mb-bk-charcoal);
+    }
+
+    .mb-bookings-card__subtitle {
+      font-size: 0.85rem;
+      color: var(--mb-bk-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-bookings-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-bookings-detail {
+      background: var(--mb-bk-light);
+      border-radius: 0.85rem;
+      padding: 0.9rem 1rem;
+    }
+
+    .mb-bookings-detail__label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--mb-bk-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .mb-bookings-detail__value {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--mb-bk-charcoal);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .mb-bookings-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--mb-bk-border);
+    }
+
+    /* ============================================
+       EMPTY / ERROR STATES
+       ============================================ */
+    .mb-bookings-state {
+      display: none;
+      max-width: 640px;
+      margin: 2rem auto 0;
+      padding: clamp(2rem, 5vw, 3rem) 1.5rem;
+      background: var(--mb-bk-white);
+      border: 2px dashed var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      text-align: center;
+    }
+
+    .mb-bookings-state.visible { display: block; }
+
+    .mb-bookings-state__icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-bookings-state__icon svg { width: 26px; height: 26px; fill: var(--mb-bk-forest); }
+    .mb-bookings-state--error .mb-bookings-state__icon { background: #fdecea; }
+    .mb-bookings-state--error .mb-bookings-state__icon svg { fill: var(--mb-bk-error); }
+
+    .mb-bookings-state h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-bookings-state p {
+      font-size: 0.9rem;
+      color: #5a6a5e;
+      line-height: 1.65;
+      max-width: 46ch;
+      margin: 0 auto 1.5rem;
+    }
+
+    .mb-bookings-state__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    /* ============================================
+       RESCHEDULE / CANCEL FORMS
+       ============================================ */
+    .mb-bookings-request {
+      display: none;
+      max-width: 720px;
+      margin: 1.5rem auto 0;
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      padding: clamp(1.5rem, 4vw, 2rem);
+      box-shadow: var(--mb-bk-shadow-sm);
+    }
+
+    .mb-bookings-request.visible { display: block; }
+
+    .mb-bookings-request__title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      color: var(--mb-bk-charcoal);
+    }
+
+    .mb-bookings-request__desc {
+      font-size: 0.87rem;
+      color: var(--mb-bk-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .mb-bookings-request__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .mb-bookings-request textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 2px solid var(--mb-bk-border);
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--mb-bk-white);
+      color: var(--mb-bk-charcoal);
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .mb-bookings-request textarea:focus { outline: none; border-color: var(--mb-bk-forest); }
+
+    .mb-bookings-request__note {
+      font-size: 0.78rem;
+      color: var(--mb-bk-muted);
+      line-height: 1.55;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #fff8e1;
+      border-left: 3px solid var(--mb-bk-warn);
+      border-radius: 0 0.6rem 0.6rem 0;
+    }
+
+    .mb-bookings-request__note svg { width: 16px; height: 16px; fill: #b8962a; vertical-align: -3px; margin-right: 0.35rem; }
+
+    /* Request success message */
+    .mb-bookings-request-success {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem 1.15rem;
+      background: #eaf7e6;
+      border: 1px solid #5cb85c;
+      border-radius: 0.85rem;
+      font-size: 0.87rem;
+      color: #2e6b2e;
+      line-height: 1.55;
+    }
+
+    .mb-bookings-request-success.visible { display: block; }
+
+    /* ============================================
+       ACTIVITY TIMELINE
+       ============================================ */
+    .mb-bookings-timeline { max-width: 780px; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .mb-bookings-timeline-item {
+      display: flex;
+      gap: 1rem;
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: 0.85rem;
+      padding: 1rem 1.15rem;
+      align-items: flex-start;
+    }
+
+    .mb-bookings-timeline-item__dot {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--mb-bk-light);
+      border: 2px solid var(--mb-bk-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--mb-bk-muted);
+    }
+
+    .mb-bookings-timeline-item__dot--done { background: var(--mb-bk-forest); border-color: var(--mb-bk-forest); color: var(--mb-bk-white); }
+
+    .mb-bookings-timeline-item__content { flex: 1; min-width: 0; }
+    .mb-bookings-timeline-item__title { font-size: 0.9rem; font-weight: 800; color: var(--mb-bk-charcoal); margin-bottom: 0.15rem; }
+    .mb-bookings-timeline-item__meta { font-size: 0.75rem; color: var(--mb-bk-muted); }
+
+    /* ============================================
+       STATUS INFO CARDS
+       ============================================ */
+    .mb-bookings-status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .mb-bookings-status-card {
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      padding: 1.15rem;
+    }
+
+    .mb-bookings-status-card__title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.4rem;
+    }
+
+    .mb-bookings-status-card__desc { font-size: 0.83rem; color: #5a6a5e; line-height: 1.5; }
+
+    /* ============================================
+       INFO CARDS (GOOD TO KNOW)
+       ============================================ */
+    .mb-bookings-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .mb-bookings-info-card {
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      padding: 1.25rem 1.15rem;
+      text-align: center;
+    }
+
+    .mb-bookings-info-card__icon {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 0.75rem;
+      border-radius: 0.7rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-bookings-info-card__icon svg { width: 20px; height: 20px; fill: var(--mb-bk-forest); }
+    .mb-bookings-info-card__label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-bk-muted); margin-bottom: 0.3rem; }
+    .mb-bookings-info-card__value { font-size: 0.95rem; font-weight: 800; color: var(--mb-bk-charcoal); line-height: 1.4; }
+
+    /* ============================================
+       HELP CARDS
+       ============================================ */
+    .mb-bookings-help {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-top: 2rem;
+    }
+
+    .mb-bookings-help-card {
+      background: var(--mb-bk-white);
+      border: 1px solid var(--mb-bk-border);
+      border-radius: var(--mb-bk-radius);
+      padding: 1.35rem 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .mb-bookings-help-card:hover { transform: translateY(-4px); border-color: var(--mb-bk-forest); }
+    .mb-bookings-help-card:focus-visible { outline: 3px solid var(--mb-bk-lime); outline-offset: 3px; }
+
+    .mb-bookings-help-card__icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 0.7rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .mb-bookings-help-card__icon svg { width: 20px; height: 20px; fill: var(--mb-bk-forest); }
+    .mb-bookings-help-card__title { font-size: 0.92rem; font-weight: 800; color: var(--mb-bk-charcoal); margin-bottom: 0.35rem; }
+    .mb-bookings-help-card__desc { font-size: 0.83rem; color: #5a6a5e; line-height: 1.5; flex: 1; margin-bottom: 0.85rem; }
+    .mb-bookings-help-card__cta { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mb-bk-forest); }
+
+    /* ============================================
+       FINAL CTA
+       ============================================ */
+    .mb-bookings-cta {
+      position: relative;
+      background: var(--mb-bk-charcoal);
+      color: var(--mb-bk-white);
+      border-radius: var(--mb-bk-radius);
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+      margin-block: clamp(2rem, 5vw, 3.5rem);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .mb-bookings-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(183,243,74,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183,243,74,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .mb-bookings-cta > * { position: relative; z-index: 1; }
+
+    .mb-bookings-cta h2 {
+      font-size: clamp(1.4rem, 4vw, 2.3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .mb-bookings-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.8); line-height: 1.65; max-width: 60ch; margin: 0 auto 1.75rem; }
+    .mb-bookings-cta__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .mb-bookings-help { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .mb-bookings-hero::after { display: none; }
+      .mb-bookings-hero { overflow-x: clip; }
+      .mb-bookings-request__row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .mb-bookings-hero__actions .mb-bookings-btn { width: 100%; }
+      .mb-bookings-help { grid-template-columns: 1fr; }
+      .mb-bookings-cta__actions .mb-bookings-btn { width: 100%; }
+      .mb-bookings-state__actions .mb-bookings-btn { width: 100%; }
+      .mb-bookings-card__actions .mb-bookings-btn { flex: 1 1 100%; }
+    }
+
+    @media (max-width: 400px) {
+      .mb-bookings-hero__title { font-size: clamp(1.55rem, 8.5vw, 2rem); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mb-bookings-main *,
+      .mb-bookings-main *::before,
+      .mb-bookings-main *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR — at top of page, scrolls with the page -->
+  <div class="announce-bar" id="announceBar">
+    <div class="container">
+      <span>READY FOR YOUR NEXT GAME? BOOK YOUR MATCH-BOX SESSION TODAY.</span>
+      <a href="pages/book-to-play.html">BOOK NOW →</a>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER — starts in normal flow, becomes fixed after scrolling past the announcement bar -->
+  <header class="main-header" id="mainHeader">
+    <div class="container">
+      <a href="index.html" class="logo-area" aria-label="Match-Box home">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <ul>
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item">
+            <a href="book-to-play.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Play <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">PLAY AT MATCH-BOX</div>
+              <a href="book-to-play.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="dropdown-text"><h4>Book a Pitch</h4><p>Reserve a one-hour football session with your friends.</p></div>
+              </a>
+              <a href="about.html#concept" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="dropdown-text"><h4>How It Works</h4><p>Discover how 4-a-side football works at Match-Box.</p></div>
+              </a>
+              <a href="price.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-tag"></i></div>
+                <div class="dropdown-text"><h4>Pricing</h4><p>Explore peak and non-peak playing rates.</p></div>
+              </a>
+              <a href="about.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-building"></i></div>
+                <div class="dropdown-text"><h4>Facility Information</h4><p>Explore the football experience and facility information.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="coaching.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Coaching <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">COACHING PROGRAMS</div>
+              <a href="coaching.html#elite" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-star"></i></div>
+                <div class="dropdown-text"><h4>Elite Coaching</h4><p>Advanced sessions for competitive players.</p></div>
+              </a>
+              <a href="coaching.html#morning" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-sun"></i></div>
+                <div class="dropdown-text"><h4>Morning Coaching</h4><p>Start your day with focused training.</p></div>
+              </a>
+              <a href="coaching.html#afternoon" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="dropdown-text"><h4>Afternoon Coaching</h4><p>Develop skills after school or work.</p></div>
+              </a>
+              <a href="coaching-registration.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="dropdown-text"><h4>Player Registration</h4><p>Explore sessions and register based on capacity.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="tournaments.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Tournaments <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">TOURNAMENTS</div>
+              <a href="tournaments.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-trophy"></i></div>
+                <div class="dropdown-text"><h4>Upcoming Tournaments</h4><p>See what's coming up on the pitch.</p></div>
+              </a>
+              <a href="tournament-details.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="dropdown-text"><h4>Tournament Details</h4><p>Rules, format, and schedules.</p></div>
+              </a>
+              <a href="tournament-register.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-users"></i></div>
+                <div class="dropdown-text"><h4>Register Your Team</h4><p>Sign up your squad for the next event.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="events.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Events <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">EVENTS</div>
+              <a href="events.html#birthday" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-birthday-cake"></i></div>
+                <div class="dropdown-text"><h4>Birthday Celebrations</h4><p>Host a memorable football birthday.</p></div>
+              </a>
+              <a href="events.html#private" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                <div class="dropdown-text"><h4>Private Football Games</h4><p>Book the pitch for your own group.</p></div>
+              </a>
+              <a href="events.html#school" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-school"></i></div>
+                <div class="dropdown-text"><h4>School Activities</h4><p>Organized football sessions for schools.</p></div>
+              </a>
+              <a href="events.html#corporate" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="dropdown-text"><h4>Corporate Team Building</h4><p>Bring your team together on the pitch.</p></div>
+              </a>
+              <a href="event-enquiry.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-envelope"></i></div>
+                <div class="dropdown-text"><h4>Submit Event Enquiry</h4><p>Tell us about your event plans.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="auth-btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+        <button class="auth-btn" id="registerBtn" aria-haspopup="dialog">Register</button>
+        <div class="account-menu-wrapper" id="accountMenuWrapper" style="display: none;">
+          <button class="account-trigger" id="accountTrigger" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar-initials" id="avatarInitials">JD</span>
+            <span class="account-name" id="accountName">John</span>
+            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <div class="account-dropdown" id="accountDropdown" role="menu">
+            <a href="customer/dashboard.html" role="menuitem"><i class="fas fa-th-large"></i> My Account</a>
+            <a href="customer/bookings.html" role="menuitem"><i class="fas fa-calendar-alt"></i> My Bookings</a>
+            <a href="customer/booking-history.html" role="menuitem"><i class="fas fa-history"></i> Booking History</a>
+            <a href="customer/coaching-registrations.html" role="menuitem"><i class="fas fa-chalkboard-teacher"></i> Coaching Registrations</a>
+            <a href="customer/tournament-registrations.html" role="menuitem"><i class="fas fa-trophy"></i> Tournament Registrations</a>
+            <a href="customer/event-enquiries.html" role="menuitem"><i class="fas fa-envelope-open-text"></i> Event Enquiries</a>
+            <div class="divider"></div>
+            <a href="customer/settings.html" role="menuitem"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="#" id="logoutBtn" role="menuitem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <a href="book-to-play.html" class="btn btn-lime">BOOK NOW</a>
+      </div>
+
+      <div class="mobile-header-actions">
+        <a href="book-to-play.html" class="mobile-book-btn"><i class="fas fa-calendar-check"></i> <span>BOOK NOW</span></a>
+        <button class="account-icon-btn" id="mobileAccountBtn" aria-label="My account"><i class="fas fa-user-circle"></i></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Placeholder that reserves space when the header becomes fixed -->
+  <div class="header-placeholder" id="headerPlaceholder" aria-hidden="true"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    </div>
+
+    <ul class="drawer-nav">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="about.html" class="drawer-link">About</a></li>
+      <li>
+        <button class="drawer-link" data-sub="playSub" aria-expanded="false">Play Football <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="playSub">
+          <a href="book-to-play.html">Book a Pitch</a>
+          <a href="about.html#concept">How It Works</a>
+          <a href="price.html">Pricing</a>
+          <a href="about.html">Facility Information</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="coachingSub" aria-expanded="false">Coaching <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="coachingSub">
+          <a href="coaching.html#elite">Elite Coaching</a>
+          <a href="coaching.html#morning">Morning Coaching</a>
+          <a href="coaching.html#afternoon">Afternoon Coaching</a>
+          <a href="coaching-registration.html">Player Registration</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="tournamentsSub" aria-expanded="false">Tournaments <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="tournamentsSub">
+          <a href="tournaments.html">Upcoming Tournaments</a>
+          <a href="tournament-details.html">Tournament Details</a>
+          <a href="tournament-register.html">Register Your Team</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="eventsSub" aria-expanded="false">Events <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="eventsSub">
+          <a href="events.html#birthday">Birthday Celebrations</a>
+          <a href="events.html#private">Private Football Games</a>
+          <a href="events.html#school">School Activities</a>
+          <a href="events.html#corporate">Corporate Team Building</a>
+          <a href="event-enquiry.html">Submit Event Enquiry</a>
+        </div>
+      </li>
+      <li><a href="contact.html" class="drawer-link">Contact</a></li>
+    </ul>
+
+    <div class="drawer-auth" id="drawerAuth">
+      <button class="btn btn-outline-lime" id="drawerLoginBtn">Login</button>
+      <button class="btn btn-lime" id="drawerRegisterBtn">Create Account</button>
+    </div>
+
+    <div class="drawer-auth" id="drawerAccount" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span class="avatar-initials" id="drawerAvatar">JD</span>
+        <span style="color: white; font-weight: 600; font-size: 0.9rem;" id="drawerName">John</span>
+      </div>
+      <a href="customer/dashboard.html" class="btn btn-outline-lime">My Account</a>
+      <a href="customer/bookings.html" class="btn btn-outline-lime">My Bookings</a>
+      <button class="btn btn-outline-lime" id="drawerLogoutBtn">Logout</button>
+    </div>
+
+    <a href="book-to-play.html" class="btn btn-lime drawer-cta">BOOK YOUR GAME</a>
+  </aside>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="authModalClose" aria-label="Close modal"><i class="fas fa-times"></i></button>
+
+      <div id="loginPanel">
+        <h2 id="authModalTitle">WELCOME BACK TO MATCH-BOX</h2>
+        <p class="subtext">Sign in to access your Match-Box experience.</p>
+        <div class="message-area" id="loginMessage"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="error-msg" id="loginEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" id="toggleLoginPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="loginPasswordError">Password is required.</div>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="link-text" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="loginSubmitBtn">LOGIN</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToRegisterBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">CREATE AN ACCOUNT</button>
+          </div>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" class="link-text" id="switchToRegisterLink">Create one</a></p>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">Demo interface. No real authentication is performed.</p>
+      </div>
+
+      <div id="registerPanel" style="display: none;">
+        <h2 id="registerTitle">JOIN THE MATCH-BOX COMMUNITY</h2>
+        <p class="subtext">Create your account and make your next football experience easier.</p>
+        <div class="message-area" id="registerMessage"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="regFullName">Full name</label>
+            <div class="input-wrapper"><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required></div>
+            <div class="error-msg" id="regFullNameError">Full name is required.</div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrapper"><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="regEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="regMobile">Mobile number</label>
+            <div class="input-wrapper"><input type="tel" id="regMobile" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" required></div>
+            <div class="error-msg" id="regMobileError">Please enter a valid mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar" id="strengthBar1"></div>
+              <div class="strength-bar" id="strengthBar2"></div>
+              <div class="strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="strength-text" id="strengthText"></div>
+            <div class="error-msg" id="regPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="regConfirmPassword">Confirm password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="regConfirmPasswordError">Passwords do not match.</div>
+          </div>
+          <div class="checkbox-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <label><input type="checkbox" id="termsCheck" required> I accept the <a href="terms.html" class="link-text">Terms & Conditions</a></label>
+            <label><input type="checkbox" id="privacyCheck" required> I accept the <a href="privacy.html" class="link-text">Privacy Policy</a></label>
+            <div class="error-msg" id="termsError">You must accept the terms and privacy policy.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="registerSubmitBtn">CREATE ACCOUNT</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToLoginBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" class="link-text" id="switchToLoginLink">Sign in</a></p>
+      </div>
+
+      <div id="forgotPanel" style="display: none;">
+        <h2>RESET YOUR PASSWORD</h2>
+        <p class="subtext">Enter your registered email address and we'll send reset instructions if the account exists.</p>
+        <div class="message-area" id="forgotMessage"></div>
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label for="forgotEmail">Registered email address</label>
+            <div class="input-wrapper"><input type="email" id="forgotEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="forgotEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="forgotSubmitBtn">SEND RESET LINK</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromForgot" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">For security, we do not reveal whether an email is registered.</p>
+      </div>
+
+      <div id="resetPanel" style="display: none;">
+        <h2>CREATE NEW PASSWORD</h2>
+        <p class="subtext">Enter your new password below.</p>
+        <div class="message-area" id="resetMessage"></div>
+        <form id="resetForm" novalidate>
+          <div class="form-group">
+            <label for="resetPassword">New password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetPassword" name="newPassword" placeholder="New password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="resetStrength">
+              <div class="strength-bar" id="resetBar1"></div>
+              <div class="strength-bar" id="resetBar2"></div>
+              <div class="strength-bar" id="resetBar3"></div>
+            </div>
+            <div class="strength-text" id="resetStrengthText"></div>
+            <div class="error-msg" id="resetPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="resetConfirmPassword">Confirm new password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetConfirmPassword" name="confirmPassword" placeholder="Confirm new password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="resetConfirmError">Passwords do not match.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="resetSubmitBtn">RESET PASSWORD</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromReset" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main class="mb-bookings-main" id="mb-bookings-main">
+
+    <!-- ===== HERO ===== -->
+    <section class="mb-bookings-hero" aria-labelledby="mb-bookings-hero-title">
+      <div class="mb-bookings-hero__bg">
+        <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2070&auto=format&fit=crop" alt="Football pitch at MATCH-BOX" fetchpriority="high">
+      </div>
+      <div class="mb-bookings-hero__overlay"></div>
+      <div class="mb-bookings-container">
+        <div class="mb-bookings-hero__inner">
+          <div class="mb-bookings-hero__badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            MY BOOKINGS
+          </div>
+          <h1 id="mb-bookings-hero-title" class="mb-bookings-hero__title">
+            YOUR GAME. YOUR BOOKING.<br><span>ALL IN ONE PLACE.</span>
+          </h1>
+          <p class="mb-bookings-hero__desc">
+            Welcome to your MATCH-BOX booking area. Find your football pitch booking, check its status, and manage your booking requests in one convenient place.
+          </p>
+          <div class="mb-bookings-hero__actions">
+            <a href="#mb-bookings-lookup" class="mb-bookings-btn mb-bookings-btn--primary">FIND MY BOOKING</a>
+            <a href="book-to-play.html" class="mb-bookings-btn mb-bookings-btn--outline">BOOK A NEW SLOT</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BOOKING LOOKUP ===== -->
+    <section class="mb-bookings-section" id="mb-bookings-lookup" aria-labelledby="mb-bookings-lookup-title">
+      <div class="mb-bookings-container">
+        <div style="text-align:center; margin-bottom:2rem;">
+          <h2 id="mb-bookings-lookup-title" class="mb-bookings-section__heading">FIND YOUR BOOKING</h2>
+          <p class="mb-bookings-section__desc" style="margin-inline:auto;">
+            Enter your booking reference and registered contact details to securely access your booking information.
+          </p>
+        </div>
+
+        <div class="mb-bookings-lookup">
+          <div class="mb-bookings-lookup__tabs" role="tablist" aria-label="Lookup method">
+            <button type="button" class="mb-bookings-lookup__tab mb-bookings-lookup__tab--active" data-method="email" role="tab" aria-selected="true">Using Email</button>
+            <button type="button" class="mb-bookings-lookup__tab" data-method="mobile" role="tab" aria-selected="false">Using Mobile</button>
+          </div>
+
+          <form id="mb-bookings-lookup-form" novalidate>
+            <div class="mb-bookings-field">
+              <label for="mb-bookings-ref">Booking Reference <span class="mb-bookings-required">*</span></label>
+              <input type="text" id="mb-bookings-ref" name="booking_reference" placeholder="Enter your booking reference" required autocomplete="off">
+              <span class="mb-bookings-error-msg" id="mb-bookings-ref-error">Please enter your booking reference.</span>
+            </div>
+
+            <div class="mb-bookings-field" id="mb-bookings-email-field">
+              <label for="mb-bookings-email">Registered Email Address <span class="mb-bookings-required">*</span></label>
+              <input type="email" id="mb-bookings-email" name="email" placeholder="Enter your registered email" autocomplete="email">
+              <span class="mb-bookings-error-msg" id="mb-bookings-email-error">Please enter a valid email address.</span>
+            </div>
+
+            <div class="mb-bookings-field" id="mb-bookings-mobile-field" style="display:none;">
+              <label for="mb-bookings-mobile">Registered Mobile Number <span class="mb-bookings-required">*</span></label>
+              <input type="tel" id="mb-bookings-mobile" name="mobile" placeholder="Enter your registered mobile number" autocomplete="tel">
+              <span class="mb-bookings-error-msg" id="mb-bookings-mobile-error">Please enter a valid 10-digit mobile number.</span>
+            </div>
+
+            <button type="submit" class="mb-bookings-btn mb-bookings-btn--primary mb-bookings-btn--full" id="mb-bookings-lookup-submit">
+              FIND MY BOOKING
+            </button>
+
+            <p class="mb-bookings-lookup__note">
+              For your security, MATCH-BOX verifies your booking reference against your registered contact details before showing booking information. If your details don't match, you'll need to try again or contact MATCH-BOX.
+            </p>
+          </form>
+        </div>
+
+        <!-- No Booking Found -->
+        <div class="mb-bookings-state" id="mb-bookings-not-found" role="status" aria-live="polite">
+          <div class="mb-bookings-state__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          </div>
+          <h3>WE COULDN'T FIND YOUR BOOKING.</h3>
+          <p>Please check your booking reference and registered contact details and try again. If you continue to have trouble, our team can help.</p>
+          <div class="mb-bookings-state__actions">
+            <a href="#mb-bookings-lookup" class="mb-bookings-btn mb-bookings-btn--primary">SEARCH AGAIN</a>
+            <a href="booking-information.html" class="mb-bookings-btn mb-bookings-btn--ghost">BOOKING INFORMATION</a>
+            <a href="contact.html" class="mb-bookings-btn mb-bookings-btn--ghost">CONTACT MATCH-BOX</a>
+          </div>
+        </div>
+
+        <!-- Booking Result -->
+        <div class="mb-bookings-result" id="mb-bookings-result">
+          <div class="mb-bookings-card">
+            <div class="mb-bookings-card__header">
+              <div class="mb-bookings-card__ref">BOOKING REFERENCE: <strong id="mb-bookings-result-ref">—</strong></div>
+              <span class="mb-bookings-status" id="mb-bookings-result-status">—</span>
+            </div>
+            <div class="mb-bookings-card__body">
+              <h3 class="mb-bookings-card__title" id="mb-bookings-result-name">—</h3>
+              <p class="mb-bookings-card__subtitle">MATCH-BOX FOOTBALL BOOKING</p>
+
+              <div class="mb-bookings-details-grid" id="mb-bookings-result-details"></div>
+
+              <div class="mb-bookings-card__actions">
+                <button type="button" class="mb-bookings-btn mb-bookings-btn--dark mb-bookings-btn--sm" id="mb-bookings-view-details">VIEW FULL DETAILS</button>
+                <button type="button" class="mb-bookings-btn mb-bookings-btn--ghost mb-bookings-btn--sm" id="mb-bookings-request-reschedule">REQUEST RESCHEDULING</button>
+                <button type="button" class="mb-bookings-btn mb-bookings-btn--ghost mb-bookings-btn--sm" id="mb-bookings-request-cancel">REQUEST CANCELLATION</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reschedule Request Form -->
+        <div class="mb-bookings-request" id="mb-bookings-reschedule-form">
+          <h3 class="mb-bookings-request__title">NEED TO CHANGE YOUR PLAYING TIME?</h3>
+          <p class="mb-bookings-request__desc">Plans changed? Submit a rescheduling request and let the MATCH-BOX team review your preferred alternative.</p>
+
+          <form id="mb-bookings-reschedule-form-el" novalidate>
+            <div class="mb-bookings-field">
+              <label for="mb-bookings-rs-ref">Booking Reference</label>
+              <input type="text" id="mb-bookings-rs-ref" readonly>
+            </div>
+
+            <div class="mb-bookings-request__row">
+              <div class="mb-bookings-field">
+                <label for="mb-bookings-rs-current-date">Current Booking Date</label>
+                <input type="text" id="mb-bookings-rs-current-date" readonly>
+              </div>
+              <div class="mb-bookings-field">
+                <label for="mb-bookings-rs-current-time">Current Booking Time</label>
+                <input type="text" id="mb-bookings-rs-current-time" readonly>
+              </div>
+            </div>
+
+            <div class="mb-bookings-request__row">
+              <div class="mb-bookings-field">
+                <label for="mb-bookings-rs-new-date">Preferred New Date <span class="mb-bookings-required">*</span></label>
+                <input type="date" id="mb-bookings-rs-new-date" required>
+                <span class="mb-bookings-error-msg" id="mb-bookings-rs-new-date-error">Please choose a valid future date.</span>
+              </div>
+              <div class="mb-bookings-field">
+                <label for="mb-bookings-rs-new-time">Preferred New Time <span class="mb-bookings-required">*</span></label>
+                <input type="time" id="mb-bookings-rs-new-time" required>
+                <span class="mb-bookings-error-msg" id="mb-bookings-rs-new-time-error">Please choose a valid time.</span>
+              </div>
+            </div>
+
+            <div class="mb-bookings-field">
+              <label for="mb-bookings-rs-reason">Reason for Change (Optional)</label>
+              <textarea id="mb-bookings-rs-reason" placeholder="Any details that may help us review your request…"></textarea>
+            </div>
+
+            <div class="mb-bookings-request__note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              Submitting a rescheduling request does not automatically change your booking. Your original booking remains in place until MATCH-BOX reviews and approves the request.
+            </div>
+
+            <div style="margin-top:1.25rem;">
+              <button type="submit" class="mb-bookings-btn mb-bookings-btn--primary mb-bookings-btn--full" id="mb-bookings-rs-submit">SUBMIT RESCHEDULING REQUEST</button>
+            </div>
+          </form>
+
+          <div class="mb-bookings-request-success" id="mb-bookings-reschedule-success" role="status" aria-live="polite">
+            Rescheduling request submitted. Your original booking remains unchanged until MATCH-BOX reviews and approves your request.
+          </div>
+        </div>
+
+        <!-- Cancellation Request Form -->
+        <div class="mb-bookings-request" id="mb-bookings-cancel-form">
+          <h3 class="mb-bookings-request__title">CANCEL YOUR BOOKING</h3>
+          <p class="mb-bookings-request__desc">If you can no longer attend your scheduled football session, submit a cancellation request for review.</p>
+
+          <form id="mb-bookings-cancel-form-el" novalidate>
+            <div class="mb-bookings-field">
+              <label for="mb-bookings-cx-ref">Booking Reference</label>
+              <input type="text" id="mb-bookings-cx-ref" readonly>
+            </div>
+
+            <div class="mb-bookings-request__row">
+              <div class="mb-bookings-field">
+                <label for="mb-bookings-cx-date">Current Booking Date</label>
+                <input type="text" id="mb-bookings-cx-date" readonly>
+              </div>
+              <div class="mb-bookings-field">
+                <label for="mb-bookings-cx-time">Current Booking Time</label>
+                <input type="text" id="mb-bookings-cx-time" readonly>
+              </div>
+            </div>
+
+            <div class="mb-bookings-field">
+              <label for="mb-bookings-cx-reason">Cancellation Reason <span class="mb-bookings-required">*</span></label>
+              <textarea id="mb-bookings-cx-reason" placeholder="Please share the reason for your cancellation request…" required></textarea>
+              <span class="mb-bookings-error-msg" id="mb-bookings-cx-reason-error">Please provide a reason for the cancellation.</span>
+            </div>
+
+            <div class="mb-bookings-field">
+              <label for="mb-bookings-cx-message">Additional Message (Optional)</label>
+              <textarea id="mb-bookings-cx-message" placeholder="Anything else we should know about your cancellation…"></textarea>
+            </div>
+
+            <div class="mb-bookings-request__note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              Submitting a cancellation request does not automatically cancel your booking. MATCH-BOX reviews each request according to the approved cancellation policy.
+            </div>
+
+            <div style="margin-top:1.25rem;">
+              <button type="submit" class="mb-bookings-btn mb-bookings-btn--dark mb-bookings-btn--full" id="mb-bookings-cx-submit">SUBMIT CANCELLATION REQUEST</button>
+            </div>
+          </form>
+
+          <div class="mb-bookings-request-success" id="mb-bookings-cancel-success" role="status" aria-live="polite">
+            Cancellation request submitted. Your booking will remain active until MATCH-BOX reviews your request according to the approved cancellation policy.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BOOKING STATUS INFO ===== -->
+    <section class="mb-bookings-section mb-bookings-section--light" aria-labelledby="mb-bookings-status-title">
+      <div class="mb-bookings-container">
+        <h2 id="mb-bookings-status-title" class="mb-bookings-section__heading">BOOKING STATUS EXPLAINED.</h2>
+        <p class="mb-bookings-section__desc">Understanding your booking status helps you know what to expect next.</p>
+
+        <div class="mb-bookings-status-grid">
+          <div class="mb-bookings-status-card">
+            <div class="mb-bookings-status-card__title" style="color:#8a6a10;">PENDING</div>
+            <p class="mb-bookings-status-card__desc">Your booking is awaiting processing or confirmation.</p>
+          </div>
+          <div class="mb-bookings-status-card">
+            <div class="mb-bookings-status-card__title" style="color:#2e6b2e;">CONFIRMED</div>
+            <p class="mb-bookings-status-card__desc">Your booking has been successfully confirmed.</p>
+          </div>
+          <div class="mb-bookings-status-card">
+            <div class="mb-bookings-status-card__title" style="color:#8a6a10;">CANCELLATION REQUESTED</div>
+            <p class="mb-bookings-status-card__desc">A cancellation request has been submitted and is awaiting review.</p>
+          </div>
+          <div class="mb-bookings-status-card">
+            <div class="mb-bookings-status-card__title" style="color:#4a5a5b;">CANCELLED</div>
+            <p class="mb-bookings-status-card__desc">The booking has been cancelled.</p>
+          </div>
+          <div class="mb-bookings-status-card">
+            <div class="mb-bookings-status-card__title" style="color:#2e3a30;">COMPLETED</div>
+            <p class="mb-bookings-status-card__desc">The scheduled football session has finished.</p>
+          </div>
+          <div class="mb-bookings-status-card">
+            <div class="mb-bookings-status-card__title" style="color:#a93226;">REJECTED</div>
+            <p class="mb-bookings-status-card__desc">The booking was not accepted.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GOOD TO KNOW ===== -->
+    <section class="mb-bookings-section" aria-labelledby="mb-bookings-info-title">
+      <div class="mb-bookings-container">
+        <h2 id="mb-bookings-info-title" class="mb-bookings-section__heading">GOOD TO KNOW BEFORE YOUR GAME.</h2>
+        <p class="mb-bookings-section__desc">Key booking information for MATCH-BOX football sessions.</p>
+
+        <div class="mb-bookings-info-grid">
+          <div class="mb-bookings-info-card">
+            <div class="mb-bookings-info-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            </div>
+            <div class="mb-bookings-info-card__label">Operating Hours</div>
+            <div class="mb-bookings-info-card__value">6:00 AM – 12:00 Midnight</div>
+          </div>
+
+          <div class="mb-bookings-info-card">
+            <div class="mb-bookings-info-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </div>
+            <div class="mb-bookings-info-card__label">Booking Duration</div>
+            <div class="mb-bookings-info-card__value">1 Hour Per Slot</div>
+          </div>
+
+          <div class="mb-bookings-info-card">
+            <div class="mb-bookings-info-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            </div>
+            <div class="mb-bookings-info-card__label">Non-Peak Price</div>
+            <div class="mb-bookings-info-card__value">₹350 / Hour</div>
+          </div>
+
+          <div class="mb-bookings-info-card">
+            <div class="mb-bookings-info-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            </div>
+            <div class="mb-bookings-info-card__label">Peak Price</div>
+            <div class="mb-bookings-info-card__value">₹500 / Hour</div>
+          </div>
+
+          <div class="mb-bookings-info-card">
+            <div class="mb-bookings-info-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            </div>
+            <div class="mb-bookings-info-card__label">Payment Method</div>
+            <div class="mb-bookings-info-card__value">Pay at Venue</div>
+          </div>
+        </div>
+
+        <p style="font-size:0.85rem;color:var(--mb-bk-muted);margin-top:1.5rem;max-width:70ch;line-height:1.65;">
+          Peak and non-peak periods are configured by MATCH-BOX management. The applicable price is determined by your selected booking date and time.
+        </p>
+        <div style="margin-top:1.5rem;">
+          <a href="booking-information.html" class="mb-bookings-btn mb-bookings-btn--ghost">READ BOOKING INFORMATION</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEED HELP ===== -->
+    <section class="mb-bookings-section mb-bookings-section--light" aria-labelledby="mb-bookings-help-title">
+      <div class="mb-bookings-container">
+        <h2 id="mb-bookings-help-title" class="mb-bookings-section__heading">NEED HELP WITH YOUR BOOKING?</h2>
+
+        <div class="mb-bookings-help">
+          <a href="booking-information.html" class="mb-bookings-help-card">
+            <div class="mb-bookings-help-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </div>
+            <h3 class="mb-bookings-help-card__title">Booking Information</h3>
+            <p class="mb-bookings-help-card__desc">Understand the booking process, operating hours, and payment method.</p>
+            <span class="mb-bookings-help-card__cta">VIEW →</span>
+          </a>
+
+          <a href="refund-policy.html" class="mb-bookings-help-card">
+            <div class="mb-bookings-help-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <h3 class="mb-bookings-help-card__title">Cancellation &amp; Refund Policy</h3>
+            <p class="mb-bookings-help-card__desc">Review the approved cancellation and refund conditions.</p>
+            <span class="mb-bookings-help-card__cta">VIEW →</span>
+          </a>
+
+          <a href="contact.html" class="mb-bookings-help-card">
+            <div class="mb-bookings-help-card__icon">
+              <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+            </div>
+            <h3 class="mb-bookings-help-card__title">Contact MATCH-BOX</h3>
+            <p class="mb-bookings-help-card__desc">Contact the team if you need assistance with your booking.</p>
+            <span class="mb-bookings-help-card__cta">CONTACT →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section class="mb-bookings-container">
+      <div class="mb-bookings-cta">
+        <h2>READY FOR YOUR NEXT MATCH?</h2>
+        <p>Your next football experience starts with a great booking. Choose your preferred time and get ready to play at MATCH-BOX.</p>
+        <div class="mb-bookings-cta__actions">
+          <a href="book-to-play.html" class="mb-bookings-btn mb-bookings-btn--primary">BOOK YOUR NEXT GAME</a>
+          <a href="contact.html" class="mb-bookings-btn mb-bookings-btn--outline">CONTACT OUR TEAM</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-cta">
+      <div class="container">
+        <h2>YOUR NEXT GAME IS WAITING.</h2>
+        <p>Bring your friends, make a team, and experience the excitement of 4-a-side football.</p>
+        <div class="footer-cta-btns">
+          <a href="book-to-play.html" class="btn btn-lime">BOOK YOUR GAME</a>
+          <a href="about.html" class="btn btn-dark-outline" style="background: transparent; border-color: var(--white); color: var(--white);">EXPLORE MATCH-BOX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo-area">
+              <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+              <div class="logo-text">
+                <span class="brand-name">MATCH-BOX</span>
+                <span class="tagline">Small Field. Big Fun!</span>
+              </div>
+            </a>
+            <p>Match-Box brings people together through the excitement of small-sided football. Enjoy the game, develop your skills, and create memorable moments.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Match-Box</a></li>
+              <li><a href="book-to-play.html">Book to Play</a></li>
+              <li><a href="coaching.html">Coaching</a></li>
+              <li><a href="tournaments.html">Tournaments</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Play & Participate</h4>
+            <ul>
+              <li><a href="book-to-play.html">Book a Pitch</a></li>
+              <li><a href="coaching-registration.html">Coaching Registration</a></li>
+              <li><a href="tournaments.html">Upcoming Tournaments</a></li>
+              <li><a href="tournament-register.html">Register Your Team</a></li>
+              <li><a href="events.html#birthday">Birthday Events</a></li>
+              <li><a href="events.html#private">Private Events</a></li>
+              <li><a href="contact.html">Ask a Question</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><a href="dashboard.html">My Account</a></li>
+              <li><a href="bookings.html">My Bookings</a></li>
+              <li><a href="booking-history.html">Booking History</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="contact.html">Contact Support</a></li>
+              <li><a href="booking-information.html">Booking Information</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Legal Information</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="refund-policy.html">Cancellation & Refund Policy</a></li>
+              <li><a href="facility-rules.html">Facility Rules & Safety Guidelines</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h4 style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lime-green); margin-bottom: 1.25rem;">Contact</h4>
+            <ul class="footer-contact-info">
+              <li><i class="fas fa-envelope"></i> <span>hello@match-box.example</span></li>
+              <li><i class="fas fa-phone-alt"></i> <span>+91 00000 00000</span></li>
+              <li><i class="fas fa-map-marker-alt"></i> <span>Match-Box Facility, Address Placeholder</span></li>
+              <li><i class="fas fa-clock"></i> <span>Operating hours: 6:00 AM – 12:00 midnight</span></li>
+            </ul>
+          </div>
+          <div class="newsletter">
+            <h4>STAY IN THE GAME.</h4>
+            <p>Get updates about upcoming tournaments, coaching, and Match-Box events.</p>
+            <form class="newsletter-form" id="newsletterForm" novalidate>
+              <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+              <button type="submit" class="btn btn-lime" id="newsletterSubmit">SUBSCRIBE</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg"></div>
+            <p style="font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem;">Demo only. Subscriptions are not stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; <span id="copyrightYear"></span> MATCH-BOX. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const header = document.getElementById('mainHeader');
+      const announceBar = document.getElementById('announceBar');
+      const headerPlaceholder = document.getElementById('headerPlaceholder');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const drawerClose = document.getElementById('drawerClose');
+      const authModalOverlay = document.getElementById('authModalOverlay');
+      const authModalClose = document.getElementById('authModalClose');
+
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const forgotPanel = document.getElementById('forgotPanel');
+      const resetPanel = document.getElementById('resetPanel');
+
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+      const drawerRegisterBtn = document.getElementById('drawerRegisterBtn');
+      const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+      const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+      const switchToLoginBtn = document.getElementById('switchToLoginBtn');
+      const switchToLoginLink = document.getElementById('switchToLoginLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+      const backToLoginFromReset = document.getElementById('backToLoginFromReset');
+
+      const accountMenuWrapper = document.getElementById('accountMenuWrapper');
+      const accountTrigger = document.getElementById('accountTrigger');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const drawerLogoutBtn = document.getElementById('drawerLogoutBtn');
+      const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const resetForm = document.getElementById('resetForm');
+      const newsletterForm = document.getElementById('newsletterForm');
+
+      let isLoggedIn = false;
+
+      /* =========================================================
+         STICKY HEADER LOGIC
+         - At page top: header sits naturally below announce bar
+         - After scrolling past announce bar: header pins to viewport top
+         - Scroll back up: header returns to natural position
+         ========================================================= */
+      const announceHeight = announceBar.offsetHeight;
+      let headerIsFixed = false;
+
+      function updateHeaderState() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > announceHeight) {
+          if (!headerIsFixed) {
+            headerIsFixed = true;
+            header.classList.add('is-fixed');
+            headerPlaceholder.classList.add('active');
+          }
+        } else {
+          if (headerIsFixed) {
+            headerIsFixed = false;
+            header.classList.remove('is-fixed');
+            headerPlaceholder.classList.remove('active');
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+      window.addEventListener('resize', function() {
+        // Recompute announce height on resize
+        // (unlikely to change, but safe)
+        updateHeaderState();
+      });
+      updateHeaderState();
+
+      /* Drawer */
+      function openDrawer() {
+        mobileDrawer.classList.add('open');
+        drawerOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeDrawer() {
+        mobileDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileDrawer.classList.contains('open')) closeDrawer();
+          if (authModalOverlay.classList.contains('active')) closeAuthModal();
+          if (accountMenuWrapper.classList.contains('open')) {
+            accountMenuWrapper.classList.remove('open');
+            accountTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      document.querySelectorAll('.drawer-link[data-sub]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const subId = this.getAttribute('data-sub');
+          const sub = document.getElementById(subId);
+          const isOpen = sub.classList.contains('open');
+          document.querySelectorAll('.drawer-sub').forEach(function(s) { s.classList.remove('open'); });
+          document.querySelectorAll('.drawer-link[data-sub]').forEach(function(b) { b.setAttribute('aria-expanded', 'false'); });
+          if (!isOpen) {
+            sub.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { closeDrawer(); });
+      });
+
+      /* Auth modal */
+      function openAuthModal(panel) {
+        authModalOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        showPanel(panel || 'login');
+      }
+
+      function closeAuthModal() {
+        authModalOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        clearMessages();
+        resetForms();
+      }
+
+      function showPanel(panelName) {
+        loginPanel.style.display = 'none';
+        registerPanel.style.display = 'none';
+        forgotPanel.style.display = 'none';
+        resetPanel.style.display = 'none';
+
+        if (panelName === 'login') loginPanel.style.display = 'block';
+        else if (panelName === 'register') registerPanel.style.display = 'block';
+        else if (panelName === 'forgot') forgotPanel.style.display = 'block';
+        else if (panelName === 'reset') resetPanel.style.display = 'block';
+      }
+
+      function clearMessages() {
+        document.querySelectorAll('.message-area').forEach(function(el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        });
+      }
+
+      function resetForms() {
+        loginForm.reset();
+        registerForm.reset();
+        forgotForm.reset();
+        resetForm.reset();
+        document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('visible'); });
+        document.querySelectorAll('.strength-bar').forEach(function(bar) { bar.className = 'strength-bar'; });
+        document.querySelectorAll('.strength-text').forEach(function(el) { el.textContent = ''; });
+      }
+
+      loginBtn.addEventListener('click', function() { openAuthModal('login'); });
+      registerBtn.addEventListener('click', function() { openAuthModal('register'); });
+      drawerLoginBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('login'); });
+      drawerRegisterBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('register'); });
+      mobileAccountBtn.addEventListener('click', function() {
+        if (isLoggedIn) openDrawer();
+        else openAuthModal('login');
+      });
+
+      switchToRegisterBtn.addEventListener('click', function() { showPanel('register'); });
+      switchToRegisterLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('register'); });
+      switchToLoginBtn.addEventListener('click', function() { showPanel('login'); });
+      switchToLoginLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('login'); });
+      forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('forgot'); });
+      backToLoginFromForgot.addEventListener('click', function() { showPanel('login'); });
+      backToLoginFromReset.addEventListener('click', function() { showPanel('login'); });
+
+      authModalClose.addEventListener('click', closeAuthModal);
+      authModalOverlay.addEventListener('click', function(e) {
+        if (e.target === authModalOverlay) closeAuthModal();
+      });
+
+      /* Password toggles */
+      function setupPasswordToggle(toggleBtnId, inputId) {
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+
+      setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+      setupPasswordToggle('toggleRegPassword', 'regPassword');
+      setupPasswordToggle('toggleRegConfirmPassword', 'regConfirmPassword');
+      setupPasswordToggle('toggleResetPassword', 'resetPassword');
+      setupPasswordToggle('toggleResetConfirmPassword', 'resetConfirmPassword');
+
+      /* Password strength */
+      function evaluatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        return Math.min(score, 3);
+      }
+
+      function updateStrengthBars(password, barIds, textId) {
+        const score = evaluatePasswordStrength(password);
+        const bars = barIds.map(function(id) { return document.getElementById(id); });
+        const textEl = document.getElementById(textId);
+
+        bars.forEach(function(bar, i) {
+          bar.className = 'strength-bar';
+          if (score > i) {
+            if (score === 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('medium');
+            else bar.classList.add('strong');
+          }
+        });
+
+        if (textEl) {
+          if (password.length === 0) textEl.textContent = '';
+          else if (score === 1) textEl.textContent = 'Weak password';
+          else if (score === 2) textEl.textContent = 'Medium strength';
+          else textEl.textContent = 'Strong password';
+        }
+      }
+
+      document.getElementById('regPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['strengthBar1', 'strengthBar2', 'strengthBar3'], 'strengthText');
+      });
+
+      document.getElementById('resetPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['resetBar1', 'resetBar2', 'resetBar3'], 'resetStrengthText');
+      });
+
+      /* Validation helpers */
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function isValidMobile(mobile) {
+        return /^[\+]?[\d\s\-]{10,15}$/.test(mobile);
+      }
+
+      function showError(errorId, show) {
+        const el = document.getElementById(errorId);
+        if (el) el.classList.toggle('visible', show);
+      }
+
+      function showMessage(containerId, text, type) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.className = 'message-area ' + type;
+        el.textContent = text;
+      }
+
+      function clearMessage(containerId) {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        }
+      }
+
+      /* Login */
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('loginMessage');
+        let valid = true;
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        showError('loginEmailError', false);
+        showError('loginPasswordError', false);
+
+        if (!email || !isValidEmail(email)) { showError('loginEmailError', true); valid = false; }
+        if (!password) { showError('loginPasswordError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('loginSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Signing in...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('loginMessage', 'This is a demo interface. Real authentication is handled by the future PHP backend.', 'success');
+        }, 800);
+      });
+
+      /* Register */
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('registerMessage');
+        let valid = true;
+
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const terms = document.getElementById('termsCheck').checked;
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        ['regFullNameError', 'regEmailError', 'regMobileError', 'regPasswordError', 'regConfirmPasswordError', 'termsError'].forEach(function(id) {
+          showError(id, false);
+        });
+
+        if (!fullName || fullName.length < 2) { showError('regFullNameError', true); valid = false; }
+        if (!email || !isValidEmail(email)) { showError('regEmailError', true); valid = false; }
+        if (!mobile || !isValidMobile(mobile)) { showError('regMobileError', true); valid = false; }
+        if (!password || password.length < 8) { showError('regPasswordError', true); valid = false; }
+        if (password !== confirmPassword) { showError('regConfirmPasswordError', true); valid = false; }
+        if (!terms || !privacy) { showError('termsError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('registerSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating account...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('registerMessage', 'This is a demo interface. Registration will be handled by the PHP/MySQL backend.', 'success');
+        }, 1000);
+      });
+
+      /* Forgot */
+      forgotForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('forgotMessage');
+        const email = document.getElementById('forgotEmail').value.trim();
+        showError('forgotEmailError', false);
+        if (!email || !isValidEmail(email)) { showError('forgotEmailError', true); return; }
+
+        const btn = document.getElementById('forgotSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Sending...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('forgotMessage', 'If an account exists with this email, password reset instructions will be sent. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Reset */
+      resetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('resetMessage');
+        let valid = true;
+
+        const password = document.getElementById('resetPassword').value;
+        const confirm = document.getElementById('resetConfirmPassword').value;
+
+        showError('resetPasswordError', false);
+        showError('resetConfirmError', false);
+
+        if (!password || password.length < 8) { showError('resetPasswordError', true); valid = false; }
+        if (password !== confirm) { showError('resetConfirmError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('resetSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Resetting...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('resetMessage', 'Password reset would be processed by the backend. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Newsletter */
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msgEl = document.getElementById('newsletterMsg');
+        msgEl.className = 'newsletter-msg';
+        msgEl.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          msgEl.className = 'newsletter-msg error';
+          msgEl.textContent = 'Please enter a valid email address.';
+          return;
+        }
+
+        const btn = document.getElementById('newsletterSubmit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          msgEl.className = 'newsletter-msg success';
+          msgEl.textContent = 'Thanks! (Demo only – no subscription is stored.)';
+          document.getElementById('newsletterEmail').value = '';
+        }, 700);
+      });
+
+      /* Logout (demo) */
+      function simulateLogout() {
+        isLoggedIn = false;
+        document.querySelectorAll('.auth-btn').forEach(function(b) { b.style.display = ''; });
+        accountMenuWrapper.style.display = 'none';
+        accountMenuWrapper.classList.remove('open');
+        document.getElementById('drawerAuth').style.display = 'flex';
+        document.getElementById('drawerAccount').style.display = 'none';
+        document.getElementById('avatarInitials').textContent = 'JD';
+        document.getElementById('accountName').textContent = 'John';
+        document.getElementById('drawerAvatar').textContent = 'JD';
+        document.getElementById('drawerName').textContent = 'John';
+      }
+
+      accountTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = accountMenuWrapper.classList.toggle('open');
+        accountTrigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!accountMenuWrapper.contains(e.target)) {
+          accountMenuWrapper.classList.remove('open');
+          accountTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        simulateLogout();
+      });
+
+      drawerLogoutBtn.addEventListener('click', function() {
+        simulateLogout();
+        closeDrawer();
+      });
+
+      /* Back to top */
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      }, { passive: true });
+
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Copyright year */
+      document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+      /* Close drawer if resized to desktop */
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth >= 1024) closeDrawer();
+        }, 150);
+      });
+
+      /* Keyboard support for desktop dropdowns */
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        const link = item.querySelector('.nav-link');
+        const panel = item.querySelector('.dropdown-panel');
+        if (!link || !panel) return;
+
+        link.addEventListener('focus', function() {
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.transform = 'translateY(0)';
+          panel.style.pointerEvents = 'auto';
+        });
+
+        item.addEventListener('mouseleave', function() {
+          if (!item.contains(document.activeElement)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+
+        item.addEventListener('focusout', function(e) {
+          if (!item.contains(e.relatedTarget)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+      });
+
+    })();
+  </script>
+
+    <script>
+    (function() {
+      'use strict';
+
+      const main = document.querySelector('.mb-bookings-main');
+      if (!main) return;
+
+      /* ============================================
+         ELEMENTS
+         ============================================ */
+      const lookupForm = document.getElementById('mb-bookings-lookup-form');
+      const refInput = document.getElementById('mb-bookings-ref');
+      const emailField = document.getElementById('mb-bookings-email-field');
+      const mobileField = document.getElementById('mb-bookings-mobile-field');
+      const emailInput = document.getElementById('mb-bookings-email');
+      const mobileInput = document.getElementById('mb-bookings-mobile');
+      const lookupTabs = main.querySelectorAll('.mb-bookings-lookup__tab');
+      const lookupSubmit = document.getElementById('mb-bookings-lookup-submit');
+
+      const notFoundState = document.getElementById('mb-bookings-not-found');
+      const resultBlock = document.getElementById('mb-bookings-result');
+      const resultRef = document.getElementById('mb-bookings-result-ref');
+      const resultStatus = document.getElementById('mb-bookings-result-status');
+      const resultName = document.getElementById('mb-bookings-result-name');
+      const resultDetails = document.getElementById('mb-bookings-result-details');
+
+      const viewDetailsBtn = document.getElementById('mb-bookings-view-details');
+      const requestRescheduleBtn = document.getElementById('mb-bookings-request-reschedule');
+      const requestCancelBtn = document.getElementById('mb-bookings-request-cancel');
+
+      const rescheduleForm = document.getElementById('mb-bookings-reschedule-form');
+      const rescheduleFormEl = document.getElementById('mb-bookings-reschedule-form-el');
+      const rsRef = document.getElementById('mb-bookings-rs-ref');
+      const rsCurrentDate = document.getElementById('mb-bookings-rs-current-date');
+      const rsCurrentTime = document.getElementById('mb-bookings-rs-current-time');
+      const rsNewDate = document.getElementById('mb-bookings-rs-new-date');
+      const rsNewTime = document.getElementById('mb-bookings-rs-new-time');
+      const rescheduleSuccess = document.getElementById('mb-bookings-reschedule-success');
+
+      const cancelForm = document.getElementById('mb-bookings-cancel-form');
+      const cancelFormEl = document.getElementById('mb-bookings-cancel-form-el');
+      const cxRef = document.getElementById('mb-bookings-cx-ref');
+      const cxDate = document.getElementById('mb-bookings-cx-date');
+      const cxTime = document.getElementById('mb-bookings-cx-time');
+      const cxReason = document.getElementById('mb-bookings-cx-reason');
+      const cancelSuccess = document.getElementById('mb-bookings-cancel-success');
+
+      let lookupMethod = 'email';
+      let currentBooking = null;
+
+      /* ============================================
+         HELPERS
+         ============================================ */
+      function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+      function validateMobile(v) { return /^(91)?[6-9]\d{9}$/.test(v.replace(/[\s\-+]/g, '')); }
+
+      function showError(input, id) {
+        input.classList.add('mb-bookings-input-error');
+        const el = document.getElementById(id);
+        if (el) el.classList.add('visible');
+      }
+
+      function clearError(input, id) {
+        input.classList.remove('mb-bookings-input-error');
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+      }
+
+      function formatDate(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso + 'T00:00:00');
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+
+      function formatDateTime(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
+
+      /* ============================================
+         LOOKUP METHOD TABS
+         ============================================ */
+      lookupTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          lookupTabs.forEach(t => {
+            t.classList.remove('mb-bookings-lookup__tab--active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          this.classList.add('mb-bookings-lookup__tab--active');
+          this.setAttribute('aria-selected', 'true');
+          lookupMethod = this.getAttribute('data-method');
+
+          if (lookupMethod === 'email') {
+            emailField.style.display = '';
+            mobileField.style.display = 'none';
+          } else {
+            emailField.style.display = 'none';
+            mobileField.style.display = '';
+          }
+        });
+      });
+
+      /* ============================================
+         LOOKUP FORM SUBMISSION (frontend demo only)
+         ============================================
+         In production this should POST to:
+           POST /api/bookings/lookup.php
+         with booking_reference + email OR mobile.
+         The backend must verify the pair before
+         returning any booking data.
+         ============================================ */
+      lookupForm?.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        clearError(refInput, 'mb-bookings-ref-error');
+        clearError(emailInput, 'mb-bookings-email-error');
+        clearError(mobileInput, 'mb-bookings-mobile-error');
+
+        let valid = true;
+
+        if (!refInput.value.trim()) {
+          showError(refInput, 'mb-bookings-ref-error');
+          valid = false;
+        }
+
+        if (lookupMethod === 'email') {
+          if (!validateEmail(emailInput.value)) {
+            showError(emailInput, 'mb-bookings-email-error');
+            valid = false;
+          }
+        } else {
+          if (!validateMobile(mobileInput.value)) {
+            showError(mobileInput, 'mb-bookings-mobile-error');
+            valid = false;
+          }
+        }
+
+        if (!valid) return;
+
+        lookupSubmit.disabled = true;
+        lookupSubmit.textContent = 'SEARCHING…';
+
+        // Frontend demo — always returns a "no booking found" state because
+        // we do not have a real backend verification here.
+        // A real implementation must NOT display booking data unless
+        // the backend confirms the reference matches the contact details.
+        setTimeout(() => {
+          lookupSubmit.disabled = false;
+          lookupSubmit.textContent = 'FIND MY BOOKING';
+          notFoundState.classList.add('visible');
+          resultBlock.classList.remove('visible');
+          rescheduleForm.classList.remove('visible');
+          cancelForm.classList.remove('visible');
+        }, 900);
+      });
+
+      /* ============================================
+         REAL-TIME ERROR CLEARING
+         ============================================ */
+      refInput?.addEventListener('input', () => clearError(refInput, 'mb-bookings-ref-error'));
+      emailInput?.addEventListener('input', () => clearError(emailInput, 'mb-bookings-email-error'));
+      mobileInput?.addEventListener('input', () => clearError(mobileInput, 'mb-bookings-mobile-error'));
+
+      /* ============================================
+         RESCHEDULE FORM
+         ============================================ */
+      requestRescheduleBtn?.addEventListener('click', () => {
+        if (!currentBooking) return;
+        cancelForm.classList.remove('visible');
+        rescheduleForm.classList.add('visible');
+        rsRef.value = currentBooking.reference || '';
+        rsCurrentDate.value = currentBooking.date || '';
+        rsCurrentTime.value = currentBooking.time || '';
+        rescheduleForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      rescheduleFormEl?.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        clearError(rsNewDate, 'mb-bookings-rs-new-date-error');
+        clearError(rsNewTime, 'mb-bookings-rs-new-time-error');
+
+        let valid = true;
+
+        if (!rsNewDate.value) {
+          showError(rsNewDate, 'mb-bookings-rs-new-date-error');
+          valid = false;
+        } else {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const picked = new Date(rsNewDate.value + 'T00:00:00');
+          if (isNaN(picked.getTime()) || picked < today) {
+            showError(rsNewDate, 'mb-bookings-rs-new-date-error');
+            valid = false;
+          }
+        }
+
+        if (!rsNewTime.value) {
+          showError(rsNewTime, 'mb-bookings-rs-new-time-error');
+          valid = false;
+        }
+
+        if (!valid) return;
+
+        rescheduleSuccess.classList.add('visible');
+        rescheduleFormEl.reset();
+        rsRef.value = currentBooking ? currentBooking.reference : '';
+      });
+
+      /* ============================================
+         CANCEL FORM
+         ============================================ */
+      requestCancelBtn?.addEventListener('click', () => {
+        if (!currentBooking) return;
+        rescheduleForm.classList.remove('visible');
+        cancelForm.classList.add('visible');
+        cxRef.value = currentBooking.reference || '';
+        cxDate.value = currentBooking.date || '';
+        cxTime.value = currentBooking.time || '';
+        cancelForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      cancelFormEl?.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        clearError(cxReason, 'mb-bookings-cx-reason-error');
+
+        if (cxReason.value.trim().length < 3) {
+          showError(cxReason, 'mb-bookings-cx-reason-error');
+          return;
+        }
+
+        const ok = window.confirm('Are you sure you want to submit a cancellation request for this booking?');
+        if (!ok) return;
+
+        cancelSuccess.classList.add('visible');
+        cancelFormEl.reset();
+        cxRef.value = currentBooking ? currentBooking.reference : '';
+      });
+
+      /* ============================================
+         VIEW FULL DETAILS (frontend demo)
+         ============================================ */
+      viewDetailsBtn?.addEventListener('click', () => {
+        if (!currentBooking) return;
+        alert('In production, this would fetch full booking details from GET /api/bookings/details.php after backend verification.');
+      });
+
+    })();
+  </script>
+</body>
+</html>

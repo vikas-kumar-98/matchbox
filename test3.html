@@ -3,1709 +3,1687 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="mb-tournament-details-page-title">Tournament Details | MATCH-BOX Football Tournament</title>
-  <meta id="mb-tournament-details-meta-desc" name="description" content="Explore football tournaments at MATCH-BOX. View tournament information, registration details, fixtures, rules, and results.">
-  <link id="mb-tournament-details-canonical" rel="canonical" href="https://match-box.example.com/tournament-details.html">
-  <meta id="mb-tournament-details-og-title" property="og:title" content="Tournament Details | MATCH-BOX Football Tournament">
-  <meta id="mb-tournament-details-og-desc" property="og:description" content="Explore football tournaments at MATCH-BOX. View tournament information, registration details, fixtures, rules, and results.">
-  <meta id="mb-tournament-details-og-img" property="og:image" content="">
-  <meta property="og:type" content="website">
+  <title>My Dashboard | MATCH-BOX</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="MATCH-BOX customer dashboard for managing football bookings, coaching registrations, tournament participation, and event enquiries.">
   <style>
     /* ============================================
-       TOURNAMENT DETAILS PAGE – SCOPED STYLES
-       Prefix: mb-tournament-details-
+       CUSTOMER DASHBOARD – SCOPED STYLES
+       Prefix: mb-user-
        ============================================ */
 
-    .mb-tournament-details-main {
-      --mb-td-charcoal: #101511;
-      --mb-td-deep: #080B09;
-      --mb-td-lime: #B7F34A;
-      --mb-td-forest: #285C35;
-      --mb-td-white: #FFFFFF;
-      --mb-td-light: #F5F7F2;
-      --mb-td-border: #d9e0d9;
-      --mb-td-muted: #6b7a6e;
-      --mb-td-error: #c0392b;
-      --mb-td-warn: #e0b83a;
-      --mb-td-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.15);
-      --mb-td-shadow-lg: 0 20px 40px -12px rgba(0,0,0,0.25);
-      --mb-td-radius: 1.25rem;
-      --mb-td-radius-btn: 3rem;
-      --mb-td-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: var(--mb-td-white);
-      color: var(--mb-td-charcoal);
-      font-family: var(--mb-td-font);
-      line-height: 1.65;
+    .mb-user-app {
+      --mb-u-charcoal: #101511;
+      --mb-u-deep: #080B09;
+      --mb-u-lime: #B7F34A;
+      --mb-u-forest: #285C35;
+      --mb-u-white: #FFFFFF;
+      --mb-u-light: #F5F7F2;
+      --mb-u-border: #d9e0d9;
+      --mb-u-muted: #6b7a6e;
+      --mb-u-error: #c0392b;
+      --mb-u-warn: #e0b83a;
+      --mb-u-info: #3b82f6;
+      --mb-u-success: #5cb85c;
+      --mb-u-shadow-sm: 0 2px 8px -2px rgba(0,0,0,0.08);
+      --mb-u-shadow-md: 0 8px 20px -8px rgba(0,0,0,0.15);
+      --mb-u-radius: 1rem;
+      --mb-u-radius-sm: 0.6rem;
+      --mb-u-radius-btn: 3rem;
+      --mb-u-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      --mb-u-sidebar-w: 260px;
+      --mb-u-sidebar-collapsed-w: 72px;
+      --mb-u-header-h: 64px;
+      background: var(--mb-u-light);
+      color: var(--mb-u-charcoal);
+      font-family: var(--mb-u-font);
+      font-size: 14px;
+      line-height: 1.55;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--mb-u-sidebar-w) 1fr;
+      grid-template-rows: var(--mb-u-header-h) 1fr;
+      grid-template-areas:
+        "sidebar header"
+        "sidebar main";
       overflow-x: clip;
       width: 100%;
       max-width: 100%;
     }
 
-    .mb-tournament-details-main *,
-    .mb-tournament-details-main *::before,
-    .mb-tournament-details-main *::after {
+    .mb-user-app *,
+    .mb-user-app *::before,
+    .mb-user-app *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    .mb-tournament-details-container {
-      width: 100%;
-      max-width: 1280px;
-      margin-inline: auto;
-      padding-inline: clamp(1rem, 5vw, 4rem);
+    .mb-user-app.mb-user-sidebar-collapsed {
+      grid-template-columns: var(--mb-u-sidebar-collapsed-w) 1fr;
     }
 
-    .mb-tournament-details-btn {
-      display: inline-flex;
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .mb-user-sidebar {
+      grid-area: sidebar;
+      background: var(--mb-u-charcoal);
+      color: var(--mb-u-white);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+      z-index: 200;
+      transition: width 0.2s ease, transform 0.25s ease;
+    }
+
+    .mb-user-sidebar__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+      min-height: var(--mb-u-header-h);
+    }
+
+    .mb-user-sidebar__logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 0.6rem;
+      background: var(--mb-u-lime);
+      color: var(--mb-u-deep);
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-size: 0.8rem;
-      padding: 0.8rem 1.7rem;
-      border-radius: var(--mb-td-radius-btn);
-      border: 2px solid transparent;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
-      background: transparent;
-      font-family: inherit;
-      line-height: 1.2;
-      text-align: center;
-    }
-
-    .mb-tournament-details-btn:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 3px; }
-    .mb-tournament-details-btn--primary { background: var(--mb-td-lime); color: var(--mb-td-deep); border-color: var(--mb-td-lime); }
-    .mb-tournament-details-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
-    .mb-tournament-details-btn--outline { border-color: rgba(255,255,255,0.4); color: var(--mb-td-white); }
-    .mb-tournament-details-btn--outline:hover { border-color: var(--mb-td-lime); color: var(--mb-td-lime); }
-    .mb-tournament-details-btn--dark { background: var(--mb-td-charcoal); color: var(--mb-td-white); border-color: var(--mb-td-charcoal); }
-    .mb-tournament-details-btn--dark:hover { background: #1f2a21; border-color: #1f2a21; }
-    .mb-tournament-details-btn--ghost { border-color: var(--mb-td-border); color: var(--mb-td-charcoal); background: var(--mb-td-white); }
-    .mb-tournament-details-btn--ghost:hover { border-color: var(--mb-td-forest); }
-    .mb-tournament-details-btn--full { width: 100%; }
-    .mb-tournament-details-btn[disabled],
-    .mb-tournament-details-btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; pointer-events: none; transform: none; }
-
-    .mb-tournament-details-hidden { display: none !important; }
-
-    /* BREADCRUMB */
-    .mb-tournament-details-breadcrumb-bar {
-      background: var(--mb-td-white);
-      border-bottom: 1px solid var(--mb-td-border);
-      padding-block: 0.85rem;
-    }
-
-    .mb-tournament-details-breadcrumb {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.78rem;
-      color: var(--mb-td-muted);
-    }
-
-    .mb-tournament-details-breadcrumb a { color: var(--mb-td-forest); text-decoration: none; font-weight: 600; }
-    .mb-tournament-details-breadcrumb a:hover { text-decoration: underline; }
-    .mb-tournament-details-breadcrumb a:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 2px; border-radius: 2px; }
-    .mb-tournament-details-breadcrumb__sep { color: #b0b8b1; }
-
-    /* HERO */
-    .mb-tournament-details-hero {
-      position: relative;
-      background: var(--mb-td-deep);
-      color: var(--mb-td-white);
-      padding-block: clamp(2.5rem, 7vw, 5rem);
-      overflow: hidden;
-      overflow-x: clip;
-      width: 100%;
-      max-width: 100%;
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-    }
-
-    .mb-tournament-details-hero__bg { position: absolute; inset: 0; z-index: 1; background: var(--mb-td-deep); }
-    .mb-tournament-details-hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
-
-    .mb-tournament-details-hero__overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(110deg, rgba(8,11,9,0.95) 0%, rgba(8,11,9,0.84) 55%, rgba(8,11,9,0.62) 100%);
-      z-index: 2;
-    }
-
-    .mb-tournament-details-hero::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: -100px;
-      width: 320px;
-      height: 320px;
-      border: 2px solid rgba(183,243,74,0.14);
-      border-radius: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .mb-tournament-details-hero__inner { position: relative; z-index: 4; max-width: 900px; width: 100%; }
-
-    .mb-tournament-details-hero__label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(183,243,74,0.13);
-      border-left: 4px solid var(--mb-td-lime);
-      padding: 0.45rem 1.1rem;
-      border-radius: 0 2rem 2rem 0;
-      font-weight: 700;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--mb-td-lime);
-      margin-bottom: 1.25rem;
-    }
-
-    .mb-tournament-details-hero__title {
-      font-size: clamp(1.9rem, 6.5vw, 3.6rem);
       font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-      word-break: break-word;
-    }
-
-    .mb-tournament-details-hero__desc {
-      font-size: clamp(0.92rem, 3.4vw, 1.1rem);
-      color: rgba(255,255,255,0.87);
-      max-width: 62ch;
-      line-height: 1.65;
-      margin-bottom: 1.5rem;
-    }
-
-    .mb-tournament-details-hero__meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem 1.5rem;
-      margin-bottom: 1.75rem;
       font-size: 0.85rem;
-      color: rgba(255,255,255,0.78);
+      flex-shrink: 0;
     }
 
-    .mb-tournament-details-hero__meta-item { display: inline-flex; align-items: center; gap: 0.4rem; }
-    .mb-tournament-details-hero__meta-item svg { width: 15px; height: 15px; fill: var(--mb-td-lime); flex-shrink: 0; }
+    .mb-user-sidebar__brand-text { min-width: 0; }
+    .mb-user-sidebar__brand-name { font-size: 1rem; font-weight: 800; letter-spacing: 0.02em; color: var(--mb-u-white); white-space: nowrap; }
+    .mb-user-sidebar__brand-sub { font-size: 0.7rem; color: var(--mb-u-lime); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
 
-    .mb-tournament-details-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .mb-user-sidebar__nav {
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      flex: 1;
+    }
 
-    /* STATUS BADGE */
-    .mb-tournament-details-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.45rem 1rem;
-      border-radius: 3rem;
-      font-size: 0.72rem;
-      font-weight: 800;
+    .mb-user-nav-group__title {
+      font-size: 0.65rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1.25rem;
-      border: 1px solid transparent;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+      padding: 0 0.75rem;
+      margin-bottom: 0.4rem;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
-    .mb-tournament-details-hero .mb-tournament-details-status--open { background: rgba(183,243,74,0.18); color: var(--mb-td-lime); border-color: rgba(183,243,74,0.4); }
-    .mb-tournament-details-hero .mb-tournament-details-status--soon { background: rgba(59,130,246,0.2); color: #9ac1ff; border-color: rgba(59,130,246,0.4); }
-    .mb-tournament-details-hero .mb-tournament-details-status--full { background: rgba(224,184,58,0.2); color: #f2d574; border-color: rgba(224,184,58,0.4); }
-    .mb-tournament-details-hero .mb-tournament-details-status--closed { background: rgba(180,190,185,0.15); color: #c4ccc6; border-color: rgba(180,190,185,0.3); }
-    .mb-tournament-details-hero .mb-tournament-details-status--completed { background: rgba(255,255,255,0.1); color: #d4dcd6; border-color: rgba(255,255,255,0.2); }
-    .mb-tournament-details-hero .mb-tournament-details-status--postponed { background: rgba(224,184,58,0.2); color: #f2d574; border-color: rgba(224,184,58,0.4); }
-    .mb-tournament-details-hero .mb-tournament-details-status--cancelled { background: rgba(192,57,43,0.2); color: #f5a49b; border-color: rgba(192,57,43,0.4); }
+    .mb-user-nav-group__list { list-style: none; display: flex; flex-direction: column; gap: 0.15rem; }
 
-    .mb-tournament-details-status--open { background: rgba(92,184,92,0.16); color: #2e6b2e; border-color: rgba(92,184,92,0.4); }
-    .mb-tournament-details-status--soon { background: rgba(59,130,246,0.14); color: #1e5bb8; border-color: rgba(59,130,246,0.35); }
-    .mb-tournament-details-status--full { background: rgba(224,184,58,0.18); color: #8a6a10; border-color: rgba(224,184,58,0.4); }
-    .mb-tournament-details-status--closed { background: rgba(127,140,141,0.14); color: #4a5a5b; border-color: rgba(127,140,141,0.35); }
-    .mb-tournament-details-status--completed { background: rgba(16,21,17,0.08); color: #2e3a30; border-color: rgba(16,21,17,0.2); }
-    .mb-tournament-details-status--postponed { background: rgba(224,184,58,0.18); color: #8a6a10; border-color: rgba(224,184,58,0.4); }
-    .mb-tournament-details-status--cancelled { background: rgba(192,57,43,0.1); color: #a93226; border-color: rgba(192,57,43,0.35); }
-
-    /* SECTIONS */
-    .mb-tournament-details-section { padding-block: clamp(2.5rem, 6vw, 4rem); background: var(--mb-td-white); }
-    .mb-tournament-details-section--light { background: var(--mb-td-light); }
-
-    .mb-tournament-details-section__heading {
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 0.65rem;
+    .mb-user-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--mb-u-radius-sm);
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
     }
 
-    .mb-tournament-details-section__desc {
-      font-size: 0.92rem;
-      color: #5a6a5e;
-      max-width: 65ch;
-      line-height: 1.65;
-      margin-bottom: 2rem;
+    .mb-user-nav-link:hover { background: rgba(255,255,255,0.08); color: var(--mb-u-white); }
+    .mb-user-nav-link:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+    .mb-user-nav-link.mb-user-nav-link--active { background: rgba(183,243,74,0.15); color: var(--mb-u-lime); font-weight: 700; border-left: 3px solid var(--mb-u-lime); padding-left: calc(0.75rem - 3px); }
+    .mb-user-nav-link.mb-user-nav-link--danger { color: #ff9b95; }
+    .mb-user-nav-link.mb-user-nav-link--danger:hover { background: rgba(192,57,43,0.18); color: #ffb8b3; }
+
+    .mb-user-nav-link svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+
+    .mb-user-sidebar-collapsed .mb-user-sidebar__brand-text,
+    .mb-user-sidebar-collapsed .mb-user-nav-group__title,
+    .mb-user-sidebar-collapsed .mb-user-nav-link span {
+      display: none;
     }
 
-    /* ABOUT */
-    .mb-tournament-details-about {
-      background: var(--mb-td-white);
-      border-radius: var(--mb-td-radius);
-      border: 1px solid var(--mb-td-border);
-      padding: clamp(1.5rem, 4vw, 2rem);
-      box-shadow: var(--mb-td-shadow-sm);
+    .mb-user-sidebar-collapsed .mb-user-nav-link {
+      justify-content: center;
+      padding: 0.65rem 0.5rem;
     }
 
-    .mb-tournament-details-about p {
-      font-size: 0.95rem;
-      color: #3a4a3e;
-      line-height: 1.75;
-      margin-bottom: 1rem;
-      max-width: 75ch;
+    .mb-user-sidebar-collapsed .mb-user-sidebar__brand {
+      justify-content: center;
+      padding-inline: 0.5rem;
     }
 
-    .mb-tournament-details-about p:last-child { margin-bottom: 0; }
-
-    /* DASHBOARD */
-    .mb-tournament-details-dashboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.1rem;
-      margin-top: 2rem;
+    .mb-user-sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,9,0.55);
+      z-index: 150;
     }
 
-    .mb-tournament-details-dash-card {
-      background: var(--mb-td-white);
-      border-radius: var(--mb-td-radius);
-      border: 1px solid var(--mb-td-border);
-      padding: 1.4rem 1.25rem;
-      transition: transform 0.25s, border-color 0.25s;
+    .mb-user-sidebar-overlay.active { display: block; }
+
+    /* ============================================
+       TOP HEADER
+       ============================================ */
+    .mb-user-header {
+      grid-area: header;
+      background: var(--mb-u-white);
+      border-bottom: 1px solid var(--mb-u-border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--mb-u-header-h);
     }
 
-    .mb-tournament-details-dash-card:hover { transform: translateY(-3px); border-color: var(--mb-td-forest); }
-
-    .mb-tournament-details-dash-card__icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 0.7rem;
-      background: rgba(40,92,53,0.08);
+    .mb-user-header__toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--mb-u-border);
+      background: var(--mb-u-white);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 0.9rem;
+      color: var(--mb-u-charcoal);
+      flex-shrink: 0;
     }
 
-    .mb-tournament-details-dash-card__icon svg { width: 20px; height: 20px; fill: var(--mb-td-forest); }
-    .mb-tournament-details-dash-card__label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-td-muted); margin-bottom: 0.3rem; }
-    .mb-tournament-details-dash-card__value { font-size: 1rem; font-weight: 800; color: var(--mb-td-charcoal); line-height: 1.4; word-break: break-word; }
+    .mb-user-header__toggle:hover { background: var(--mb-u-light); }
+    .mb-user-header__toggle:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+    .mb-user-header__toggle svg { width: 18px; height: 18px; fill: currentColor; }
 
-    /* FORMAT */
-    .mb-tournament-details-format-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
+    .mb-user-header__title-block { min-width: 0; }
+    .mb-user-header__title { font-size: 1rem; font-weight: 800; color: var(--mb-u-charcoal); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mb-user-header__breadcrumb { font-size: 0.72rem; color: var(--mb-u-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .mb-user-header__actions { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
+
+    .mb-user-header__icon-btn {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--mb-u-charcoal);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
     }
 
-    .mb-tournament-details-rule-card {
-      background: var(--mb-td-white);
-      border-radius: var(--mb-td-radius);
-      border: 1px solid var(--mb-td-border);
-      border-top: 3px solid var(--mb-td-forest);
-      padding: 1.25rem 1.15rem;
+    .mb-user-header__icon-btn:hover { background: var(--mb-u-light); }
+    .mb-user-header__icon-btn:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+    .mb-user-header__icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .mb-user-header__badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 3rem;
+      background: var(--mb-u-error);
+      color: var(--mb-u-white);
+      font-size: 0.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
     }
 
-    .mb-tournament-details-rule-card__title { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mb-td-forest); margin-bottom: 0.5rem; }
-    .mb-tournament-details-rule-card__desc { font-size: 0.88rem; color: #3a4a3e; line-height: 1.6; }
+    .mb-user-header__profile {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+      border-radius: var(--mb-u-radius-btn);
+      border: 1px solid var(--mb-u-border);
+      cursor: pointer;
+      background: var(--mb-u-white);
+      font-family: inherit;
+      position: relative;
+    }
 
-    .mb-tournament-details-format-note {
+    .mb-user-header__profile:hover { border-color: var(--mb-u-forest); }
+    .mb-user-header__profile:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+
+    .mb-user-header__avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--mb-u-forest);
+      color: var(--mb-u-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .mb-user-header__profile-text { display: none; text-align: left; }
+    @media (min-width: 768px) { .mb-user-header__profile-text { display: block; } }
+    .mb-user-header__profile-name { font-size: 0.8rem; font-weight: 700; color: var(--mb-u-charcoal); line-height: 1.2; }
+    .mb-user-header__profile-role { font-size: 0.65rem; color: var(--mb-u-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+
+    .mb-user-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 220px;
+      background: var(--mb-u-white);
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius);
+      box-shadow: var(--mb-u-shadow-md);
+      padding: 0.4rem;
+      z-index: 300;
+      display: none;
+    }
+
+    .mb-user-dropdown.active { display: block; }
+
+    .mb-user-dropdown__item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: var(--mb-u-radius-sm);
+      color: var(--mb-u-charcoal);
+      text-decoration: none;
+      font-size: 0.82rem;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .mb-user-dropdown__item:hover { background: var(--mb-u-light); }
+    .mb-user-dropdown__item:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+    .mb-user-dropdown__item svg { width: 16px; height: 16px; fill: var(--mb-u-muted); flex-shrink: 0; }
+    .mb-user-dropdown__item--danger { color: var(--mb-u-error); }
+    .mb-user-dropdown__item--danger svg { fill: var(--mb-u-error); }
+
+    .mb-user-dropdown__divider { height: 1px; background: var(--mb-u-border); margin: 0.4rem 0; }
+
+    .mb-user-notifications {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 320px;
+      max-width: calc(100vw - 2rem);
+      background: var(--mb-u-white);
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius);
+      box-shadow: var(--mb-u-shadow-md);
+      z-index: 300;
+      display: none;
+    }
+
+    .mb-user-notifications.active { display: block; }
+
+    .mb-user-notifications__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--mb-u-border);
+    }
+
+    .mb-user-notifications__title { font-size: 0.85rem; font-weight: 800; }
+    .mb-user-notifications__list { max-height: 340px; overflow-y: auto; }
+
+    .mb-user-notification {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--mb-u-border);
+      font-size: 0.8rem;
+    }
+
+    .mb-user-notification:last-child { border-bottom: none; }
+    .mb-user-notification__title { font-weight: 700; color: var(--mb-u-charcoal); margin-bottom: 0.15rem; }
+    .mb-user-notification__meta { font-size: 0.7rem; color: var(--mb-u-muted); }
+
+    .mb-user-notifications__empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--mb-u-muted);
+    }
+
+    /* ============================================
+       MAIN
+       ============================================ */
+    .mb-user-main {
+      grid-area: main;
+      padding: clamp(1rem, 2.5vw, 1.75rem);
+      min-width: 0;
+      overflow-x: clip;
+    }
+
+    .mb-user-page { display: none; }
+    .mb-user-page.mb-user-page--active { display: block; }
+
+    .mb-user-page-header { margin-bottom: 1.5rem; }
+    .mb-user-page-title { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; color: var(--mb-u-charcoal); margin-bottom: 0.25rem; letter-spacing: -0.01em; }
+    .mb-user-page-desc { font-size: 0.85rem; color: var(--mb-u-muted); line-height: 1.55; }
+
+    .mb-user-demo-banner {
       display: flex;
       align-items: flex-start;
       gap: 0.6rem;
-      background: var(--mb-td-white);
-      border-left: 4px solid var(--mb-td-forest);
-      border-radius: 0.85rem;
-      padding: 1rem 1.15rem;
-      margin-block: 1.5rem;
-      font-size: 0.87rem;
-      color: #3a4a3e;
-      line-height: 1.65;
-      max-width: 780px;
-    }
-
-    .mb-tournament-details-format-note svg { width: 18px; height: 18px; fill: var(--mb-td-forest); flex-shrink: 0; margin-top: 0.1rem; }
-
-    /* SCHEDULE */
-    .mb-tournament-details-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-
-    .mb-tournament-details-filter {
-      padding: 0.55rem 1.1rem;
-      border-radius: 3rem;
-      border: 2px solid var(--mb-td-border);
-      background: var(--mb-td-white);
-      color: var(--mb-td-charcoal);
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-      font-family: inherit;
-    }
-
-    .mb-tournament-details-filter:hover { border-color: var(--mb-td-forest); }
-    .mb-tournament-details-filter:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 2px; }
-    .mb-tournament-details-filter--active { background: var(--mb-td-charcoal); color: var(--mb-td-white); border-color: var(--mb-td-charcoal); }
-
-    .mb-tournament-details-match-list { display: flex; flex-direction: column; gap: 0.7rem; max-width: 900px; }
-
-    .mb-tournament-details-match {
-      background: var(--mb-td-white);
-      border: 1px solid var(--mb-td-border);
-      border-radius: 1rem;
-      padding: 1rem 1.15rem;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .mb-tournament-details-match__num {
-      flex-shrink: 0;
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 0.6rem;
-      background: var(--mb-td-light);
-      color: var(--mb-td-forest);
-      font-weight: 800;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mb-tournament-details-match__body { min-width: 0; }
-    .mb-tournament-details-match__round { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-td-muted); margin-bottom: 0.2rem; }
-    .mb-tournament-details-match__teams { font-size: 0.92rem; font-weight: 700; color: var(--mb-td-charcoal); margin-bottom: 0.2rem; }
-    .mb-tournament-details-match__meta { font-size: 0.78rem; color: var(--mb-td-muted); }
-    .mb-tournament-details-match__score { font-size: 1rem; font-weight: 800; color: var(--mb-td-charcoal); text-align: right; white-space: nowrap; }
-
-    /* TEAMS */
-    .mb-tournament-details-teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
-
-    .mb-tournament-details-team {
-      background: var(--mb-td-white);
-      border: 1px solid var(--mb-td-border);
-      border-radius: 1rem;
-      padding: 1.25rem 1.15rem;
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-
-    .mb-tournament-details-team__logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 0.6rem;
-      background: var(--mb-td-forest);
-      color: var(--mb-td-white);
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .mb-tournament-details-team__logo img { width: 100%; height: 100%; object-fit: cover; }
-    .mb-tournament-details-team__name { font-size: 0.92rem; font-weight: 800; color: var(--mb-td-charcoal); }
-
-    /* REGISTRATION */
-    .mb-tournament-details-registration {
-      background: var(--mb-td-white);
-      border: 1px solid var(--mb-td-border);
-      border-radius: var(--mb-td-radius);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      box-shadow: var(--mb-td-shadow-sm);
-      max-width: 860px;
-    }
-
-    .mb-tournament-details-registration__row {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--mb-td-border);
-      font-size: 0.9rem;
-    }
-
-    .mb-tournament-details-registration__row:last-child { border-bottom: none; }
-    .mb-tournament-details-registration__row span:first-child { color: var(--mb-td-muted); }
-    .mb-tournament-details-registration__row span:last-child { font-weight: 700; color: var(--mb-td-charcoal); text-align: right; }
-
-    .mb-tournament-details-progress-bar {
-      height: 16px;
-      background: var(--mb-td-light);
-      border-radius: 3rem;
-      overflow: hidden;
-      margin-bottom: 0.6rem;
-      border: 1px solid var(--mb-td-border);
-    }
-
-    .mb-tournament-details-progress-bar__fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--mb-td-forest), var(--mb-td-lime));
-      border-radius: 3rem;
-      transition: width 0.6s ease;
-    }
-
-    .mb-tournament-details-progress-stats {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+      background: #fff8e1;
+      border: 1px solid #f0d97a;
+      border-left: 4px solid #e0b83a;
+      border-radius: var(--mb-u-radius-sm);
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
       font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--mb-td-muted);
-      margin-bottom: 1.25rem;
-      flex-wrap: wrap;
+      color: #6b5a1f;
+      line-height: 1.55;
     }
 
-    .mb-tournament-details-registration .mb-tournament-details-btn { margin-top: 1rem; }
+    .mb-user-demo-banner svg { width: 16px; height: 16px; fill: #b8962a; flex-shrink: 0; margin-top: 0.1rem; }
 
-    /* RESULTS */
-    .mb-tournament-details-results-block { margin-bottom: 2rem; }
-    .mb-tournament-details-results-block:last-child { margin-bottom: 0; }
-    .mb-tournament-details-results-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 1rem; color: var(--mb-td-charcoal); text-transform: uppercase; letter-spacing: 0.02em; }
-
-    .mb-tournament-details-table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--mb-td-border);
-      border-radius: 0.85rem;
-      background: var(--mb-td-white);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .mb-tournament-details-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 520px; }
-
-    .mb-tournament-details-table th,
-    .mb-tournament-details-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--mb-td-border); white-space: nowrap; }
-
-    .mb-tournament-details-table th {
-      background: var(--mb-td-light);
-      font-weight: 800;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--mb-td-forest);
-    }
-
-    .mb-tournament-details-table tr:last-child td { border-bottom: none; }
-    .mb-tournament-details-table td:first-child { font-weight: 800; color: var(--mb-td-forest); }
-
-    /* UPDATES */
-    .mb-tournament-details-updates { display: flex; flex-direction: column; gap: 0.75rem; max-width: 780px; }
-
-    .mb-tournament-details-update {
-      background: var(--mb-td-white);
-      border: 1px solid var(--mb-td-border);
-      border-left: 4px solid var(--mb-td-forest);
-      border-radius: 0.85rem;
-      padding: 1rem 1.15rem;
-    }
-
-    .mb-tournament-details-update__meta {
-      font-size: 0.7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--mb-td-forest);
-      margin-bottom: 0.35rem;
-    }
-
-    .mb-tournament-details-update__title { font-size: 0.94rem; font-weight: 800; color: var(--mb-td-charcoal); margin-bottom: 0.3rem; }
-    .mb-tournament-details-update__desc { font-size: 0.87rem; color: #4a5a4e; line-height: 1.6; }
-
-    /* GALLERY */
-    .mb-tournament-details-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; }
-
-    .mb-tournament-details-gallery__item {
-      border-radius: 1rem;
-      overflow: hidden;
-      cursor: pointer;
-      aspect-ratio: 4 / 3;
-      background: #d9e0d9;
-      border: none;
-      padding: 0;
-    }
-
-    .mb-tournament-details-gallery__item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-    .mb-tournament-details-gallery__item:hover img { transform: scale(1.05); }
-    .mb-tournament-details-gallery__item:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 3px; }
-
-    .mb-tournament-details-lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(8,11,9,0.94);
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .mb-tournament-details-lightbox.active { display: flex; }
-
-    .mb-tournament-details-lightbox img {
-      max-width: 90vw;
-      max-height: 85vh;
-      border-radius: 1rem;
-      box-shadow: 0 30px 50px rgba(0,0,0,0.8);
-      object-fit: contain;
-    }
-
-    .mb-tournament-details-lightbox__close {
-      position: absolute;
-      top: 1.25rem;
-      right: 1.5rem;
-      width: 2.75rem;
-      height: 2.75rem;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
-      font-size: 1.4rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mb-tournament-details-lightbox__close:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 2px; }
-
-    /* FAQ */
-    .mb-tournament-details-faq { max-width: 860px; display: flex; flex-direction: column; gap: 0.55rem; }
-
-    .mb-tournament-details-faq__item {
-      border: 1px solid var(--mb-td-border);
-      border-radius: 0.95rem;
-      overflow: hidden;
-      background: var(--mb-td-white);
-      transition: border-color 0.2s;
-    }
-
-    .mb-tournament-details-faq__item[data-open="true"] { border-color: var(--mb-td-forest); }
-
-    .mb-tournament-details-faq__question {
-      width: 100%;
-      background: none;
-      border: none;
-      padding: 0.95rem 1.1rem;
-      font-size: 0.9rem;
-      font-weight: 700;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      color: var(--mb-td-charcoal);
-      font-family: inherit;
-      line-height: 1.45;
-    }
-
-    .mb-tournament-details-faq__question:hover { background: var(--mb-td-light); }
-    .mb-tournament-details-faq__question:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: -3px; border-radius: 0.95rem; }
-
-    .mb-tournament-details-faq__icon {
-      flex-shrink: 0;
-      width: 22px;
-      height: 22px;
+    /* ============================================
+       WELCOME / HERO
+       ============================================ */
+    .mb-user-welcome {
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 0.1rem;
+      background: linear-gradient(120deg, var(--mb-u-charcoal) 0%, var(--mb-u-forest) 100%);
+      color: var(--mb-u-white);
+      border-radius: var(--mb-u-radius);
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
     }
 
-    .mb-tournament-details-faq__icon::before,
-    .mb-tournament-details-faq__icon::after {
+    .mb-user-welcome::after {
       content: '';
       position: absolute;
-      background: var(--mb-td-forest);
-      border-radius: 2px;
-      transition: transform 0.25s ease, background 0.2s;
+      top: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      border: 2px solid rgba(183,243,74,0.2);
+      border-radius: 50%;
+      pointer-events: none;
     }
 
-    .mb-tournament-details-faq__icon::before { width: 13px; height: 2px; }
-    .mb-tournament-details-faq__icon::after { width: 2px; height: 13px; }
-    .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__icon::after { transform: rotate(90deg) scaleY(0); }
-    .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__icon::before { background: var(--mb-td-lime); }
+    .mb-user-welcome > * { position: relative; z-index: 1; }
+    .mb-user-welcome__title { font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 800; line-height: 1.2; margin-bottom: 0.5rem; }
+    .mb-user-welcome__title span { color: var(--mb-u-lime); }
+    .mb-user-welcome__desc { font-size: 0.92rem; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 60ch; margin-bottom: 1.25rem; }
+    .mb-user-welcome__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .mb-user-welcome__next {
+      margin-top: 1.25rem;
+      padding: 0.85rem 1rem;
+      background: rgba(255,255,255,0.08);
+      border-left: 3px solid var(--mb-u-lime);
+      border-radius: 0 var(--mb-u-radius-sm) var(--mb-u-radius-sm) 0;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .mb-user-welcome__next strong { color: var(--mb-u-lime); }
 
-    .mb-tournament-details-faq__answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 1.1rem; }
-    .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__answer { max-height: 400px; padding: 0 1.1rem 1.1rem; }
-    .mb-tournament-details-faq__answer p { font-size: 0.86rem; color: #4a5a4e; line-height: 1.65; }
+    /* ============================================
+       BUTTONS
+       ============================================ */
+    .mb-user-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--mb-u-radius-btn);
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      background: transparent;
+      font-family: inherit;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
 
-    /* RELATED */
-    .mb-tournament-details-related { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.15rem; }
+    .mb-user-btn:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+    .mb-user-btn--primary { background: var(--mb-u-lime); color: var(--mb-u-deep); border-color: var(--mb-u-lime); }
+    .mb-user-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+    .mb-user-btn--dark { background: var(--mb-u-charcoal); color: var(--mb-u-white); border-color: var(--mb-u-charcoal); }
+    .mb-user-btn--dark:hover { background: #1f2a21; border-color: #1f2a21; }
+    .mb-user-btn--outline { border-color: rgba(255,255,255,0.4); color: var(--mb-u-white); }
+    .mb-user-btn--outline:hover { border-color: var(--mb-u-lime); color: var(--mb-u-lime); }
+    .mb-user-btn--ghost { border-color: var(--mb-u-border); color: var(--mb-u-charcoal); background: var(--mb-u-white); }
+    .mb-user-btn--ghost:hover { border-color: var(--mb-u-forest); }
+    .mb-user-btn--sm { padding: 0.35rem 0.75rem; font-size: 0.7rem; }
+    .mb-user-btn--full { width: 100%; }
+    .mb-user-btn--danger { border-color: var(--mb-u-error); color: var(--mb-u-error); }
+    .mb-user-btn--danger:hover { background: var(--mb-u-error); color: var(--mb-u-white); }
 
-    .mb-tournament-details-related-card {
-      background: var(--mb-td-white);
-      border-radius: var(--mb-td-radius);
-      overflow: hidden;
-      border: 1px solid var(--mb-td-border);
+    /* ============================================
+       OVERVIEW CARDS
+       ============================================ */
+    .mb-user-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .mb-user-kpi {
+      background: var(--mb-u-white);
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius);
+      padding: 1.15rem;
       display: flex;
       flex-direction: column;
       text-decoration: none;
       color: inherit;
-      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     }
 
-    .mb-tournament-details-related-card:hover { transform: translateY(-4px); border-color: var(--mb-td-forest); box-shadow: var(--mb-td-shadow-sm); }
-    .mb-tournament-details-related-card:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 3px; }
+    .mb-user-kpi:hover { transform: translateY(-2px); box-shadow: var(--mb-u-shadow-sm); border-color: var(--mb-u-forest); }
+    .mb-user-kpi:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
 
-    .mb-tournament-details-related-card__img { aspect-ratio: 16 / 9; overflow: hidden; background: #d9e0d9; }
-    .mb-tournament-details-related-card__img img { width: 100%; height: 100%; object-fit: cover; }
-
-    .mb-tournament-details-related-card__body { padding: 1.1rem 1.15rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
-    .mb-tournament-details-related-card__title { font-size: 1rem; font-weight: 800; color: var(--mb-td-charcoal); margin-bottom: 0.4rem; }
-    .mb-tournament-details-related-card__meta { font-size: 0.8rem; color: var(--mb-td-muted); margin-bottom: 0.75rem; }
-    .mb-tournament-details-related-card__cta { margin-top: auto; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-td-forest); }
-
-    /* FINAL CTA */
-    .mb-tournament-details-cta {
-      position: relative;
-      background: var(--mb-td-charcoal);
-      color: var(--mb-td-white);
-      border-radius: var(--mb-td-radius);
-      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
-      margin-block: clamp(2rem, 5vw, 3.5rem);
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .mb-tournament-details-cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(183,243,74,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(183,243,74,0.04) 1px, transparent 1px);
-      background-size: 44px 44px;
-      pointer-events: none;
-    }
-
-    .mb-tournament-details-cta > * { position: relative; z-index: 1; }
-
-    .mb-tournament-details-cta h2 {
-      font-size: clamp(1.4rem, 4vw, 2.3rem);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.02em;
-    }
-
-    .mb-tournament-details-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.8); line-height: 1.65; max-width: 60ch; margin: 0 auto 1.75rem; }
-    .mb-tournament-details-cta__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
-
-    /* LOADING SKELETON */
-    .mb-tournament-details-skeleton { padding-block: clamp(2rem, 5vw, 4rem); }
-
-    .mb-tournament-details-skeleton__block {
-      background: linear-gradient(90deg, #eef1ee 25%, #f6f8f6 50%, #eef1ee 75%);
-      background-size: 200% 100%;
-      animation: mbTdShimmer 1.4s infinite linear;
-      border-radius: 0.75rem;
-    }
-
-    @keyframes mbTdShimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* STATE PANELS */
-    .mb-tournament-details-state { padding-block: clamp(3rem, 8vw, 6rem); background: var(--mb-td-white); text-align: center; }
-
-    .mb-tournament-details-state__icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
+    .mb-user-kpi__icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 0.6rem;
       background: rgba(40,92,53,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.25rem;
+      margin-bottom: 0.85rem;
     }
 
-    .mb-tournament-details-state__icon svg { width: 30px; height: 30px; fill: var(--mb-td-forest); }
-    .mb-tournament-details-state--error .mb-tournament-details-state__icon { background: #fdecea; }
-    .mb-tournament-details-state--error .mb-tournament-details-state__icon svg { fill: var(--mb-td-error); }
+    .mb-user-kpi__icon svg { width: 18px; height: 18px; fill: var(--mb-u-forest); }
+    .mb-user-kpi__label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-u-muted); margin-bottom: 0.35rem; }
+    .mb-user-kpi__value { font-size: 1.6rem; font-weight: 800; color: var(--mb-u-charcoal); line-height: 1; margin-bottom: 0.35rem; }
+    .mb-user-kpi__value--muted { color: var(--mb-u-muted); font-size: 1rem; font-weight: 600; }
+    .mb-user-kpi__meta { font-size: 0.72rem; color: var(--mb-u-muted); line-height: 1.4; }
 
-    .mb-tournament-details-state h1 {
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
+    /* ============================================
+       CARDS
+       ============================================ */
+    .mb-user-card {
+      background: var(--mb-u-white);
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-user-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.15rem;
+      border-bottom: 1px solid var(--mb-u-border);
+      flex-wrap: wrap;
+    }
+
+    .mb-user-card__title { font-size: 0.92rem; font-weight: 800; color: var(--mb-u-charcoal); }
+    .mb-user-card__body { padding: 1.15rem; }
+
+    .mb-user-empty {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--mb-u-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .mb-user-empty svg { width: 32px; height: 32px; fill: var(--mb-u-border); display: block; margin: 0 auto 0.6rem; }
+    .mb-user-empty__title { font-weight: 800; color: var(--mb-u-charcoal); margin-bottom: 0.35rem; font-size: 0.9rem; }
+    .mb-user-empty .mb-user-btn { margin-top: 1rem; }
+
+    /* ============================================
+       BOOKING CARDS
+       ============================================ */
+    .mb-user-booking-list { display: flex; flex-direction: column; gap: 0.85rem; }
+
+    .mb-user-booking-card {
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius);
+      padding: 1.1rem 1.15rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.1rem;
+      align-items: center;
+      background: var(--mb-u-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .mb-user-booking-card:hover { border-color: var(--mb-u-forest); box-shadow: var(--mb-u-shadow-sm); }
+
+    .mb-user-booking-card__date {
+      flex-shrink: 0;
+      width: 3.5rem;
+      text-align: center;
+      background: var(--mb-u-light);
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.35rem;
+    }
+
+    .mb-user-booking-card__day { font-size: 1.3rem; font-weight: 800; line-height: 1; color: var(--mb-u-forest); }
+    .mb-user-booking-card__month { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-u-muted); margin-top: 0.15rem; }
+
+    .mb-user-booking-card__body { min-width: 0; }
+    .mb-user-booking-card__ref { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em; color: var(--mb-u-muted); margin-bottom: 0.2rem; }
+    .mb-user-booking-card__title { font-size: 0.92rem; font-weight: 800; color: var(--mb-u-charcoal); margin-bottom: 0.25rem; }
+    .mb-user-booking-card__meta { font-size: 0.8rem; color: var(--mb-u-muted); line-height: 1.5; }
+
+    .mb-user-booking-card__right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+    .mb-user-booking-card__amount { font-size: 0.95rem; font-weight: 800; color: var(--mb-u-charcoal); white-space: nowrap; }
+
+    /* ============================================
+       BADGES
+       ============================================ */
+    .mb-user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 3rem;
+      font-size: 0.65rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .mb-user-badge--pending { background: rgba(224,184,58,0.18); color: #8a6a10; }
+    .mb-user-badge--confirmed { background: rgba(92,184,92,0.16); color: #2e6b2e; }
+    .mb-user-badge--completed { background: rgba(40,92,53,0.12); color: #2e5a34; }
+    .mb-user-badge--cancelled { background: rgba(127,140,141,0.16); color: #4a5a5b; }
+    .mb-user-badge--rejected { background: rgba(192,57,43,0.12); color: #a93226; }
+    .mb-user-badge--new { background: rgba(59,130,246,0.14); color: #1e5bb8; }
+    .mb-user-badge--open { background: rgba(92,184,92,0.16); color: #2e6b2e; }
+
+    /* ============================================
+       TABLES
+       ============================================ */
+    .mb-user-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .mb-user-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 640px; }
+
+    .mb-user-table th, .mb-user-table td {
+      text-align: left;
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--mb-u-border);
+      white-space: nowrap;
+    }
+
+    .mb-user-table th {
+      background: var(--mb-u-light);
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-u-muted);
+    }
+
+    .mb-user-table tbody tr:hover { background: rgba(245,247,242,0.6); }
+    .mb-user-table tbody tr:last-child td { border-bottom: none; }
+
+    /* ============================================
+       FILTERS
+       ============================================ */
+    .mb-user-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .mb-user-filters input,
+    .mb-user-filters select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius-sm);
+      font-size: 0.8rem;
+      font-family: inherit;
+      background: var(--mb-u-white);
+      color: var(--mb-u-charcoal);
+    }
+
+    .mb-user-filters input:focus,
+    .mb-user-filters select:focus { outline: none; border-color: var(--mb-u-forest); }
+
+    /* ============================================
+       TABS
+       ============================================ */
+    .mb-user-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--mb-u-border);
+      padding-bottom: 0.65rem;
+    }
+
+    .mb-user-tab {
+      padding: 0.5rem 0.95rem;
+      border-radius: var(--mb-u-radius-btn);
+      border: 1px solid var(--mb-u-border);
+      background: var(--mb-u-white);
+      color: var(--mb-u-charcoal);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .mb-user-tab:hover { border-color: var(--mb-u-forest); }
+    .mb-user-tab:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+    .mb-user-tab.mb-user-tab--active { background: var(--mb-u-charcoal); color: var(--mb-u-white); border-color: var(--mb-u-charcoal); }
+
+    /* ============================================
+       MODAL
+       ============================================ */
+    .mb-user-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,9,0.55);
+      z-index: 900;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .mb-user-modal.active { display: flex; }
+
+    .mb-user-modal__content {
+      background: var(--mb-u-white);
+      border-radius: var(--mb-u-radius);
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .mb-user-modal__header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--mb-u-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mb-user-modal__title { font-size: 0.95rem; font-weight: 800; }
+    .mb-user-modal__close {
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--mb-u-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.4rem;
+    }
+    .mb-user-modal__close:hover { background: var(--mb-u-light); color: var(--mb-u-charcoal); }
+    .mb-user-modal__body { padding: 1.15rem 1.25rem; font-size: 0.87rem; line-height: 1.6; color: #4a5a4e; }
+    .mb-user-modal__footer { padding: 1rem 1.25rem; border-top: 1px solid var(--mb-u-border); display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; }
+
+    /* ============================================
+       TOASTS
+       ============================================ */
+    .mb-user-toast-container {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+
+    .mb-user-toast {
+      background: var(--mb-u-charcoal);
+      color: var(--mb-u-white);
+      padding: 0.7rem 1.1rem;
+      border-radius: var(--mb-u-radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: var(--mb-u-shadow-md);
+      max-width: 340px;
+      pointer-events: auto;
+      animation: mbUserToastIn 0.25s ease;
+    }
+
+    .mb-user-toast--info { border-left: 3px solid var(--mb-u-info); }
+    .mb-user-toast--warn { border-left: 3px solid var(--mb-u-warn); }
+    .mb-user-toast--error { border-left: 3px solid var(--mb-u-error); }
+
+    @keyframes mbUserToastIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================
+       PROFILE / SETTINGS FORMS
+       ============================================ */
+    .mb-user-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mb-user-field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-u-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .mb-user-field input,
+    .mb-user-field textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius-sm);
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--mb-u-white);
+      color: var(--mb-u-charcoal);
+    }
+
+    .mb-user-field input:focus,
+    .mb-user-field textarea:focus { outline: none; border-color: var(--mb-u-forest); }
+
+    .mb-user-field input[readonly] { background: var(--mb-u-light); color: var(--mb-u-muted); }
+
+    .mb-user-form-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    .mb-user-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.83rem;
+      color: #4a5a4e;
+      line-height: 1.5;
       margin-bottom: 0.6rem;
     }
 
-    .mb-tournament-details-state p {
-      font-size: 0.92rem;
-      color: #5a6a5e;
-      max-width: 55ch;
-      margin: 0 auto 1.75rem;
-      line-height: 1.65;
+    .mb-user-checkbox input { width: 16px; height: 16px; margin-top: 0.15rem; accent-color: var(--mb-u-forest); flex-shrink: 0; }
+
+    /* ============================================
+       HELP CARDS
+       ============================================ */
+    .mb-user-help-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
     }
 
-    .mb-tournament-details-state p a { color: var(--mb-td-forest); font-weight: 600; text-decoration: underline; }
-    .mb-tournament-details-state__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .mb-user-help-card {
+      background: var(--mb-u-white);
+      border: 1px solid var(--mb-u-border);
+      border-radius: var(--mb-u-radius);
+      padding: 1.25rem 1.15rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }
 
-    /* RESPONSIVE */
+    .mb-user-help-card:hover { transform: translateY(-3px); border-color: var(--mb-u-forest); }
+    .mb-user-help-card:focus-visible { outline: 2px solid var(--mb-u-lime); outline-offset: 2px; }
+
+    .mb-user-help-card__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 0.65rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .mb-user-help-card__icon svg { width: 18px; height: 18px; fill: var(--mb-u-forest); }
+    .mb-user-help-card__title { font-size: 0.9rem; font-weight: 800; color: var(--mb-u-charcoal); margin-bottom: 0.3rem; }
+    .mb-user-help-card__desc { font-size: 0.8rem; color: var(--mb-u-muted); line-height: 1.5; flex: 1; margin-bottom: 0.75rem; }
+    .mb-user-help-card__cta { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mb-u-forest); }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
     @media (max-width: 1024px) {
-      .mb-tournament-details-gallery { grid-template-columns: repeat(2, 1fr); }
-      .mb-tournament-details-match { grid-template-columns: auto 1fr; }
-      .mb-tournament-details-match__score { grid-column: 2; text-align: left; }
+      .mb-user-app { grid-template-columns: var(--mb-u-sidebar-collapsed-w) 1fr; }
+      .mb-user-app:not(.mb-user-sidebar-collapsed) .mb-user-sidebar__brand-text,
+      .mb-user-app:not(.mb-user-sidebar-collapsed) .mb-user-nav-group__title,
+      .mb-user-app:not(.mb-user-sidebar-collapsed) .mb-user-nav-link span { display: none; }
+      .mb-user-app:not(.mb-user-sidebar-collapsed) .mb-user-nav-link { justify-content: center; padding: 0.65rem 0.5rem; }
     }
 
     @media (max-width: 768px) {
-      .mb-tournament-details-hero::after { display: none; }
-      .mb-tournament-details-hero { overflow-x: clip; }
-      .mb-tournament-details-gallery { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 600px) {
-      .mb-tournament-details-hero__actions .mb-tournament-details-btn { width: 100%; }
-      .mb-tournament-details-cta__actions .mb-tournament-details-btn { width: 100%; }
-      .mb-tournament-details-state__actions .mb-tournament-details-btn { width: 100%; }
-      .mb-tournament-details-faq__question { font-size: 0.88rem; padding: 0.9rem 1rem; }
-      .mb-tournament-details-faq__answer { padding: 0 1rem; }
-      .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__answer { padding: 0 1rem 1rem; }
+      .mb-user-app {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "header"
+          "main";
+      }
+      .mb-user-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        transform: translateX(-100%);
+        z-index: 250;
+      }
+      .mb-user-app.mb-user-sidebar-open .mb-user-sidebar { transform: translateX(0); }
+      .mb-user-app.mb-user-sidebar-open .mb-user-sidebar-overlay { display: block; }
+      .mb-user-kpi-grid { grid-template-columns: 1fr; }
+      .mb-user-booking-card { grid-template-columns: 1fr; }
+      .mb-user-booking-card__right { align-items: flex-start; text-align: left; }
+      .mb-user-welcome__actions .mb-user-btn { width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .mb-tournament-details-main *,
-      .mb-tournament-details-main *::before,
-      .mb-tournament-details-main *::after {
+      .mb-user-app *,
+      .mb-user-app *::before,
+      .mb-user-app *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 <body>
-  <main class="mb-tournament-details-main" id="mb-tournament-details-main">
 
-    <!-- LOADING SKELETON -->
-    <div class="mb-tournament-details-skeleton" id="mb-tournament-details-skeleton" aria-hidden="true">
-      <div class="mb-tournament-details-container">
-        <div class="mb-tournament-details-skeleton__block" style="height: 22px; width: 40%; margin-bottom: 1rem;"></div>
-        <div class="mb-tournament-details-skeleton__block" style="height: 52px; width: 80%; margin-bottom: 1rem;"></div>
-        <div class="mb-tournament-details-skeleton__block" style="height: 22px; width: 60%; margin-bottom: 2rem;"></div>
-        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:1rem;">
-          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
-          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
-          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
-          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
-        </div>
-      </div>
-    </div>
+  <div class="mb-user-app" id="mb-user-app">
 
-    <!-- INVALID ID -->
-    <section class="mb-tournament-details-state mb-tournament-details-hidden" id="mb-tournament-details-invalid-id" aria-labelledby="mb-td-invalid-title">
-      <div class="mb-tournament-details-container">
-        <div class="mb-tournament-details-state__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-        </div>
-        <h1 id="mb-td-invalid-title">TOURNAMENT REFERENCE REQUIRED</h1>
-        <p id="mb-td-invalid-desc">No tournament reference was provided. Please choose a tournament below or visit the <a href="tournaments.html">tournaments page</a>.</p>
-        <div class="mb-tournament-details-state__actions" id="mb-td-invalid-actions">
-          <a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW ALL TOURNAMENTS</a>
-        </div>
-      </div>
-    </section>
+    <div class="mb-user-sidebar-overlay" id="mb-user-sidebar-overlay"></div>
 
-    <!-- NOT FOUND -->
-    <section class="mb-tournament-details-state mb-tournament-details-hidden" id="mb-tournament-details-not-found" aria-labelledby="mb-td-not-found-title">
-      <div class="mb-tournament-details-container">
-        <div class="mb-tournament-details-state__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-        </div>
-        <h1 id="mb-td-not-found-title">TOURNAMENT NOT FOUND</h1>
-        <p>We couldn't find this tournament. It may have been removed, unpublished, or the link may be incorrect.</p>
-        <div class="mb-tournament-details-state__actions">
-          <a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW ALL TOURNAMENTS</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- API ERROR -->
-    <section class="mb-tournament-details-state mb-tournament-details-state--error mb-tournament-details-hidden" id="mb-tournament-details-error" aria-labelledby="mb-td-error-title">
-      <div class="mb-tournament-details-container">
-        <div class="mb-tournament-details-state__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        </div>
-        <h1 id="mb-td-error-title">UNABLE TO LOAD TOURNAMENT</h1>
-        <p>Unable to load tournament information right now. Please try again later.</p>
-        <div class="mb-tournament-details-state__actions">
-          <button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--primary" id="mb-tournament-details-retry">TRY AGAIN</button>
-          <a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--ghost">VIEW ALL TOURNAMENTS</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTENT -->
-    <div id="mb-tournament-details-content" class="mb-tournament-details-hidden">
-
-      <div class="mb-tournament-details-breadcrumb-bar">
-        <div class="mb-tournament-details-container">
-          <nav class="mb-tournament-details-breadcrumb" aria-label="Breadcrumb">
-            <a href="index.html">Home</a>
-            <span class="mb-tournament-details-breadcrumb__sep" aria-hidden="true">/</span>
-            <a href="tournaments.html">Tournaments</a>
-            <span class="mb-tournament-details-breadcrumb__sep" aria-hidden="true">/</span>
-            <span aria-current="page" id="mb-tournament-details-crumb-current">Tournament Details</span>
-          </nav>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="mb-user-sidebar" id="mb-user-sidebar" aria-label="Customer dashboard navigation">
+      <div class="mb-user-sidebar__brand">
+        <div class="mb-user-sidebar__logo">MB</div>
+        <div class="mb-user-sidebar__brand-text">
+          <div class="mb-user-sidebar__brand-name">MATCH-BOX</div>
+          <div class="mb-user-sidebar__brand-sub">My Dashboard</div>
         </div>
       </div>
 
-      <section class="mb-tournament-details-hero" aria-labelledby="mb-tournament-details-hero-title">
-        <div class="mb-tournament-details-hero__bg">
-          <img id="mb-tournament-details-hero-img" src="" alt="">
+      <nav class="mb-user-sidebar__nav">
+        <div class="mb-user-nav-group">
+          <div class="mb-user-nav-group__title">Main Menu</div>
+          <ul class="mb-user-nav-group__list">
+            <li>
+              <a class="mb-user-nav-link mb-user-nav-link--active" data-page="overview" href="#overview">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span>Overview</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="bookings" href="#bookings">
+                <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                <span>My Bookings</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="history" href="#history">
+                <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+                <span>Booking History</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="coaching" href="#coaching">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></svg>
+                <span>Coaching</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="tournaments" href="#tournaments">
+                <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>
+                <span>My Tournaments</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="events" href="#events">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span>My Events</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="notifications" href="#notifications">
+                <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                <span>Notifications</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="profile" href="#profile">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="settings" href="#settings">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                <span>Account Settings</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link" data-page="help" href="#help">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                <span>Help &amp; Support</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="mb-tournament-details-hero__overlay"></div>
-        <div class="mb-tournament-details-container">
-          <div class="mb-tournament-details-hero__inner">
-            <div class="mb-tournament-details-hero__label" id="mb-tournament-details-hero-label">MATCH-BOX FOOTBALL TOURNAMENT</div>
-            <span class="mb-tournament-details-status" id="mb-tournament-details-status" aria-live="polite"></span>
-            <h1 id="mb-tournament-details-hero-title" class="mb-tournament-details-hero__title">Tournament Name</h1>
-            <p id="mb-tournament-details-hero-desc" class="mb-tournament-details-hero__desc"></p>
-            <div class="mb-tournament-details-hero__meta" id="mb-tournament-details-hero-meta"></div>
-            <div class="mb-tournament-details-hero__actions" id="mb-tournament-details-hero-actions"></div>
+
+        <div class="mb-user-nav-group">
+          <div class="mb-user-nav-group__title">Account</div>
+          <ul class="mb-user-nav-group__list">
+            <li>
+              <a class="mb-user-nav-link" href="index.html">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                <span>Back to Website</span>
+              </a>
+            </li>
+            <li>
+              <a class="mb-user-nav-link mb-user-nav-link--danger" href="#" id="mb-user-logout">
+                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ===== HEADER ===== -->
+    <header class="mb-user-header" id="mb-user-header">
+      <button type="button" class="mb-user-header__toggle" id="mb-user-toggle" aria-label="Toggle sidebar" aria-expanded="true">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+
+      <div class="mb-user-header__title-block">
+        <div class="mb-user-header__title" id="mb-user-page-title">Overview</div>
+        <div class="mb-user-header__breadcrumb" id="mb-user-breadcrumb">My Dashboard / Overview</div>
+      </div>
+
+      <div class="mb-user-header__actions">
+        <button type="button" class="mb-user-header__icon-btn" id="mb-user-notif-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <span class="mb-user-header__badge" id="mb-user-notif-count" style="display:none;">0</span>
+          <div class="mb-user-notifications" id="mb-user-notif-panel" role="region" aria-label="Notifications">
+            <div class="mb-user-notifications__header">
+              <span class="mb-user-notifications__title">Notifications</span>
+              <button type="button" class="mb-user-btn mb-user-btn--ghost mb-user-btn--sm" id="mb-user-mark-read">Mark all read</button>
+            </div>
+            <div class="mb-user-notifications__list" id="mb-user-notif-list">
+              <div class="mb-user-notifications__empty">No notifications yet.</div>
+            </div>
+          </div>
+        </button>
+
+        <button type="button" class="mb-user-header__profile" id="mb-user-profile-btn" aria-label="Open profile menu">
+          <div class="mb-user-header__avatar" id="mb-user-avatar-initial">C</div>
+          <div class="mb-user-header__profile-text">
+            <div class="mb-user-header__profile-name" id="mb-user-profile-name">Customer</div>
+            <div class="mb-user-header__profile-role">My Account</div>
+          </div>
+          <div class="mb-user-dropdown" id="mb-user-profile-menu" role="menu">
+            <a href="#profile" class="mb-user-dropdown__item" data-page="profile">
+              <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>
+              My Profile
+            </a>
+            <a href="#settings" class="mb-user-dropdown__item" data-page="settings">
+              <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/></svg>
+              Account Settings
+            </a>
+            <a href="#help" class="mb-user-dropdown__item" data-page="help">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+              Help &amp; Support
+            </a>
+            <div class="mb-user-dropdown__divider"></div>
+            <button type="button" class="mb-user-dropdown__item mb-user-dropdown__item--danger" id="mb-user-logout-menu">
+              <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+              Logout
+            </button>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="mb-user-main" id="mb-user-main">
+
+      <div class="mb-user-demo-banner">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <span><strong>Demo environment.</strong> This customer dashboard displays sample layout only. Real bookings, coaching registrations, tournaments, events, notifications, profile information and statistics will load from the MATCH-BOX backend once customer authentication (PHP/MySQL/PDO) is implemented.</span>
+      </div>
+
+      <!-- ===== OVERVIEW PAGE ===== -->
+      <div class="mb-user-page mb-user-page--active" data-page-content="overview">
+
+        <!-- Welcome -->
+        <div class="mb-user-welcome">
+          <div class="mb-user-welcome__title">Welcome back, <span id="mb-user-welcome-name">Customer</span>!</div>
+          <p class="mb-user-welcome__desc">
+            Ready for your next game? Manage your bookings, track your progress and stay connected with MATCH-BOX.
+          </p>
+          <div class="mb-user-welcome__actions">
+            <a href="book-to-play.html" class="mb-user-btn mb-user-btn--primary">BOOK A PITCH</a>
+            <a href="tournaments.html" class="mb-user-btn mb-user-btn--outline">EXPLORE TOURNAMENTS</a>
+          </div>
+          <div class="mb-user-welcome__next" id="mb-user-next-booking">
+            No upcoming bookings. Ready to get back on the pitch? <a href="book-to-play.html" style="color:var(--mb-u-lime);font-weight:700;text-decoration:underline;">Book Now</a>
           </div>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-section" aria-labelledby="mb-tournament-details-about-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-about-title" class="mb-tournament-details-section__heading">ABOUT THE TOURNAMENT</h2>
-          <div class="mb-tournament-details-about" id="mb-tournament-details-about"></div>
+        <!-- KPI Cards -->
+        <div class="mb-user-kpi-grid">
+          <a href="#bookings" class="mb-user-kpi" data-page="bookings">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+            <div class="mb-user-kpi__label">Total Bookings</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted" id="mb-user-kpi-total">Awaiting data</div>
+            <div class="mb-user-kpi__meta">All your football bookings</div>
+          </a>
+          <a href="#bookings" class="mb-user-kpi" data-page="bookings">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div>
+            <div class="mb-user-kpi__label">Upcoming</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted" id="mb-user-kpi-upcoming">Awaiting data</div>
+            <div class="mb-user-kpi__meta">Confirmed future bookings</div>
+          </a>
+          <a href="#history" class="mb-user-kpi" data-page="history">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+            <div class="mb-user-kpi__label">Completed</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted" id="mb-user-kpi-completed">Awaiting data</div>
+            <div class="mb-user-kpi__meta">Finished football sessions</div>
+          </a>
+          <a href="#history" class="mb-user-kpi" data-page="history">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
+            <div class="mb-user-kpi__label">Cancelled</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted" id="mb-user-kpi-cancelled">Awaiting data</div>
+            <div class="mb-user-kpi__meta">Cancelled bookings</div>
+          </a>
+          <a href="#coaching" class="mb-user-kpi" data-page="coaching">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></svg></div>
+            <div class="mb-user-kpi__label">Coaching</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted" id="mb-user-kpi-coaching">Awaiting data</div>
+            <div class="mb-user-kpi__meta">Coaching registrations</div>
+          </a>
+          <a href="#tournaments" class="mb-user-kpi" data-page="tournaments">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg></div>
+            <div class="mb-user-kpi__label">Tournaments</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted" id="mb-user-kpi-tournaments">Awaiting data</div>
+            <div class="mb-user-kpi__meta">Team participation</div>
+          </a>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-dashboard-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-dashboard-title" class="mb-tournament-details-section__heading">TOURNAMENT DASHBOARD</h2>
-          <p class="mb-tournament-details-section__desc">Key information about this tournament. Only published details are shown.</p>
-          <div class="mb-tournament-details-dashboard" id="mb-tournament-details-dashboard"></div>
-        </div>
-      </section>
-
-      <section class="mb-tournament-details-section" aria-labelledby="mb-tournament-details-format-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-format-title" class="mb-tournament-details-section__heading">FORMAT &amp; TOURNAMENT RULES</h2>
-          <p class="mb-tournament-details-section__desc">Tournament-specific rules are published by the organiser. Only approved rules are shown here.</p>
-          <div class="mb-tournament-details-format-note">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            <span><strong>4-a-side format clarification:</strong> MATCH-BOX uses a 4-a-side football format, meaning four players per team are on the pitch during a match. This does not automatically mean the total squad must contain exactly four players. Squad size, substitute limits, match duration, and other rules come from the specific tournament's approved configuration.</span>
+        <!-- Upcoming bookings -->
+        <div class="mb-user-card">
+          <div class="mb-user-card__header">
+            <div class="mb-user-card__title">My Upcoming Bookings</div>
+            <a href="#bookings" class="mb-user-btn mb-user-btn--ghost mb-user-btn--sm" data-page="bookings">View All Bookings</a>
           </div>
-          <div id="mb-tournament-details-format-wrap"></div>
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+              <div class="mb-user-empty__title">No upcoming bookings</div>
+              <p>Your future football sessions will appear here once you have a confirmed booking.</p>
+              <a href="book-to-play.html" class="mb-user-btn mb-user-btn--primary mb-user-btn--sm">BOOK A PITCH</a>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-schedule-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-schedule-title" class="mb-tournament-details-section__heading">MATCH SCHEDULE</h2>
-          <div class="mb-tournament-details-filters" id="mb-tournament-details-schedule-filters" role="group" aria-label="Filter matches"></div>
-          <div id="mb-tournament-details-schedule-wrap"></div>
+      <!-- ===== BOOKINGS PAGE ===== -->
+      <div class="mb-user-page" data-page-content="bookings">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">My Bookings</h1>
+          <p class="mb-user-page-desc">All upcoming and active football pitch bookings.</p>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-section" aria-labelledby="mb-tournament-details-teams-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-teams-title" class="mb-tournament-details-section__heading">TEAMS COMPETING</h2>
-          <div id="mb-tournament-details-teams-wrap"></div>
+        <div class="mb-user-tabs" role="tablist" aria-label="Booking filters">
+          <button class="mb-user-tab mb-user-tab--active" data-tab="all" role="tab" aria-selected="true">All Bookings</button>
+          <button class="mb-user-tab" data-tab="upcoming" role="tab" aria-selected="false">Upcoming</button>
+          <button class="mb-user-tab" data-tab="completed" role="tab" aria-selected="false">Completed</button>
+          <button class="mb-user-tab" data-tab="cancelled" role="tab" aria-selected="false">Cancelled</button>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-reg-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-reg-title" class="mb-tournament-details-section__heading">BRING YOUR TEAM TO THE PITCH.</h2>
-          <div id="mb-tournament-details-registration-wrap"></div>
+        <div class="mb-user-filters">
+          <input type="search" placeholder="Search by booking reference…" aria-label="Search bookings">
+          <select aria-label="Filter by status">
+            <option>All Statuses</option>
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+          <select aria-label="Filter by date">
+            <option>All Dates</option>
+            <option>Today</option>
+            <option>This Week</option>
+            <option>This Month</option>
+          </select>
+          <button type="button" class="mb-user-btn mb-user-btn--ghost mb-user-btn--sm">Reset</button>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-section mb-tournament-details-hidden" id="mb-tournament-details-results-section" aria-labelledby="mb-tournament-details-results-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-results-title" class="mb-tournament-details-section__heading">RESULTS &amp; STANDINGS</h2>
-          <div id="mb-tournament-details-results-wrap"></div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+              <div class="mb-user-empty__title">No bookings to display</div>
+              <p>Bookings belonging to your account will appear here once the backend returns your records.</p>
+              <a href="book-to-play.html" class="mb-user-btn mb-user-btn--primary mb-user-btn--sm">BOOK A PITCH</a>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="mb-tournament-details-section mb-tournament-details-section--light mb-tournament-details-hidden" id="mb-tournament-details-updates-section" aria-labelledby="mb-tournament-details-updates-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-updates-title" class="mb-tournament-details-section__heading">LATEST TOURNAMENT UPDATES</h2>
-          <div class="mb-tournament-details-updates" id="mb-tournament-details-updates"></div>
+      <!-- ===== HISTORY PAGE ===== -->
+      <div class="mb-user-page" data-page-content="history">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">Booking History</h1>
+          <p class="mb-user-page-desc">Review past and cancelled bookings.</p>
         </div>
-      </section>
-
-      <section class="mb-tournament-details-section mb-tournament-details-hidden" id="mb-tournament-details-gallery-section" aria-labelledby="mb-tournament-details-gallery-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-gallery-title" class="mb-tournament-details-section__heading">TOURNAMENT GALLERY</h2>
-          <p class="mb-tournament-details-section__desc">Illustrative football visuals. Actual MATCH-BOX tournament photographs will appear when available.</p>
-          <div class="mb-tournament-details-gallery" id="mb-tournament-details-gallery"></div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+              <div class="mb-user-empty__title">No booking history yet</div>
+              <p>Your completed and cancelled bookings will appear here once the backend returns your records.</p>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-faq-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-faq-title" class="mb-tournament-details-section__heading">TOURNAMENT FAQ</h2>
-          <div class="mb-tournament-details-faq" id="mb-tournament-details-faq"></div>
+      <!-- ===== COACHING PAGE ===== -->
+      <div class="mb-user-page" data-page-content="coaching">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">Coaching</h1>
+          <p class="mb-user-page-desc">Your MATCH-BOX football coaching registrations.</p>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-section mb-tournament-details-hidden" id="mb-tournament-details-related-section" aria-labelledby="mb-tournament-details-related-title">
-        <div class="mb-tournament-details-container">
-          <h2 id="mb-tournament-details-related-title" class="mb-tournament-details-section__heading">EXPLORE MORE TOURNAMENTS</h2>
-          <div class="mb-tournament-details-related" id="mb-tournament-details-related"></div>
+        <div class="mb-user-kpi-grid" style="margin-bottom:1.5rem;">
+          <div class="mb-user-kpi">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></svg></div>
+            <div class="mb-user-kpi__label">Morning Session</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted">5:00 – 6:30 AM</div>
+            <div class="mb-user-kpi__meta">Capacity: 10 (8 outfield + 2 GK)</div>
+          </div>
+          <div class="mb-user-kpi">
+            <div class="mb-user-kpi__icon"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2z"/></svg></div>
+            <div class="mb-user-kpi__label">Afternoon Session</div>
+            <div class="mb-user-kpi__value mb-user-kpi__value--muted">3:00 – 4:30 PM</div>
+            <div class="mb-user-kpi__meta">Capacity configurable</div>
+          </div>
         </div>
-      </section>
 
-      <section class="mb-tournament-details-container">
-        <div class="mb-tournament-details-cta">
-          <h2>READY TO TAKE ON THE CHALLENGE?</h2>
-          <p>Bring your team together and be part of the MATCH-BOX football experience.</p>
-          <div class="mb-tournament-details-cta__actions" id="mb-tournament-details-final-actions"></div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></svg>
+              <div class="mb-user-empty__title">No coaching registrations</div>
+              <p>Your coaching registrations will appear here once connected to the backend.</p>
+              <a href="coaching.html" class="mb-user-btn mb-user-btn--primary mb-user-btn--sm">EXPLORE COACHING</a>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
 
-    </div>
+      <!-- ===== TOURNAMENTS PAGE ===== -->
+      <div class="mb-user-page" data-page-content="tournaments">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">My Tournaments</h1>
+          <p class="mb-user-page-desc">Your team’s tournament participation and registrations.</p>
+        </div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>
+              <div class="mb-user-empty__title">No tournament registrations</div>
+              <p>Your tournament team registrations will appear here once the backend returns your records.</p>
+              <a href="tournaments.html" class="mb-user-btn mb-user-btn--primary mb-user-btn--sm">EXPLORE TOURNAMENTS</a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  </main>
+      <!-- ===== EVENTS PAGE ===== -->
+      <div class="mb-user-page" data-page-content="events">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">My Events</h1>
+          <p class="mb-user-page-desc">Track your football event enquiries and confirmed events.</p>
+        </div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <div class="mb-user-empty__title">No event enquiries yet</div>
+              <p>Your football event enquiries and confirmed events will appear here once connected to the backend.</p>
+              <a href="events.html" class="mb-user-btn mb-user-btn--primary mb-user-btn--sm">EXPLORE EVENTS</a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Lightbox -->
-  <div class="mb-tournament-details-lightbox" id="mb-tournament-details-lightbox" role="dialog" aria-modal="true" aria-label="Tournament image preview">
-    <button type="button" class="mb-tournament-details-lightbox__close" id="mb-tournament-details-lightbox-close" aria-label="Close image preview">&times;</button>
-    <img id="mb-tournament-details-lightbox-img" src="" alt="">
+      <!-- ===== NOTIFICATIONS PAGE ===== -->
+      <div class="mb-user-page" data-page-content="notifications">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">Notifications</h1>
+          <p class="mb-user-page-desc">Booking, coaching, tournament and event updates.</p>
+        </div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-empty">
+              <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+              <div class="mb-user-empty__title">No notifications</div>
+              <p>Your notifications will appear here once the backend returns them.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROFILE PAGE ===== -->
+      <div class="mb-user-page" data-page-content="profile">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">My Profile</h1>
+          <p class="mb-user-page-desc">Manage your personal information.</p>
+        </div>
+        <div class="mb-user-card">
+          <div class="mb-user-card__body">
+            <div class="mb-user-form-grid">
+              <div class="mb-user-field">
+                <label for="mb-user-profile-fullname">Full Name</label>
+                <input type="text" id="mb-user-profile-fullname" placeholder="Awaiting backend" readonly>
+              </div>
+              <div class="mb-user-field">
+                <label for="mb-user-profile-email">Email Address</label>
+                <input type="email" id="mb-user-profile-email" placeholder="Awaiting backend" readonly>
+              </div>
+              <div class="mb-user-field">
+                <label for="mb-user-profile-mobile">Mobile Number</label>
+                <input type="tel" id="mb-user-profile-mobile" placeholder="Awaiting backend" readonly>
+              </div>
+              <div class="mb-user-field">
+                <label for="mb-user-profile-dob">Date of Birth</label>
+                <input type="date" id="mb-user-profile-dob" readonly>
+              </div>
+            </div>
+            <p style="font-size:0.82rem;color:var(--mb-u-muted);line-height:1.55;margin-top:0.5rem;">
+              Profile information will be editable once customer authentication and the profile update API are implemented. Email changes will require verification.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS PAGE ===== -->
+      <div class="mb-user-page" data-page-content="settings">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">Account Settings</h1>
+          <p class="mb-user-page-desc">Security, communication preferences and account management.</p>
+        </div>
+
+        <div class="mb-user-card">
+          <div class="mb-user-card__header">
+            <div class="mb-user-card__title">Password Management</div>
+          </div>
+          <div class="mb-user-card__body">
+            <div class="mb-user-form-grid">
+              <div class="mb-user-field">
+                <label for="mb-user-current-pass">Current Password</label>
+                <input type="password" id="mb-user-current-pass" placeholder="••••••••" disabled>
+              </div>
+              <div class="mb-user-field">
+                <label for="mb-user-new-pass">New Password</label>
+                <input type="password" id="mb-user-new-pass" placeholder="••••••••" disabled>
+              </div>
+              <div class="mb-user-field">
+                <label for="mb-user-confirm-pass">Confirm New Password</label>
+                <input type="password" id="mb-user-confirm-pass" placeholder="••••••••" disabled>
+              </div>
+            </div>
+            <p style="font-size:0.82rem;color:var(--mb-u-muted);line-height:1.55;margin-top:0.5rem;">
+              Password changes will be enabled once secure backend authentication is implemented.
+            </p>
+          </div>
+        </div>
+
+        <div class="mb-user-card">
+          <div class="mb-user-card__header">
+            <div class="mb-user-card__title">Communication Preferences</div>
+          </div>
+          <div class="mb-user-card__body">
+            <label class="mb-user-checkbox"><input type="checkbox" disabled> Booking notifications</label>
+            <label class="mb-user-checkbox"><input type="checkbox" disabled> Coaching updates</label>
+            <label class="mb-user-checkbox"><input type="checkbox" disabled> Tournament announcements</label>
+            <label class="mb-user-checkbox"><input type="checkbox" disabled> Event enquiry updates</label>
+            <p style="font-size:0.82rem;color:var(--mb-u-muted);line-height:1.55;margin-top:0.5rem;">
+              Communication preferences will be saved to the backend once integration is complete.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== HELP PAGE ===== -->
+      <div class="mb-user-page" data-page-content="help">
+        <div class="mb-user-page-header">
+          <h1 class="mb-user-page-title">Help &amp; Support</h1>
+          <p class="mb-user-page-desc">Useful links and support information for MATCH-BOX customers.</p>
+        </div>
+
+        <div class="mb-user-help-grid">
+          <a href="faq.html" class="mb-user-help-card">
+            <div class="mb-user-help-card__icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
+            <h3 class="mb-user-help-card__title">Frequently Asked Questions</h3>
+            <p class="mb-user-help-card__desc">Find answers about bookings, coaching, tournaments and events.</p>
+            <span class="mb-user-help-card__cta">VIEW FAQ →</span>
+          </a>
+          <a href="contact.html" class="mb-user-help-card">
+            <div class="mb-user-help-card__icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.11.89 2 2 2h16c1.1 0 2-.89 2-2V6c0-1.1-.9-2-2-2z"/></svg></div>
+            <h3 class="mb-user-help-card__title">Contact MATCH-BOX</h3>
+            <p class="mb-user-help-card__desc">Send a general enquiry or ask a question to the MATCH-BOX team.</p>
+            <span class="mb-user-help-card__cta">CONTACT →</span>
+          </a>
+          <a href="booking-information.html" class="mb-user-help-card">
+            <div class="mb-user-help-card__icon"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+            <h3 class="mb-user-help-card__title">Booking Information</h3>
+            <p class="mb-user-help-card__desc">Understand the booking process, pricing and payment method.</p>
+            <span class="mb-user-help-card__cta">VIEW →</span>
+          </a>
+          <a href="terms.html" class="mb-user-help-card">
+            <div class="mb-user-help-card__icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg></div>
+            <h3 class="mb-user-help-card__title">Terms &amp; Conditions</h3>
+            <p class="mb-user-help-card__desc">Review the applicable MATCH-BOX terms and policies.</p>
+            <span class="mb-user-help-card__cta">VIEW →</span>
+          </a>
+          <a href="privacy.html" class="mb-user-help-card">
+            <div class="mb-user-help-card__icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+            <h3 class="mb-user-help-card__title">Privacy Policy</h3>
+            <p class="mb-user-help-card__desc">Understand how your personal information is handled.</p>
+            <span class="mb-user-help-card__cta">VIEW →</span>
+          </a>
+          <a href="refund-policy.html" class="mb-user-help-card">
+            <div class="mb-user-help-card__icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
+            <h3 class="mb-user-help-card__title">Refund Policy</h3>
+            <p class="mb-user-help-card__desc">Read the cancellation and refund policy before booking.</p>
+            <span class="mb-user-help-card__cta">VIEW →</span>
+          </a>
+        </div>
+      </div>
+
+    </main>
   </div>
+
+  <!-- Modal -->
+  <div class="mb-user-modal" id="mb-user-modal" role="dialog" aria-modal="true" aria-labelledby="mb-user-modal-title">
+    <div class="mb-user-modal__content">
+      <div class="mb-user-modal__header">
+        <div class="mb-user-modal__title" id="mb-user-modal-title">Notice</div>
+        <button type="button" class="mb-user-modal__close" id="mb-user-modal-close" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="mb-user-modal__body" id="mb-user-modal-body"></div>
+      <div class="mb-user-modal__footer">
+        <button type="button" class="mb-user-btn mb-user-btn--dark" id="mb-user-modal-ok">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="mb-user-toast-container" id="mb-user-toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <script>
     (function() {
       'use strict';
 
-      const main = document.querySelector('.mb-tournament-details-main');
-      if (!main) return;
+      const app = document.getElementById('mb-user-app');
+      if (!app) return;
 
       /* ============================================
-         DOM REFERENCES
+         SIDEBAR TOGGLE
          ============================================ */
-      const skeleton = document.getElementById('mb-tournament-details-skeleton');
-      const invalidState = document.getElementById('mb-tournament-details-invalid-id');
-      const invalidActions = document.getElementById('mb-td-invalid-actions');
-      const notFoundState = document.getElementById('mb-tournament-details-not-found');
-      const errorState = document.getElementById('mb-tournament-details-error');
-      const contentEl = document.getElementById('mb-tournament-details-content');
-      const retryBtn = document.getElementById('mb-tournament-details-retry');
+      const toggleBtn = document.getElementById('mb-user-toggle');
+      const overlay = document.getElementById('mb-user-sidebar-overlay');
 
-      const heroImg = document.getElementById('mb-tournament-details-hero-img');
-      const heroLabel = document.getElementById('mb-tournament-details-hero-label');
-      const statusEl = document.getElementById('mb-tournament-details-status');
-      const heroTitle = document.getElementById('mb-tournament-details-hero-title');
-      const heroDesc = document.getElementById('mb-tournament-details-hero-desc');
-      const heroMeta = document.getElementById('mb-tournament-details-hero-meta');
-      const heroActions = document.getElementById('mb-tournament-details-hero-actions');
-      const crumbCurrent = document.getElementById('mb-tournament-details-crumb-current');
+      function isMobile() { return window.innerWidth <= 768; }
 
-      const aboutWrap = document.getElementById('mb-tournament-details-about');
-      const dashboardWrap = document.getElementById('mb-tournament-details-dashboard');
-      const formatWrap = document.getElementById('mb-tournament-details-format-wrap');
-      const scheduleFilters = document.getElementById('mb-tournament-details-schedule-filters');
-      const scheduleWrap = document.getElementById('mb-tournament-details-schedule-wrap');
-      const teamsWrap = document.getElementById('mb-tournament-details-teams-wrap');
-      const registrationWrap = document.getElementById('mb-tournament-details-registration-wrap');
-      const resultsSection = document.getElementById('mb-tournament-details-results-section');
-      const resultsWrap = document.getElementById('mb-tournament-details-results-wrap');
-      const updatesSection = document.getElementById('mb-tournament-details-updates-section');
-      const updatesWrap = document.getElementById('mb-tournament-details-updates');
-      const gallerySection = document.getElementById('mb-tournament-details-gallery-section');
-      const galleryWrap = document.getElementById('mb-tournament-details-gallery');
-      const faqWrap = document.getElementById('mb-tournament-details-faq');
-      const relatedSection = document.getElementById('mb-tournament-details-related-section');
-      const relatedWrap = document.getElementById('mb-tournament-details-related');
-      const finalActions = document.getElementById('mb-tournament-details-final-actions');
+      toggleBtn?.addEventListener('click', function() {
+        if (isMobile()) {
+          app.classList.toggle('mb-user-sidebar-open');
+        } else {
+          app.classList.toggle('mb-user-sidebar-collapsed');
+        }
+      });
 
-      const lightbox = document.getElementById('mb-tournament-details-lightbox');
-      const lightboxImg = document.getElementById('mb-tournament-details-lightbox-img');
-      const lightboxClose = document.getElementById('mb-tournament-details-lightbox-close');
-
-      const pageTitleEl = document.getElementById('mb-tournament-details-page-title');
-      const metaDescEl = document.getElementById('mb-tournament-details-meta-desc');
-      const canonicalEl = document.getElementById('mb-tournament-details-canonical');
-      const ogTitleEl = document.getElementById('mb-tournament-details-og-title');
-      const ogDescEl = document.getElementById('mb-tournament-details-og-desc');
-      const ogImgEl = document.getElementById('mb-tournament-details-og-img');
+      overlay?.addEventListener('click', () => app.classList.remove('mb-user-sidebar-open'));
 
       /* ============================================
-         STATUS MAPPING
+         PAGE NAVIGATION
          ============================================ */
-      const STATUS_MAP = {
-        open: { label: 'Registration Open', cls: 'mb-tournament-details-status--open' },
-        soon: { label: 'Coming Soon', cls: 'mb-tournament-details-status--soon' },
-        full: { label: 'Registration Full', cls: 'mb-tournament-details-status--full' },
-        closed: { label: 'Registration Closed', cls: 'mb-tournament-details-status--closed' },
-        completed: { label: 'Completed', cls: 'mb-tournament-details-status--completed' },
-        postponed: { label: 'Postponed', cls: 'mb-tournament-details-status--postponed' },
-        cancelled: { label: 'Cancelled', cls: 'mb-tournament-details-status--cancelled' }
+      const navLinks = document.querySelectorAll('.mb-user-nav-link[data-page]');
+      const pageEls = document.querySelectorAll('.mb-user-page[data-page-content]');
+      const pageTitle = document.getElementById('mb-user-page-title');
+      const breadcrumb = document.getElementById('mb-user-breadcrumb');
+
+      const PAGE_LABELS = {
+        'overview': 'Overview',
+        'bookings': 'My Bookings',
+        'history': 'Booking History',
+        'coaching': 'Coaching',
+        'tournaments': 'My Tournaments',
+        'events': 'My Events',
+        'notifications': 'Notifications',
+        'profile': 'My Profile',
+        'settings': 'Account Settings',
+        'help': 'Help & Support'
       };
+
+      function activatePage(pageKey) {
+        pageEls.forEach(p => p.classList.toggle('mb-user-page--active', p.getAttribute('data-page-content') === pageKey));
+        navLinks.forEach(l => l.classList.toggle('mb-user-nav-link--active', l.getAttribute('data-page') === pageKey));
+        const label = PAGE_LABELS[pageKey] || 'Dashboard';
+        if (pageTitle) pageTitle.textContent = label;
+        if (breadcrumb) breadcrumb.textContent = 'My Dashboard / ' + label;
+        app.classList.remove('mb-user-sidebar-open');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          const pageKey = this.getAttribute('data-page');
+          if (pageKey) {
+            e.preventDefault();
+            activatePage(pageKey);
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-page]').forEach(el => {
+        if (!el.classList.contains('mb-user-nav-link')) {
+          el.addEventListener('click', function(e) {
+            const pageKey = this.getAttribute('data-page');
+            if (pageKey) {
+              e.preventDefault();
+              activatePage(pageKey);
+            }
+          });
+        }
+      });
+
+      /* ============================================
+         NOTIFICATIONS
+         ============================================ */
+      const notifBtn = document.getElementById('mb-user-notif-btn');
+      const notifPanel = document.getElementById('mb-user-notif-panel');
+      const notifCount = document.getElementById('mb-user-notif-count');
+      const notifList = document.getElementById('mb-user-notif-list');
+      const markReadBtn = document.getElementById('mb-user-mark-read');
+
+      let notifications = [];
+
+      function renderNotifications() {
+        if (!notifList) return;
+        notifCount.textContent = String(notifications.length);
+        notifCount.style.display = notifications.length ? 'flex' : 'none';
+
+        if (!notifications.length) {
+          notifList.innerHTML = '<div class="mb-user-notifications__empty">No notifications yet.</div>';
+          return;
+        }
+
+        notifList.innerHTML = notifications.map(n => `
+          <div class="mb-user-notification">
+            <div class="mb-user-notification__title">${escapeHtml(n.title)}</div>
+            <div class="mb-user-notification__meta">${escapeHtml(n.meta)}</div>
+          </div>
+        `).join('');
+      }
+
+      notifBtn?.addEventListener('click', function(e) {
+        if (e.target.closest('.mb-user-notifications')) return;
+        notifPanel.classList.toggle('active');
+      });
+
+      markReadBtn?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notifications = [];
+        renderNotifications();
+        showToast('All notifications marked as read', 'info');
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('#mb-user-notif-btn')) notifPanel?.classList.remove('active');
+        if (!e.target.closest('#mb-user-profile-btn')) document.getElementById('mb-user-profile-menu')?.classList.remove('active');
+      });
+
+      renderNotifications();
+
+      /* ============================================
+         PROFILE DROPDOWN
+         ============================================ */
+      const profileBtn = document.getElementById('mb-user-profile-btn');
+      const profileMenu = document.getElementById('mb-user-profile-menu');
+
+      profileBtn?.addEventListener('click', function(e) {
+        if (e.target.closest('.mb-user-dropdown__item')) return;
+        profileMenu.classList.toggle('active');
+      });
+
+      /* ============================================
+         LOGOUT (demo)
+         ============================================ */
+      function handleLogout(e) {
+        e?.preventDefault();
+        openModal('Logout', 'Logout is handled by the backend authentication system. In production, clicking logout will destroy the customer session and redirect to the login page.', true);
+      }
+
+      document.getElementById('mb-user-logout')?.addEventListener('click', handleLogout);
+      document.getElementById('mb-user-logout-menu')?.addEventListener('click', handleLogout);
+
+      /* ============================================
+         MODAL
+         ============================================ */
+      const modal = document.getElementById('mb-user-modal');
+      const modalTitle = document.getElementById('mb-user-modal-title');
+      const modalBody = document.getElementById('mb-user-modal-body');
+      const modalClose = document.getElementById('mb-user-modal-close');
+      const modalOk = document.getElementById('mb-user-modal-ok');
+      let lastFocused = null;
+
+      function openModal(title, body, onlyClose) {
+        lastFocused = document.activeElement;
+        modalTitle.textContent = title;
+        modalBody.textContent = body;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        (onlyClose ? modalOk : modalClose).focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      }
+
+      modalClose?.addEventListener('click', closeModal);
+      modalOk?.addEventListener('click', closeModal);
+      modal?.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      /* ============================================
+         TOASTS
+         ============================================ */
+      function showToast(message, type) {
+        const container = document.getElementById('mb-user-toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'mb-user-toast' + (type ? ' mb-user-toast--' + type : '');
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 250);
+        }, 3200);
+      }
 
       /* ============================================
          HELPERS
          ============================================ */
-      function escapeHtml(str) {
-        if (str === null || str === undefined) return '';
-        return String(str)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
+      function escapeHtml(s) {
+        if (s === null || s === undefined) return '';
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
       }
-
-      function formatDate(iso) {
-        if (!iso) return null;
-        const d = new Date(iso + (iso.length <= 10 ? 'T00:00:00' : ''));
-        if (isNaN(d.getTime())) return iso;
-        return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-      }
-
-      function showState(state) {
-        skeleton.classList.toggle('mb-tournament-details-hidden', state !== 'loading');
-        invalidState.classList.toggle('mb-tournament-details-hidden', state !== 'invalid');
-        notFoundState.classList.toggle('mb-tournament-details-hidden', state !== 'not-found');
-        errorState.classList.toggle('mb-tournament-details-hidden', state !== 'error');
-        contentEl.classList.toggle('mb-tournament-details-hidden', state !== 'content');
-      }
-
-      function getParam(name) {
-        try { return new URLSearchParams(window.location.search).get(name); }
-        catch (e) { return null; }
-      }
-
-      /* ============================================
-         DEMO DATA — MULTIPLE TOURNAMENTS
-         ============================================
-         These are demo records for layout testing.
-         In production, replace getTournamentById with:
-           GET /api/tournaments/details.php?id=TOURNAMENT_ID
-           GET /api/tournaments/schedule.php?id=TOURNAMENT_ID
-           GET /api/tournaments/teams.php?id=TOURNAMENT_ID
-           GET /api/tournaments/results.php?id=TOURNAMENT_ID
-           GET /api/tournaments/updates.php?id=TOURNAMENT_ID
-           GET /api/tournaments/related.php?id=TOURNAMENT_ID
-         ============================================ */
-      const DEMO_TOURNAMENTS = {
-        '1': {
-          tournament_id: 1,
-          tournament_name: 'MATCH-BOX Summer Cup',
-          published: true,
-          short_description: 'A competitive 4-a-side football tournament bringing teams together for a full day of small-sided football at MATCH-BOX.',
-          full_description: 'The MATCH-BOX Summer Cup is a 4-a-side football tournament designed for teams who want to compete, enjoy the game, and experience the excitement of small-sided football. Team registration is open for the published competition window. Tournament-specific rules, match schedule, and results will be published here as they become available.',
-          banner_image: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1600&auto=format&fit=crop',
-          tournament_start_date: '2025-08-16',
-          tournament_end_date: '2025-08-16',
-          registration_deadline: '2025-08-05',
-          registration_status: 'open',
-          maximum_teams: 16,
-          registered_teams_count: 9,
-          entry_fee: null,
-          prize_details: null,
-          match_format: '4-a-side football matches',
-          tournament_rules: {
-            'Match Format': '4-a-side football matches. Tournament-specific duration will be published in the official schedule.',
-            'Squad Size': 'Squad size is defined by the tournament organiser. The 4-a-side format describes players on the pitch, not the total registered squad.',
-            'Substitutes': 'Substitute rules are published with the tournament rules.',
-            'Player Eligibility': 'Player eligibility conditions are configured by the tournament organiser.'
-          },
-          venue_information: { name: 'MATCH-BOX Football Ground', address: null, city: null },
-          matches: [
-            { match_number: 1, round: 'Group Stage', team_a: 'Team A', team_b: 'Team B', date: '2025-08-16', kickoff: '09:00', status: 'upcoming', score_a: null, score_b: null },
-            { match_number: 2, round: 'Group Stage', team_a: 'Team C', team_b: 'Team D', date: '2025-08-16', kickoff: '10:00', status: 'upcoming', score_a: null, score_b: null }
-          ],
-          teams: null,
-          results: null,
-          updates: [
-            { title: 'Registration Now Open', category: 'Registration Update', published_at: '2025-06-01', description: 'Team registration for the MATCH-BOX Summer Cup is now open.' }
-          ],
-          gallery: [
-            'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=800&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop'
-          ]
-        },
-        '2': {
-          tournament_id: 2,
-          tournament_name: 'MATCH-BOX Midweek League',
-          published: true,
-          short_description: 'A midweek small-sided football league for corporate and group teams.',
-          full_description: 'The MATCH-BOX Midweek League is a recurring 4-a-side football competition for corporate and group teams. Registration is currently full for this season.',
-          banner_image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1600&auto=format&fit=crop',
-          tournament_start_date: '2025-09-10',
-          tournament_end_date: '2025-10-15',
-          registration_deadline: '2025-08-30',
-          registration_status: 'full',
-          maximum_teams: 12,
-          registered_teams_count: 12,
-          entry_fee: null,
-          prize_details: null,
-          match_format: '4-a-side football matches',
-          tournament_rules: {
-            'Match Format': '4-a-side football matches.',
-            'Squad Size': 'Squad size is defined by the tournament organiser.'
-          },
-          venue_information: { name: 'MATCH-BOX Football Ground', address: null, city: null },
-          matches: [],
-          teams: null,
-          results: null,
-          updates: null,
-          gallery: []
-        },
-        '3': {
-          tournament_id: 3,
-          tournament_name: 'MATCH-BOX Junior Cup',
-          published: true,
-          short_description: 'A football tournament for school and student teams.',
-          full_description: 'The MATCH-BOX Junior Cup is a school and student football tournament. Registration details will be published once confirmed.',
-          banner_image: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=1600&auto=format&fit=crop',
-          tournament_start_date: '2025-10-04',
-          tournament_end_date: '2025-10-04',
-          registration_deadline: null,
-          registration_status: 'soon',
-          maximum_teams: null,
-          registered_teams_count: null,
-          entry_fee: null,
-          prize_details: null,
-          match_format: '4-a-side football matches',
-          tournament_rules: null,
-          venue_information: { name: null, address: null, city: null },
-          matches: [],
-          teams: null,
-          results: null,
-          updates: null,
-          gallery: []
-        },
-        '15': {
-          tournament_id: 15,
-          tournament_name: 'MATCH-BOX Winter Classic',
-          published: true,
-          short_description: 'A winter 4-a-side football tournament for competitive teams at MATCH-BOX.',
-          full_description: 'The MATCH-BOX Winter Classic is a competitive 4-a-side football tournament. Registration has closed for this season and match results will be published here as they become available.',
-          banner_image: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1600&auto=format&fit=crop',
-          tournament_start_date: '2025-12-14',
-          tournament_end_date: '2025-12-14',
-          registration_deadline: '2025-12-01',
-          registration_status: 'closed',
-          maximum_teams: 8,
-          registered_teams_count: 8,
-          entry_fee: null,
-          prize_details: null,
-          match_format: '4-a-side football matches',
-          tournament_rules: {
-            'Match Format': '4-a-side football matches.',
-            'Squad Size': 'Squad size is defined by the tournament organiser.'
-          },
-          venue_information: { name: 'MATCH-BOX Football Ground', address: null, city: null },
-          matches: [],
-          teams: null,
-          results: null,
-          updates: null,
-          gallery: []
-        }
-      };
-
-      /* ============================================
-         RENDERERS
-         ============================================ */
-      function renderStatus(status) {
-        const s = STATUS_MAP[status];
-        if (!s) { statusEl.style.display = 'none'; return; }
-        statusEl.className = 'mb-tournament-details-status ' + s.cls;
-        statusEl.textContent = s.label;
-        statusEl.style.display = 'inline-flex';
-      }
-
-      function renderHero(t) {
-        heroImg.src = t.banner_image || '';
-        heroImg.alt = (t.tournament_name || 'Tournament') + ' banner';
-        heroTitle.textContent = t.tournament_name || 'Tournament';
-        heroDesc.textContent = t.short_description || '';
-        crumbCurrent.textContent = t.tournament_name || 'Tournament Details';
-
-        renderStatus(t.registration_status);
-
-        const meta = [];
-        if (t.tournament_start_date) {
-          meta.push(`<span class="mb-tournament-details-hero__meta-item">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            ${escapeHtml(formatDate(t.tournament_start_date))}
-          </span>`);
-        }
-        if (t.registration_deadline) {
-          meta.push(`<span class="mb-tournament-details-hero__meta-item">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-            Deadline: ${escapeHtml(formatDate(t.registration_deadline))}
-          </span>`);
-        }
-        if (t.maximum_teams != null) {
-          meta.push(`<span class="mb-tournament-details-hero__meta-item">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-            Max Teams: ${escapeHtml(t.maximum_teams)}
-          </span>`);
-        }
-        if (t.registered_teams_count != null) {
-          meta.push(`<span class="mb-tournament-details-hero__meta-item">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-            Registered: ${escapeHtml(t.registered_teams_count)}
-          </span>`);
-        }
-        heroMeta.innerHTML = meta.join('');
-
-        const status = t.registration_status;
-        let actions = '';
-        if (status === 'open') {
-          actions += `<a href="tournament-register.html?tournament_id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--primary">REGISTER YOUR TEAM</a>`;
-          actions += `<a href="#mb-tournament-details-reg-title" class="mb-tournament-details-btn mb-tournament-details-btn--outline">REGISTRATION INFO</a>`;
-        } else if (status === 'soon') {
-          actions += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--outline" disabled aria-disabled="true">REGISTRATION OPENING SOON</button>`;
-        } else if (status === 'full') {
-          actions += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--outline" disabled aria-disabled="true">REGISTRATION FULL</button>`;
-        } else if (status === 'closed' || status === 'cancelled') {
-          actions += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--outline" disabled aria-disabled="true">REGISTRATION CLOSED</button>`;
-        } else if (status === 'completed') {
-          actions += `<a href="#mb-tournament-details-results-title" class="mb-tournament-details-btn mb-tournament-details-btn--outline">VIEW RESULTS</a>`;
-        } else if (status === 'postponed') {
-          actions += `<a href="#mb-tournament-details-updates-title" class="mb-tournament-details-btn mb-tournament-details-btn--outline">OFFICIAL UPDATE</a>`;
-        }
-        heroActions.innerHTML = actions;
-
-        const title = (t.tournament_name || 'Football Tournament') + ' | MATCH-BOX Football Tournament';
-        const desc = 'Explore ' + (t.tournament_name || 'this tournament') + ' at MATCH-BOX. View tournament information, registration details, fixtures, rules, and results.';
-        pageTitleEl.textContent = title;
-        metaDescEl.setAttribute('content', desc);
-        canonicalEl.setAttribute('href', 'https://match-box.example.com/tournament-details.html?id=' + encodeURIComponent(t.tournament_id));
-        ogTitleEl.setAttribute('content', title);
-        ogDescEl.setAttribute('content', desc);
-        if (t.banner_image) ogImgEl.setAttribute('content', t.banner_image);
-      }
-
-      function renderAbout(t) {
-        const parts = [];
-        if (t.full_description) parts.push(`<p>${escapeHtml(t.full_description)}</p>`);
-        else if (t.short_description) parts.push(`<p>${escapeHtml(t.short_description)}</p>`);
-        aboutWrap.innerHTML = parts.length ? parts.join('') : '<p style="color:#6b7a6e;">Tournament description will be published soon.</p>';
-      }
-
-      function renderDashboard(t) {
-        const cards = [];
-        const add = (label, value, iconPath) => {
-          if (value === null || value === undefined || value === '') return;
-          cards.push(`<div class="mb-tournament-details-dash-card">
-            <div class="mb-tournament-details-dash-card__icon">
-              <svg viewBox="0 0 24 24" aria-hidden="true">${iconPath}</svg>
-            </div>
-            <div class="mb-tournament-details-dash-card__label">${escapeHtml(label)}</div>
-            <div class="mb-tournament-details-dash-card__value">${escapeHtml(value)}</div>
-          </div>`);
-        };
-
-        add('Tournament Schedule', t.tournament_start_date ? formatDate(t.tournament_start_date) + (t.tournament_end_date && t.tournament_end_date !== t.tournament_start_date ? ' – ' + formatDate(t.tournament_end_date) : '') : null,
-          '<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>');
-        add('Team Registration', STATUS_MAP[t.registration_status] ? STATUS_MAP[t.registration_status].label : null,
-          '<path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>');
-        add('Entry Fee', t.entry_fee,
-          '<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>');
-        add('Prize Information', t.prize_details,
-          '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>');
-        add('Match Format', t.match_format,
-          '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="4"/>');
-        add('Venue', t.venue_information && t.venue_information.name ? t.venue_information.name : null,
-          '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>');
-
-        dashboardWrap.innerHTML = cards.length ? cards.join('') : '<p style="font-size:0.9rem;color:#6b7a6e;">Tournament details will be published soon.</p>';
-      }
-
-      function renderFormat(t) {
-        const rules = t.tournament_rules || {};
-        const keys = Object.keys(rules);
-        if (!keys.length) {
-          formatWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;text-transform:uppercase;letter-spacing:0.04em;">TOURNAMENT RULES WILL BE ANNOUNCED BY THE ORGANISERS.</div>';
-          return;
-        }
-        formatWrap.innerHTML = '<div class="mb-tournament-details-format-grid">' +
-          keys.map(k => `<div class="mb-tournament-details-rule-card">
-            <div class="mb-tournament-details-rule-card__title">${escapeHtml(k)}</div>
-            <p class="mb-tournament-details-rule-card__desc">${escapeHtml(rules[k])}</p>
-          </div>`).join('') + '</div>';
-      }
-
-      let scheduleFilter = 'all';
-
-      function renderSchedule(t) {
-        const matches = t.matches || [];
-        if (!matches.length) {
-          scheduleFilters.innerHTML = '';
-          scheduleWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;text-transform:uppercase;letter-spacing:0.04em;">MATCH SCHEDULE HAS NOT BEEN ANNOUNCED YET.</div>';
-          return;
-        }
-
-        scheduleFilters.innerHTML = `
-          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'all' ? 'mb-tournament-details-filter--active' : ''}" data-filter="all">All Matches</button>
-          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'upcoming' ? 'mb-tournament-details-filter--active' : ''}" data-filter="upcoming">Upcoming</button>
-          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'completed' ? 'mb-tournament-details-filter--active' : ''}" data-filter="completed">Completed</button>
-          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'group' ? 'mb-tournament-details-filter--active' : ''}" data-filter="group">Group Stage</button>
-          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'knockout' ? 'mb-tournament-details-filter--active' : ''}" data-filter="knockout">Knockout</button>
-        `;
-
-        scheduleFilters.querySelectorAll('[data-filter]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            scheduleFilter = btn.getAttribute('data-filter');
-            renderSchedule(t);
-          });
-        });
-
-        const filtered = matches.filter(m => {
-          if (scheduleFilter === 'all') return true;
-          if (scheduleFilter === 'upcoming') return m.status === 'upcoming';
-          if (scheduleFilter === 'completed') return m.status === 'completed';
-          if (scheduleFilter === 'group') return (m.round || '').toLowerCase().includes('group');
-          if (scheduleFilter === 'knockout') return (m.round || '').toLowerCase().includes('knockout') || (m.round || '').toLowerCase().includes('final');
-          return true;
-        });
-
-        if (!filtered.length) {
-          scheduleWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;">No matches match the selected filter.</div>';
-          return;
-        }
-
-        scheduleWrap.innerHTML = '<div class="mb-tournament-details-match-list">' + filtered.map(m => {
-          const score = (m.score_a !== null && m.score_b !== null && m.score_a !== undefined && m.score_b !== undefined)
-            ? `${m.score_a} – ${m.score_b}` : '';
-          const meta = [];
-          if (m.date) meta.push(formatDate(m.date));
-          if (m.kickoff) meta.push(m.kickoff);
-          if (m.status) meta.push(m.status);
-          return `<div class="mb-tournament-details-match">
-            <div class="mb-tournament-details-match__num">${escapeHtml(m.match_number || '—')}</div>
-            <div class="mb-tournament-details-match__body">
-              <div class="mb-tournament-details-match__round">${escapeHtml(m.round || 'Match')}</div>
-              <div class="mb-tournament-details-match__teams">${escapeHtml(m.team_a || 'TBD')} vs ${escapeHtml(m.team_b || 'TBD')}</div>
-              <div class="mb-tournament-details-match__meta">${escapeHtml(meta.join(' · '))}</div>
-            </div>
-            <div class="mb-tournament-details-match__score">${escapeHtml(score)}</div>
-          </div>`;
-        }).join('') + '</div>';
-      }
-
-      function renderTeams(t) {
-        if (!t.teams || !t.teams.length) {
-          teamsWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;text-transform:uppercase;letter-spacing:0.04em;">PARTICIPATING TEAMS WILL BE ANNOUNCED SOON.</div>';
-          return;
-        }
-        teamsWrap.innerHTML = '<div class="mb-tournament-details-teams">' + t.teams.map(team => {
-          const initial = (team.name || '?').charAt(0).toUpperCase();
-          return `<div class="mb-tournament-details-team">
-            <div class="mb-tournament-details-team__logo">${team.logo ? `<img src="${escapeHtml(team.logo)}" alt="${escapeHtml(team.name)} logo">` : escapeHtml(initial)}</div>
-            <div class="mb-tournament-details-team__name">${escapeHtml(team.name || 'Team')}</div>
-          </div>`;
-        }).join('') + '</div>';
-      }
-
-      function renderRegistration(t) {
-        const status = t.registration_status;
-        let html = '<div class="mb-tournament-details-registration">';
-
-        html += `<div class="mb-tournament-details-registration__row">
-          <span>Registration Status</span>
-          <span>${escapeHtml(STATUS_MAP[status] ? STATUS_MAP[status].label : '—')}</span>
-        </div>`;
-
-        if (t.registration_deadline) {
-          html += `<div class="mb-tournament-details-registration__row">
-            <span>Registration Deadline</span>
-            <span>${escapeHtml(formatDate(t.registration_deadline))}</span>
-          </div>`;
-        }
-        if (t.maximum_teams != null) {
-          html += `<div class="mb-tournament-details-registration__row">
-            <span>Maximum Teams</span>
-            <span>${escapeHtml(t.maximum_teams)}</span>
-          </div>`;
-        }
-        if (t.entry_fee) {
-          html += `<div class="mb-tournament-details-registration__row">
-            <span>Entry Fee</span>
-            <span>${escapeHtml(t.entry_fee)}</span>
-          </div>`;
-        }
-
-        if (t.maximum_teams != null && t.registered_teams_count != null) {
-          const max = Number(t.maximum_teams);
-          const reg = Number(t.registered_teams_count);
-          const pct = max > 0 ? Math.min(100, Math.round((reg / max) * 100)) : 0;
-          html += `<div style="margin-top:1.25rem;">
-            <div class="mb-tournament-details-progress-bar">
-              <div class="mb-tournament-details-progress-bar__fill" style="width:${pct}%;"></div>
-            </div>
-            <div class="mb-tournament-details-progress-stats">
-              <span>${reg} registered</span>
-              <span>${max} maximum</span>
-            </div>
-          </div>`;
-        }
-
-        if (status === 'open') {
-          html += `<a href="tournament-register.html?tournament_id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--primary mb-tournament-details-btn--full">REGISTER YOUR TEAM</a>`;
-        } else if (status === 'soon') {
-          html += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full" disabled aria-disabled="true">REGISTRATION OPENING SOON</button>`;
-        } else if (status === 'full') {
-          html += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full" disabled aria-disabled="true">REGISTRATION FULL</button>`;
-        } else if (status === 'closed' || status === 'cancelled') {
-          html += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full" disabled aria-disabled="true">REGISTRATION CLOSED</button>`;
-        } else if (status === 'completed') {
-          html += `<a href="#mb-tournament-details-results-title" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full">VIEW RESULTS</a>`;
-        }
-
-        html += `<p style="font-size:0.78rem;color:#8a9a8e;margin-top:1rem;line-height:1.5;">Registration eligibility and capacity are validated by the MATCH-BOX backend. The 4-a-side format describes the match format, not necessarily the total squad size.</p>`;
-        html += '</div>';
-
-        registrationWrap.innerHTML = html;
-      }
-
-      function renderResults(t) {
-        if (!t.results) {
-          resultsSection.classList.add('mb-tournament-details-hidden');
-          return;
-        }
-        resultsSection.classList.remove('mb-tournament-details-hidden');
-        resultsWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;">RESULTS AND STANDINGS WILL BE PUBLISHED HERE WHEN AVAILABLE.</div>';
-      }
-
-      function renderUpdates(t) {
-        if (!t.updates || !t.updates.length) {
-          updatesSection.classList.add('mb-tournament-details-hidden');
-          return;
-        }
-        updatesSection.classList.remove('mb-tournament-details-hidden');
-        updatesWrap.innerHTML = t.updates.map(u => `
-          <div class="mb-tournament-details-update">
-            <div class="mb-tournament-details-update__meta">${escapeHtml(u.category || 'Update')} · ${escapeHtml(formatDate(u.published_at))}</div>
-            <div class="mb-tournament-details-update__title">${escapeHtml(u.title)}</div>
-            <p class="mb-tournament-details-update__desc">${escapeHtml(u.description || '')}</p>
-          </div>
-        `).join('');
-      }
-
-      function renderGallery(t) {
-        if (!t.gallery || !t.gallery.length) {
-          gallerySection.classList.add('mb-tournament-details-hidden');
-          return;
-        }
-        gallerySection.classList.remove('mb-tournament-details-hidden');
-        galleryWrap.innerHTML = t.gallery.map((src, i) => `
-          <button type="button" class="mb-tournament-details-gallery__item" data-gallery-src="${escapeHtml(src)}" aria-label="View tournament image ${i + 1}">
-            <img src="${escapeHtml(src)}" alt="Football tournament visual ${i + 1}" loading="lazy">
-          </button>
-        `).join('');
-      }
-
-      function renderFaq(t) {
-        const deadline = t.registration_deadline ? formatDate(t.registration_deadline) : null;
-        const fee = t.entry_fee || 'Entry fee information will be published when available.';
-        const squadText = 'Squad size is defined by the tournament organiser. The 4-a-side format describes players on the pitch, not the total registered squad.';
-        const contactLink = '<a href="contact.html">contact page</a>';
-
-        const faqs = [
-          { q: 'How can my team register?', a: 'If registration is open, use the Register Your Team button above and complete the tournament registration form.' },
-          { q: 'What does 4-a-side football mean?', a: 'It means four players per team are on the pitch during play. Total squad size and substitutes depend on the published tournament rules.' },
-          { q: 'How many players can be included in a squad?', a: squadText },
-          { q: 'What is the registration deadline?', a: deadline ? 'The published registration deadline is ' + deadline + '.' : 'The registration deadline will be published when available.' },
-          { q: 'Is there an entry fee?', a: fee },
-          { q: 'Where can I find the match schedule?', a: 'The match schedule is displayed on this page under Match Schedule once it is officially published.' },
-          { q: 'When will participating teams be announced?', a: 'Participating teams are displayed on this page when officially confirmed by the organiser.' },
-          { q: 'Where will tournament results be published?', a: 'Results and standings are displayed under Results & Standings when officially published.' },
-          { q: 'Can I register after the deadline?', a: 'Registration is subject to the published deadline and current tournament status.' },
-          { q: 'How can I contact MATCH-BOX about this tournament?', a: 'Please use the official ' + contactLink + ' for tournament-related enquiries.' }
-        ];
-
-        faqWrap.innerHTML = faqs.map((f, i) => `
-          <div class="mb-tournament-details-faq__item" data-open="false">
-            <button type="button" class="mb-tournament-details-faq__question" aria-expanded="false" aria-controls="mb-td-faq-a${i + 1}" id="mb-td-faq-q${i + 1}">
-              ${escapeHtml(f.q)}
-              <span class="mb-tournament-details-faq__icon" aria-hidden="true"></span>
-            </button>
-            <div class="mb-tournament-details-faq__answer" id="mb-td-faq-a${i + 1}" role="region" aria-labelledby="mb-td-faq-q${i + 1}">
-              <p>${f.a}</p>
-            </div>
-          </div>
-        `).join('');
-
-        faqWrap.querySelectorAll('.mb-tournament-details-faq__item').forEach(item => {
-          const btn = item.querySelector('.mb-tournament-details-faq__question');
-          btn.addEventListener('click', () => {
-            const isOpen = item.getAttribute('data-open') === 'true';
-            faqWrap.querySelectorAll('.mb-tournament-details-faq__item').forEach(o => {
-              if (o !== item) {
-                o.setAttribute('data-open', 'false');
-                o.querySelector('.mb-tournament-details-faq__question').setAttribute('aria-expanded', 'false');
-              }
-            });
-            item.setAttribute('data-open', String(!isOpen));
-            btn.setAttribute('aria-expanded', String(!isOpen));
-          });
-        });
-      }
-
-      function renderRelated(t) {
-        const others = Object.values(DEMO_TOURNAMENTS).filter(
-          x => x.published && String(x.tournament_id) !== String(t.tournament_id)
-        );
-        if (!others.length) {
-          relatedSection.classList.add('mb-tournament-details-hidden');
-          return;
-        }
-        relatedSection.classList.remove('mb-tournament-details-hidden');
-        relatedWrap.innerHTML = others.map(o => `
-          <a href="tournament-details.html?id=${encodeURIComponent(o.tournament_id)}" class="mb-tournament-details-related-card">
-            <div class="mb-tournament-details-related-card__img">
-              <img src="${escapeHtml(o.banner_image)}" alt="${escapeHtml(o.tournament_name)} banner" loading="lazy">
-            </div>
-            <div class="mb-tournament-details-related-card__body">
-              <h3 class="mb-tournament-details-related-card__title">${escapeHtml(o.tournament_name)}</h3>
-              <div class="mb-tournament-details-related-card__meta">${escapeHtml(formatDate(o.tournament_start_date) || '')} · ${escapeHtml(STATUS_MAP[o.registration_status] ? STATUS_MAP[o.registration_status].label : '')}</div>
-              <span class="mb-tournament-details-related-card__cta">VIEW DETAILS →</span>
-            </div>
-          </a>
-        `).join('');
-      }
-
-      function renderFinalActions(t) {
-        const status = t.registration_status;
-        let html = '';
-        if (status === 'open') {
-          html += `<a href="tournament-register.html?tournament_id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--primary">REGISTER YOUR TEAM</a>`;
-        } else if (status === 'soon') {
-          html += `<a href="#mb-tournament-details-updates-title" class="mb-tournament-details-btn mb-tournament-details-btn--primary">EXPLORE TOURNAMENT UPDATES</a>`;
-        } else if (status === 'completed') {
-          html += `<a href="#mb-tournament-details-results-title" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW RESULTS</a>`;
-        } else if (status === 'full' || status === 'closed' || status === 'cancelled') {
-          html += `<a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">EXPLORE OTHER TOURNAMENTS</a>`;
-        }
-        html += `<a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--outline">VIEW ALL TOURNAMENTS</a>`;
-        finalActions.innerHTML = html;
-      }
-
-      function renderTournament(t) {
-        renderHero(t);
-        renderAbout(t);
-        renderDashboard(t);
-        renderFormat(t);
-        renderSchedule(t);
-        renderTeams(t);
-        renderRegistration(t);
-        renderResults(t);
-        renderUpdates(t);
-        renderGallery(t);
-        renderFaq(t);
-        renderRelated(t);
-        renderFinalActions(t);
-        showState('content');
-      }
-
-      /* ============================================
-         LOADER — FIXED
-         ============================================ */
-      function loadTournament() {
-        const id = getParam('id');
-
-        // No ID provided → show invalid state with helpful context
-        if (!id || id.trim() === '') {
-          showState('invalid');
-          // Populate list of available demo tournaments to help the visitor
-          if (invalidActions) {
-            const available = Object.values(DEMO_TOURNAMENTS).filter(x => x.published).slice(0, 3);
-            if (available.length) {
-              const linksHtml = available.map(t =>
-                `<a href="tournament-details.html?id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--ghost">${escapeHtml(t.tournament_name)}</a>`
-              ).join('');
-              invalidActions.innerHTML = linksHtml + `<a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW ALL TOURNAMENTS</a>`;
-            }
-          }
-          return;
-        }
-
-        showState('loading');
-
-        // Frontend demo mode:
-        // Replace the setTimeout block with real fetch() calls in production.
-        setTimeout(() => {
-          const t = DEMO_TOURNAMENTS[id];
-          if (!t) { showState('not-found'); return; }
-          if (!t.published) { showState('not-found'); return; }
-          try {
-            renderTournament(t);
-          } catch (err) {
-            console.error(err);
-            showState('error');
-          }
-        }, 300);
-      }
-
-      retryBtn?.addEventListener('click', loadTournament);
-
-      /* ============================================
-         GALLERY LIGHTBOX
-         ============================================ */
-      function openLightbox(src) {
-        lightboxImg.src = src;
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        lightboxClose.focus();
-      }
-
-      function closeLightbox() {
-        lightbox.classList.remove('active');
-        lightboxImg.src = '';
-        document.body.style.overflow = '';
-      }
-
-      galleryWrap?.addEventListener('click', e => {
-        const btn = e.target.closest('[data-gallery-src]');
-        if (!btn) return;
-        openLightbox(btn.getAttribute('data-gallery-src'));
-      });
-
-      galleryWrap?.addEventListener('keydown', e => {
-        const btn = e.target.closest('[data-gallery-src]');
-        if (!btn) return;
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openLightbox(btn.getAttribute('data-gallery-src'));
-        }
-      });
-
-      lightboxClose?.addEventListener('click', closeLightbox);
-      lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
-      });
-
-      /* ============================================
-         INIT
-         ============================================ */
-      loadTournament();
 
     })();
   </script>
