@@ -1,0 +1,3724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match-Box · Advanced Header, Auth & Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-charcoal: #101511;
+      --almost-black: #080B09;
+      --lime-green: #B7F34A;
+      --football-green: #285C35;
+      --white: #FFFFFF;
+      --light-bg: #F5F7F3;
+      --muted-grey: #777F78;
+      --font-primary: 'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --transition: 0.25s ease;
+      --header-height: 72px;
+      --announce-height: 38px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--light-bg);
+      color: var(--deep-charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========== REUSABLE ========== */
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+
+    .btn-lime {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-lime:hover {
+      background: #a4e03a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(183, 243, 74, 0.25);
+    }
+
+    .btn-outline-lime {
+      background: transparent;
+      color: var(--lime-green);
+      border: 1px solid var(--lime-green);
+    }
+
+    .btn-outline-lime:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-dark-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-dark-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    /* ========== ANNOUNCEMENT BAR — normal flow, at top ========== */
+    .announce-bar {
+      background: var(--football-green);
+      color: var(--white);
+      height: var(--announce-height);
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      width: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .announce-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .announce-bar span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .announce-bar a {
+      color: var(--lime-green);
+      font-weight: 700;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .announce-bar a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    /* ========== MAIN HEADER — in flow normally, becomes fixed on scroll ========== */
+    .main-header {
+      position: relative; /* in normal document flow at page load */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: var(--deep-charcoal);
+      display: flex;
+      align-items: center;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    /* When scrolled past the announcement bar: pin to top of viewport */
+    .main-header.is-fixed {
+      position: fixed;
+      top: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Placeholder that reserves header space when header becomes fixed */
+    .header-placeholder {
+      display: none;
+      height: var(--header-height);
+    }
+
+    .header-placeholder.active {
+      display: block;
+    }
+
+    .main-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* ----- Logo ----- */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--lime-green);
+      border-radius: 50%;
+      color: var(--almost-black);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .logo-text .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime-green);
+    }
+
+    /* ----- Desktop Navigation ----- */
+    .desktop-nav {
+      display: none;
+      height: 100%;
+    }
+
+    .desktop-nav ul {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0 0.9rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--lime-green);
+    }
+
+    .nav-link i {
+      font-size: 0.7rem;
+      transition: transform var(--transition);
+    }
+
+    .nav-item:hover .nav-link i {
+      transform: rotate(180deg);
+    }
+
+    .nav-link.active {
+      color: var(--lime-green);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: var(--lime-green);
+      border-radius: 2px;
+    }
+
+    /* ----- Dropdown Panel ----- */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 280px;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .nav-item:hover .dropdown-panel,
+    .nav-item:focus-within .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 0.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #e9ece9;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      gap: 12px;
+      padding: 0.65rem 1.5rem;
+      transition: background var(--transition);
+    }
+
+    .dropdown-item:hover {
+      background: #f0f5ec;
+    }
+
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--light-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--football-green);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .dropdown-text p {
+      font-size: 0.75rem;
+      color: var(--muted-grey);
+      line-height: 1.3;
+    }
+
+    /* ----- Header Actions (desktop) ----- */
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .auth-btn {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--lime-green);
+    }
+
+    .account-icon-btn {
+      color: var(--white);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+    }
+
+    .account-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .account-menu-wrapper {
+      position: relative;
+    }
+
+    .account-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      background: transparent;
+      padding: 4px 8px 4px 4px;
+      border-radius: 30px;
+      transition: background var(--transition);
+    }
+
+    .account-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .avatar-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .account-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 240px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .account-menu-wrapper.open .account-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .account-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--deep-charcoal);
+      transition: background var(--transition);
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f5ec;
+      color: var(--football-green);
+    }
+
+    .account-dropdown a i {
+      width: 16px;
+      color: var(--muted-grey);
+    }
+
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e9ece9;
+      margin: 0.4rem 1rem;
+    }
+
+    /* ----- Mobile Header Actions ----- */
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .mobile-book-btn {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hamburger {
+      color: var(--white);
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ----- Mobile Drawer ----- */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 88%;
+      max-width: 380px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--deep-charcoal);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem 1.25rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-drawer.open {
+      right: 0;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.75);
+      z-index: 2400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 12px;
+    }
+
+    .drawer-close {
+      color: var(--white);
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .drawer-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .drawer-nav {
+      flex: 1;
+    }
+
+    .drawer-nav > li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      width: 100%;
+      text-align: left;
+      transition: color var(--transition);
+    }
+
+    .drawer-link:hover {
+      color: var(--lime-green);
+    }
+
+    .drawer-link i {
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+
+    .drawer-sub {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 0.5rem;
+    }
+
+    .drawer-sub.open {
+      max-height: 500px;
+    }
+
+    .drawer-sub a {
+      display: block;
+      color: #b0b8b0;
+      font-size: 0.85rem;
+      padding: 0.6rem 0 0.6rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .drawer-sub a:hover {
+      color: var(--lime-green);
+      border-left-color: var(--lime-green);
+    }
+
+    .drawer-cta {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-auth .btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.85);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-grey);
+      font-size: 1.2rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--deep-charcoal);
+    }
+
+    .auth-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.25rem;
+      padding-right: 2rem;
+    }
+
+    .auth-modal .subtext {
+      font-size: 0.85rem;
+      color: var(--muted-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+      border: 1px solid #d4dcd4;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--football-green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 53, 0.15);
+    }
+
+    .input-wrapper input.error {
+      border-color: #d32f2f;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 10px;
+      background: none;
+      color: var(--muted-grey);
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color var(--transition);
+    }
+
+    .input-icon-right:hover {
+      color: var(--deep-charcoal);
+    }
+
+    .error-msg {
+      font-size: 0.7rem;
+      color: #d32f2f;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .checkbox-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--deep-charcoal);
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--football-green);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .link-text {
+      color: var(--football-green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+
+    .link-text:hover {
+      color: var(--lime-green);
+      text-decoration: underline;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-actions .btn {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted-grey);
+      margin-top: 1rem;
+    }
+
+    .auth-switch .link-text {
+      font-size: 0.8rem;
+    }
+
+    .message-area {
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .message-area.error {
+      display: block;
+      background: #fdecea;
+      color: #b71c1c;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .message-area.success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 3px solid #2e7d32;
+    }
+
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .strength-bar.weak { background: #e53935; }
+    .strength-bar.medium { background: #fbc02d; }
+    .strength-bar.strong { background: #43a047; }
+
+    .strength-text {
+      font-size: 0.7rem;
+      color: var(--muted-grey);
+      margin-top: 2px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--almost-black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--deep-charcoal);
+      color: var(--white);
+      padding-top: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .footer-cta {
+      background: var(--football-green);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-cta p {
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .footer-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-main {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-brand .logo-area {
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      max-width: 300px;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime-green);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--transition), padding-left var(--transition);
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .footer-col ul a:hover {
+      color: var(--lime-green);
+      padding-left: 4px;
+    }
+
+    .footer-contact-info li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.8rem;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    .footer-contact-info i {
+      color: var(--lime-green);
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .newsletter {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .newsletter h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .newsletter p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--lime-green);
+    }
+
+    .newsletter-form .btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .newsletter-msg {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .newsletter-msg.error {
+      display: block;
+      color: #ef9a9a;
+    }
+
+    .newsletter-msg.success {
+      display: block;
+      color: var(--lime-green);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--lime-green);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(183, 243, 74, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: #a4e03a;
+      transform: translateY(-3px);
+    }
+
+    /* ========== RESPONSIVE ========== */
+
+    /* Mobile & tablet: up to 1023px */
+    @media (max-width: 1023px) {
+      .desktop-nav { display: none !important; }
+      .header-actions { display: none !important; }
+      .mobile-header-actions { display: flex !important; }
+
+      .main-header .container { padding: 0 16px; gap: 8px; }
+      .logo-text .brand-name { font-size: 1.25rem; }
+      .logo-text .tagline { font-size: 0.5rem; }
+      .logo-icon { width: 32px; height: 32px; font-size: 1rem; }
+      .container { padding: 0 16px; }
+      .announce-bar .container { padding: 0 16px; gap: 6px; }
+      .announce-bar { font-size: 0.65rem; }
+      .announce-bar span { font-size: 0.65rem; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-cta { padding: 2rem 0; }
+      .footer-cta-btns .btn { width: 100%; max-width: 280px; }
+      .footer-cta p { font-size: 0.9rem; padding: 0 8px; }
+      .auth-modal { padding: 1.5rem 1.25rem; }
+      .auth-modal h2 { font-size: 1.5rem; }
+      .newsletter-form .btn { width: 100%; }
+    }
+
+    /* Very small mobile */
+    @media (max-width: 380px) {
+      .mobile-book-btn span { display: none; }
+      .mobile-book-btn { padding: 0.5rem 0.6rem; }
+      .logo-text .brand-name { font-size: 1.1rem; }
+      .main-header .container { padding: 0 10px; }
+    }
+
+    /* Desktop: 1024px and above */
+    @media (min-width: 1024px) {
+      .desktop-nav { display: block !important; }
+      .header-actions { display: flex !important; }
+      .mobile-header-actions { display: none !important; }
+
+      .footer-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;
+        gap: 2rem;
+      }
+      .footer-brand { grid-column: span 1; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .footer-cta-btns { gap: 1rem; }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* Desktop wide */
+    @media (min-width: 1440px) {
+      .container { padding: 0 40px; }
+      .desktop-nav .nav-link { font-size: 0.85rem; padding: 0 0.9rem; }
+      .header-actions { gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+
+
+    /*Main index page here...........*/
+
+    /* ----- SCOPE & RESET (only inside main) ----- */
+    .mb-main-content {
+      /* Brand tokens (local, not overriding global) */
+      --mb-charcoal: #101511;
+      --mb-deep-black: #080B09;
+      --mb-lime: #B7F34A;
+      --mb-forest: #285C35;
+      --mb-white: #FFFFFF;
+      --mb-light: #F5F7F2;
+      --mb-gray-border: rgba(255,255,255,0.12);
+      --mb-shadow-card: 0 20px 35px -12px rgba(0,0,0,0.45);
+      --mb-radius-card: 1.75rem;
+      --mb-radius-btn: 3rem;
+      --mb-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background-color: var(--mb-white);
+      color: var(--mb-charcoal);
+      font-family: var(--mb-font-sans);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .mb-main-content *,
+    .mb-main-content *::before,
+    .mb-main-content *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ----- shared layout & spacing ----- */
+    .mb-container {
+      width: 100%;
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 4rem);
+    }
+
+    .mb-section {
+      padding-block: clamp(3.5rem, 10vw, 8rem);
+    }
+
+    .mb-section--dark {
+      background-color: var(--mb-charcoal);
+      color: var(--mb-white);
+    }
+
+    .mb-section--light {
+      background-color: var(--mb-light);
+      color: var(--mb-charcoal);
+    }
+
+    .mb-section--white {
+      background-color: var(--mb-white);
+      color: var(--mb-charcoal);
+    }
+
+    /* headings / text */
+    .mb-eyebrow {
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mb-lime);
+      margin-bottom: 0.75rem;
+    }
+
+    .mb-section--light .mb-eyebrow {
+      color: var(--mb-forest);
+    }
+
+    .mb-h1,
+    .mb-h2,
+    .mb-h3 {
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .mb-h1 {
+      font-size: clamp(2.8rem, 10vw, 6rem);
+    }
+
+    .mb-h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    .mb-h3 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+    }
+
+    .mb-text-lg {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      max-width: 55ch;
+    }
+
+    .mb-text {
+      font-size: 1rem;
+      max-width: 55ch;
+    }
+
+    /* buttons */
+    .mb-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.875rem;
+      padding: 0.9rem 2rem;
+      border-radius: var(--mb-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      line-height: 1.2;
+      background: transparent;
+    }
+
+    .mb-btn:focus-visible {
+      outline: 3px solid var(--mb-lime);
+      outline-offset: 4px;
+    }
+
+    .mb-btn--primary {
+      background-color: var(--mb-lime);
+      color: var(--mb-deep-black);
+      border-color: var(--mb-lime);
+    }
+
+    .mb-btn--primary:hover {
+      background-color: #c6ff6b;
+      border-color: #c6ff6b;
+    }
+
+    .mb-btn--outline {
+      border-color: rgba(255,255,255,0.35);
+      color: var(--mb-white);
+      background-color: transparent;
+    }
+
+    .mb-btn--outline:hover {
+      border-color: var(--mb-lime);
+      color: var(--mb-lime);
+    }
+
+    .mb-btn--dark {
+      background-color: var(--mb-charcoal);
+      color: var(--mb-white);
+      border-color: var(--mb-charcoal);
+    }
+
+    .mb-btn--dark:hover {
+      background-color: #1f2a21;
+      border-color: #1f2a21;
+    }
+
+    .mb-text-link {
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--mb-lime);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: gap 0.2s;
+    }
+
+    .mb-text-link:hover {
+      gap: 0.6rem;
+    }
+
+    .mb-text-link--dark {
+      color: var(--mb-forest);
+    }
+
+    /* card base */
+    .mb-card {
+      border-radius: var(--mb-radius-card);
+      overflow: hidden;
+      background-color: var(--mb-white);
+      box-shadow: var(--mb-shadow-card);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mb-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 40px -12px rgba(0,0,0,0.55);
+    }
+
+    /* images */
+    .mb-img-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ----- HERO SECTION ----- */
+    .mb-home-hero {
+      position: relative;
+      background-color: var(--mb-deep-black);
+      color: var(--mb-white);
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .mb-home-hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .mb-home-hero__bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+
+    .mb-home-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, rgba(8,11,9,0.92) 0%, rgba(8,11,9,0.6) 50%, rgba(8,11,9,0.3) 100%);
+      z-index: 2;
+    }
+
+    .mb-home-hero__content {
+      position: relative;
+      z-index: 3;
+      padding-block: clamp(4rem, 12vw, 8rem);
+    }
+
+    .mb-home-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183, 243, 74, 0.15);
+      border-left: 4px solid var(--mb-lime);
+      padding: 0.5rem 1.2rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-lime);
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-home-hero__title {
+      font-size: clamp(2.8rem, 10vw, 6rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-home-hero__title span {
+      color: var(--mb-lime);
+    }
+
+    .mb-home-hero__subtitle {
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.5rem;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .mb-home-hero__desc {
+      max-width: 50ch;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .mb-home-hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .mb-home-hero__indicator {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 4;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      background: rgba(16,21,17,0.65);
+      backdrop-filter: blur(8px);
+      padding: 0.75rem 1.25rem;
+      border-radius: 4rem;
+      border: 1px solid var(--mb-gray-border);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .mb-home-hero__indicator svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--mb-lime);
+    }
+
+    /* ----- EXPERIENCE (5 services) ----- */
+    .mb-experience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .mb-exp-card {
+      background: var(--mb-white);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 12px 24px -12px rgba(0,0,0,0.15);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .mb-exp-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 36px -12px rgba(0,0,0,0.25);
+    }
+
+    .mb-exp-card__img {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--mb-light);
+    }
+
+    .mb-exp-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .mb-exp-card:hover .mb-exp-card__img img {
+      transform: scale(1.03);
+    }
+
+    .mb-exp-card__content {
+      padding: 1.5rem 1.25rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .mb-exp-card__title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-exp-card__desc {
+      font-size: 0.925rem;
+      color: #4a4f4b;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+
+    /* ----- ABOUT CONCEPT ----- */
+    .mb-about-split {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(2rem, 6vw, 5rem);
+      align-items: center;
+    }
+
+    .mb-about-split__image {
+      flex: 1 1 340px;
+      border-radius: var(--mb-radius-card);
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      box-shadow: var(--mb-shadow-card);
+    }
+
+    .mb-about-split__content {
+      flex: 1 1 340px;
+    }
+
+    .mb-concept-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin: 2rem 0 2.5rem;
+    }
+
+    .mb-concept-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .mb-concept-item__icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--mb-lime);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--mb-deep-black);
+      font-weight: 800;
+    }
+
+    /* ----- BOOKING SECTION (conversion) ----- */
+    .mb-booking-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(2rem, 6vw, 4rem);
+      align-items: stretch;
+    }
+
+    .mb-booking-info {
+      flex: 1 1 300px;
+    }
+
+    .mb-booking-preview {
+      flex: 1 1 340px;
+      background: var(--mb-white);
+      border-radius: var(--mb-radius-card);
+      box-shadow: var(--mb-shadow-card);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mb-booking-preview__label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--mb-forest);
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-booking-field {
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-booking-field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #2e3a30;
+    }
+
+    .mb-booking-field input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 2px solid #d0d9d0;
+      border-radius: 1rem;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      background: var(--mb-white);
+    }
+
+    .mb-booking-field input:focus {
+      outline: none;
+      border-color: var(--mb-forest);
+    }
+
+    .mb-booking-duration {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--mb-light);
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-booking-duration svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--mb-forest);
+    }
+
+    .mb-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 2px solid #e2e8e2;
+      padding-top: 1.25rem;
+      margin-top: auto;
+      margin-bottom: 1.75rem;
+    }
+
+    .mb-price-row span:first-child {
+      font-weight: 600;
+      color: #4a5a4e;
+    }
+
+    .mb-price-row span:last-child {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--mb-charcoal);
+    }
+
+    .mb-pricing-cards {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0 1.5rem;
+    }
+
+    .mb-price-tag {
+      background: var(--mb-white);
+      border-radius: 1.25rem;
+      padding: 1rem 1.5rem;
+      flex: 1 1 140px;
+      border: 2px solid #d9e0d9;
+    }
+
+    .mb-price-tag--peak {
+      border-color: var(--mb-lime);
+      background: rgba(183, 243, 74, 0.06);
+    }
+
+    .mb-price-tag__label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #536356;
+      margin-bottom: 0.25rem;
+    }
+
+    .mb-price-tag__value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--mb-charcoal);
+      line-height: 1.2;
+    }
+
+    .mb-price-tag__value small {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #5b6b5e;
+    }
+
+    .mb-note {
+      font-size: 0.8rem;
+      color: #6b7a6e;
+      margin-top: 1rem;
+    }
+
+    /* ----- COACHING SECTION ----- */
+    .mb-coaching-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .mb-coaching-card {
+      background: var(--mb-white);
+      border-radius: var(--mb-radius-card);
+      overflow: hidden;
+      box-shadow: 0 15px 30px -12px rgba(0,0,0,0.2);
+    }
+
+    .mb-coaching-card__img {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #d9e0d9;
+    }
+
+    .mb-coaching-card__content {
+      padding: 1.75rem;
+    }
+
+    .mb-coaching-card__title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .mb-coaching-card__details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      color: #3a4a3e;
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+
+    .mb-focus-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 2rem 0 2.5rem;
+      list-style: none;
+    }
+
+    .mb-focus-tags li {
+      background: var(--mb-white);
+      border: 1px solid #d0d9d0;
+      border-radius: 3rem;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2e3a30;
+    }
+
+    /* ----- TOURNAMENTS ----- */
+    .mb-tournament-placeholder {
+      background: var(--mb-charcoal);
+      color: var(--mb-white);
+      border-radius: var(--mb-radius-card);
+      padding: clamp(2rem, 6vw, 4rem);
+      text-align: center;
+      border: 1px solid var(--mb-gray-border);
+    }
+
+    /* ----- EVENTS ----- */
+    .mb-events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .mb-event-card {
+      background: var(--mb-white);
+      border-radius: var(--mb-radius-card);
+      overflow: hidden;
+      box-shadow: var(--mb-shadow-card);
+    }
+
+    .mb-event-card__img {
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+    }
+
+    .mb-event-card__content {
+      padding: 1.5rem;
+    }
+
+    .mb-event-card__title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ----- WHY MATCH-BOX ----- */
+    .mb-benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .mb-benefit {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: var(--mb-white);
+      border-radius: 1.5rem;
+      border: 1px solid #e2e8e2;
+    }
+
+    .mb-benefit svg {
+      width: 48px;
+      height: 48px;
+      fill: var(--mb-forest);
+      margin-bottom: 1rem;
+    }
+
+    .mb-benefit__title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-benefit__desc {
+      font-size: 0.9rem;
+      color: #4a5a4e;
+    }
+
+    /* ----- GALLERY ----- */
+    .mb-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .mb-gallery-item {
+      border-radius: 1.25rem;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: #1e2a20;
+    }
+
+    .mb-gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      display: block;
+    }
+
+    .mb-gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .mb-gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; aspect-ratio: 1; }
+    .mb-gallery-item:nth-child(2) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
+    .mb-gallery-item:nth-child(3) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
+    .mb-gallery-item:nth-child(4) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
+    .mb-gallery-item:nth-child(5) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
+    .mb-gallery-item:nth-child(6) { grid-column: span 2; grid-row: span 1; aspect-ratio: 2/1; }
+
+    /* lightbox (simple, controlled via JS) */
+    .mb-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,9,0.94);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .mb-lightbox.active { display: flex; }
+    .mb-lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 1rem;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.8);
+      object-fit: contain;
+    }
+    .mb-lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.5rem;
+      z-index: 10000;
+    }
+    .mb-lightbox-close:focus-visible { outline: 3px solid var(--mb-lime); }
+
+    /* ----- FINAL CTA ----- */
+    .mb-final-cta {
+      position: relative;
+      background: var(--mb-deep-black);
+      color: var(--mb-white);
+      border-radius: var(--mb-radius-card);
+      overflow: hidden;
+      padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 6vw, 5rem);
+      text-align: center;
+      background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .mb-final-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(8,11,9,0.92), rgba(8,11,9,0.7));
+      z-index: 1;
+    }
+
+    .mb-final-cta > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .mb-final-cta__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2.5rem;
+    }
+
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 1024px) {
+      .mb-gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .mb-gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 1; aspect-ratio: 2/1; }
+      .mb-gallery-item:nth-child(6) { grid-column: span 2; aspect-ratio: 2/1; }
+    }
+
+    @media (max-width: 768px) {
+      .mb-home-hero__indicator {
+        display: none;
+      }
+      .mb-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .mb-gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 1; aspect-ratio: 2/1; }
+      .mb-gallery-item:nth-child(6) { grid-column: span 2; aspect-ratio: 2/1; }
+      .mb-about-split {
+        flex-direction: column;
+      }
+      .mb-about-split__image {
+        width: 100%;
+      }
+      .mb-booking-wrapper {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .mb-gallery-grid {
+        grid-template-columns: 1fr;
+      }
+      .mb-gallery-item,
+      .mb-gallery-item:nth-child(1),
+      .mb-gallery-item:nth-child(6) {
+        grid-column: span 1;
+        grid-row: span 1;
+        aspect-ratio: 4/3;
+      }
+      .mb-home-hero__actions .mb-btn {
+        width: 100%;
+      }
+      .mb-price-tag {
+        flex: 1 1 100%;
+      }
+      .mb-final-cta__actions .mb-btn {
+        width: 100%;
+      }
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .mb-main-content *,
+      .mb-main-content *::before,
+      .mb-main-content *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* reveal animation (optional) */
+    .mb-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .mb-reveal.mb-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* focus */
+    .mb-main-content a:focus-visible,
+    .mb-main-content button:focus-visible,
+    .mb-main-content input:focus-visible {
+      outline: 3px solid var(--mb-lime);
+      outline-offset: 3px;
+    }
+
+    /* header hidden for demo – but we don't touch global */
+    .mb-main-content img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR — at top of page, scrolls with the page -->
+  <div class="announce-bar" id="announceBar">
+    <div class="container">
+      <span>READY FOR YOUR NEXT GAME? BOOK YOUR MATCH-BOX SESSION TODAY.</span>
+      <a href="pages/book-to-play.html">BOOK NOW →</a>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER — starts in normal flow, becomes fixed after scrolling past the announcement bar -->
+  <header class="main-header" id="mainHeader">
+    <div class="container">
+      <a href="index.html" class="logo-area" aria-label="Match-Box home">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <ul>
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item">
+            <a href="book-to-play.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Play <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">PLAY AT MATCH-BOX</div>
+              <a href="book-to-play.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="dropdown-text"><h4>Book a Pitch</h4><p>Reserve a one-hour football session with your friends.</p></div>
+              </a>
+              <a href="about.html#concept" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="dropdown-text"><h4>How It Works</h4><p>Discover how 4-a-side football works at Match-Box.</p></div>
+              </a>
+              <a href="price.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-tag"></i></div>
+                <div class="dropdown-text"><h4>Pricing</h4><p>Explore peak and non-peak playing rates.</p></div>
+              </a>
+              <a href="about.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-building"></i></div>
+                <div class="dropdown-text"><h4>Facility Information</h4><p>Explore the football experience and facility information.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="coaching.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Coaching <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">COACHING PROGRAMS</div>
+              <a href="coaching.html#elite" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-star"></i></div>
+                <div class="dropdown-text"><h4>Elite Coaching</h4><p>Advanced sessions for competitive players.</p></div>
+              </a>
+              <a href="coaching.html#morning" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-sun"></i></div>
+                <div class="dropdown-text"><h4>Morning Coaching</h4><p>Start your day with focused training.</p></div>
+              </a>
+              <a href="coaching.html#afternoon" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="dropdown-text"><h4>Afternoon Coaching</h4><p>Develop skills after school or work.</p></div>
+              </a>
+              <a href="coaching-registration.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="dropdown-text"><h4>Player Registration</h4><p>Explore sessions and register based on capacity.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="tournaments.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Tournaments <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">TOURNAMENTS</div>
+              <a href="tournaments.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-trophy"></i></div>
+                <div class="dropdown-text"><h4>Upcoming Tournaments</h4><p>See what's coming up on the pitch.</p></div>
+              </a>
+              <a href="tournament-details.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="dropdown-text"><h4>Tournament Details</h4><p>Rules, format, and schedules.</p></div>
+              </a>
+              <a href="tournament-register.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-users"></i></div>
+                <div class="dropdown-text"><h4>Register Your Team</h4><p>Sign up your squad for the next event.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="events.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Events <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">EVENTS</div>
+              <a href="events.html#birthday" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-birthday-cake"></i></div>
+                <div class="dropdown-text"><h4>Birthday Celebrations</h4><p>Host a memorable football birthday.</p></div>
+              </a>
+              <a href="events.html#private" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                <div class="dropdown-text"><h4>Private Football Games</h4><p>Book the pitch for your own group.</p></div>
+              </a>
+              <a href="events.html#school" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-school"></i></div>
+                <div class="dropdown-text"><h4>School Activities</h4><p>Organized football sessions for schools.</p></div>
+              </a>
+              <a href="events.html#corporate" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="dropdown-text"><h4>Corporate Team Building</h4><p>Bring your team together on the pitch.</p></div>
+              </a>
+              <a href="event-enquiry.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-envelope"></i></div>
+                <div class="dropdown-text"><h4>Submit Event Enquiry</h4><p>Tell us about your event plans.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="auth-btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+        <button class="auth-btn" id="registerBtn" aria-haspopup="dialog">Register</button>
+        <div class="account-menu-wrapper" id="accountMenuWrapper" style="display: none;">
+          <button class="account-trigger" id="accountTrigger" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar-initials" id="avatarInitials">JD</span>
+            <span class="account-name" id="accountName">John</span>
+            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <div class="account-dropdown" id="accountDropdown" role="menu">
+            <a href="customer/dashboard.html" role="menuitem"><i class="fas fa-th-large"></i> My Account</a>
+            <a href="customer/bookings.html" role="menuitem"><i class="fas fa-calendar-alt"></i> My Bookings</a>
+            <a href="customer/booking-history.html" role="menuitem"><i class="fas fa-history"></i> Booking History</a>
+            <a href="customer/coaching-registrations.html" role="menuitem"><i class="fas fa-chalkboard-teacher"></i> Coaching Registrations</a>
+            <a href="customer/tournament-registrations.html" role="menuitem"><i class="fas fa-trophy"></i> Tournament Registrations</a>
+            <a href="customer/event-enquiries.html" role="menuitem"><i class="fas fa-envelope-open-text"></i> Event Enquiries</a>
+            <div class="divider"></div>
+            <a href="customer/settings.html" role="menuitem"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="#" id="logoutBtn" role="menuitem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <a href="book-to-play.html" class="btn btn-lime">BOOK NOW</a>
+      </div>
+
+      <div class="mobile-header-actions">
+        <a href="book-to-play.html" class="mobile-book-btn"><i class="fas fa-calendar-check"></i> <span>BOOK NOW</span></a>
+        <button class="account-icon-btn" id="mobileAccountBtn" aria-label="My account"><i class="fas fa-user-circle"></i></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Placeholder that reserves space when the header becomes fixed -->
+  <div class="header-placeholder" id="headerPlaceholder" aria-hidden="true"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    </div>
+
+    <ul class="drawer-nav">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="about.html" class="drawer-link">About</a></li>
+      <li>
+        <button class="drawer-link" data-sub="playSub" aria-expanded="false">Play Football <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="playSub">
+          <a href="book-to-play.html">Book a Pitch</a>
+          <a href="about.html#concept">How It Works</a>
+          <a href="price.html">Pricing</a>
+          <a href="about.html">Facility Information</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="coachingSub" aria-expanded="false">Coaching <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="coachingSub">
+          <a href="coaching.html#elite">Elite Coaching</a>
+          <a href="coaching.html#morning">Morning Coaching</a>
+          <a href="coaching.html#afternoon">Afternoon Coaching</a>
+          <a href="coaching-registration.html">Player Registration</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="tournamentsSub" aria-expanded="false">Tournaments <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="tournamentsSub">
+          <a href="tournaments.html">Upcoming Tournaments</a>
+          <a href="tournament-details.html">Tournament Details</a>
+          <a href="tournament-register.html">Register Your Team</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="eventsSub" aria-expanded="false">Events <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="eventsSub">
+          <a href="events.html#birthday">Birthday Celebrations</a>
+          <a href="events.html#private">Private Football Games</a>
+          <a href="events.html#school">School Activities</a>
+          <a href="events.html#corporate">Corporate Team Building</a>
+          <a href="event-enquiry.html">Submit Event Enquiry</a>
+        </div>
+      </li>
+      <li><a href="contact.html" class="drawer-link">Contact</a></li>
+    </ul>
+
+    <div class="drawer-auth" id="drawerAuth">
+      <button class="btn btn-outline-lime" id="drawerLoginBtn">Login</button>
+      <button class="btn btn-lime" id="drawerRegisterBtn">Create Account</button>
+    </div>
+
+    <div class="drawer-auth" id="drawerAccount" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span class="avatar-initials" id="drawerAvatar">JD</span>
+        <span style="color: white; font-weight: 600; font-size: 0.9rem;" id="drawerName">John</span>
+      </div>
+      <a href="customer/dashboard.html" class="btn btn-outline-lime">My Account</a>
+      <a href="customer/bookings.html" class="btn btn-outline-lime">My Bookings</a>
+      <button class="btn btn-outline-lime" id="drawerLogoutBtn">Logout</button>
+    </div>
+
+    <a href="book-to-play.html" class="btn btn-lime drawer-cta">BOOK YOUR GAME</a>
+  </aside>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="authModalClose" aria-label="Close modal"><i class="fas fa-times"></i></button>
+
+      <div id="loginPanel">
+        <h2 id="authModalTitle">WELCOME BACK TO MATCH-BOX</h2>
+        <p class="subtext">Sign in to access your Match-Box experience.</p>
+        <div class="message-area" id="loginMessage"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="error-msg" id="loginEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" id="toggleLoginPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="loginPasswordError">Password is required.</div>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="link-text" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="loginSubmitBtn">LOGIN</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToRegisterBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">CREATE AN ACCOUNT</button>
+          </div>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" class="link-text" id="switchToRegisterLink">Create one</a></p>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">Demo interface. No real authentication is performed.</p>
+      </div>
+
+      <div id="registerPanel" style="display: none;">
+        <h2 id="registerTitle">JOIN THE MATCH-BOX COMMUNITY</h2>
+        <p class="subtext">Create your account and make your next football experience easier.</p>
+        <div class="message-area" id="registerMessage"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="regFullName">Full name</label>
+            <div class="input-wrapper"><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required></div>
+            <div class="error-msg" id="regFullNameError">Full name is required.</div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrapper"><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="regEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="regMobile">Mobile number</label>
+            <div class="input-wrapper"><input type="tel" id="regMobile" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" required></div>
+            <div class="error-msg" id="regMobileError">Please enter a valid mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar" id="strengthBar1"></div>
+              <div class="strength-bar" id="strengthBar2"></div>
+              <div class="strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="strength-text" id="strengthText"></div>
+            <div class="error-msg" id="regPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="regConfirmPassword">Confirm password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="regConfirmPasswordError">Passwords do not match.</div>
+          </div>
+          <div class="checkbox-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <label><input type="checkbox" id="termsCheck" required> I accept the <a href="pages/terms.html" class="link-text">Terms & Conditions</a></label>
+            <label><input type="checkbox" id="privacyCheck" required> I accept the <a href="pages/privacy.html" class="link-text">Privacy Policy</a></label>
+            <div class="error-msg" id="termsError">You must accept the terms and privacy policy.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="registerSubmitBtn">CREATE ACCOUNT</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToLoginBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" class="link-text" id="switchToLoginLink">Sign in</a></p>
+      </div>
+
+      <div id="forgotPanel" style="display: none;">
+        <h2>RESET YOUR PASSWORD</h2>
+        <p class="subtext">Enter your registered email address and we'll send reset instructions if the account exists.</p>
+        <div class="message-area" id="forgotMessage"></div>
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label for="forgotEmail">Registered email address</label>
+            <div class="input-wrapper"><input type="email" id="forgotEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="forgotEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="forgotSubmitBtn">SEND RESET LINK</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromForgot" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">For security, we do not reveal whether an email is registered.</p>
+      </div>
+
+      <div id="resetPanel" style="display: none;">
+        <h2>CREATE NEW PASSWORD</h2>
+        <p class="subtext">Enter your new password below.</p>
+        <div class="message-area" id="resetMessage"></div>
+        <form id="resetForm" novalidate>
+          <div class="form-group">
+            <label for="resetPassword">New password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetPassword" name="newPassword" placeholder="New password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="resetStrength">
+              <div class="strength-bar" id="resetBar1"></div>
+              <div class="strength-bar" id="resetBar2"></div>
+              <div class="strength-bar" id="resetBar3"></div>
+            </div>
+            <div class="strength-text" id="resetStrengthText"></div>
+            <div class="error-msg" id="resetPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="resetConfirmPassword">Confirm new password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetConfirmPassword" name="confirmPassword" placeholder="Confirm new password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="resetConfirmError">Passwords do not match.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="resetSubmitBtn">RESET PASSWORD</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromReset" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 
+    EXISTING HEADER AND NAVIGATION ARE PRESENT ABOVE THIS <main> ELEMENT.
+    This file ONLY contains the main content. Do not add header/footer here.
+  -->
+  <main class="mb-main-content" id="main-content">
+
+    <!-- ===== SECTION 1 – PREMIUM FOOTBALL HERO ===== -->
+    <section class="mb-home-hero" aria-labelledby="mb-hero-title">
+      <div class="mb-home-hero__bg">
+        <!-- Placeholder football action image – small-sided concept -->
+        <img 
+          src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2070&auto=format&fit=crop" 
+          alt="Players competing on a small-sided football pitch during an intense match" 
+          fetchpriority="high"
+        >
+      </div>
+      <div class="mb-home-hero__overlay"></div>
+      <div class="mb-container mb-home-hero__content">
+        <div class="mb-home-hero__badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          WELCOME TO MATCH-BOX
+        </div>
+        <h1 id="mb-hero-title" class="mb-home-hero__title">
+          SMALL FIELD.<br>
+          <span>BIG FUN.</span>
+        </h1>
+        <p class="mb-home-hero__subtitle">YOUR GAME. YOUR TEAM. YOUR PITCH.</p>
+        <p class="mb-home-hero__desc">
+          Bring your team together and experience the excitement of 4-a-side football. 
+          Book your pitch, improve your skills, compete in tournaments, and create unforgettable football moments.
+        </p>
+        <div class="mb-home-hero__actions">
+          <a href="book-pitch.html" class="mb-btn mb-btn--primary">BOOK YOUR PITCH</a>
+          <a href="coaching.html" class="mb-btn mb-btn--outline">EXPLORE COACHING</a>
+          <a href="about.html" class="mb-text-link" style="margin-left: 0.5rem;">Discover MATCH-BOX →</a>
+        </div>
+      </div>
+      <div class="mb-home-hero__indicator">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+        4-A-SIDE FOOTBALL
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2 – THE MATCH-BOX EXPERIENCE ===== -->
+    <section class="mb-section mb-section--white" aria-labelledby="mb-experience-title">
+      <div class="mb-container">
+        <span class="mb-eyebrow">MORE THAN A GAME</span>
+        <h2 id="mb-experience-title" class="mb-h2" style="max-width: 900px;">
+          MORE WAYS TO PLAY.<br>MORE REASONS TO LOVE FOOTBALL.
+        </h2>
+        <div class="mb-experience-grid">
+          <!-- 1. BOOK TO PLAY -->
+          <article class="mb-exp-card">
+            <div class="mb-exp-card__img">
+              <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop" alt="Football pitch ready for a 4-a-side game" loading="lazy">
+            </div>
+            <div class="mb-exp-card__content">
+              <h3 class="mb-exp-card__title">BOOK TO PLAY</h3>
+              <p class="mb-exp-card__desc">Reserve your football pitch and enjoy a game with friends.</p>
+              <a href="book-pitch.html" class="mb-text-link mb-text-link--dark">Book now →</a>
+            </div>
+          </article>
+          <!-- 2. FOOTBALL COACHING -->
+          <article class="mb-exp-card">
+            <div class="mb-exp-card__img">
+              <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop" alt="Young football players training with a coach" loading="lazy">
+            </div>
+            <div class="mb-exp-card__content">
+              <h3 class="mb-exp-card__title">FOOTBALL COACHING</h3>
+              <p class="mb-exp-card__desc">Develop your skills through structured training sessions.</p>
+              <a href="coaching.html" class="mb-text-link mb-text-link--dark">Explore →</a>
+            </div>
+          </article>
+          <!-- 3. TOURNAMENTS -->
+          <article class="mb-exp-card">
+            <div class="mb-exp-card__img">
+              <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=800&auto=format&fit=crop" alt="Trophy and footballs on a pitch" loading="lazy">
+            </div>
+            <div class="mb-exp-card__content">
+              <h3 class="mb-exp-card__title">TOURNAMENTS</h3>
+              <p class="mb-exp-card__desc">Compete with other teams and challenge yourself.</p>
+              <a href="tournaments.html" class="mb-text-link mb-text-link--dark">View →</a>
+            </div>
+          </article>
+          <!-- 4. EVENTS & CELEBRATIONS -->
+          <article class="mb-exp-card">
+            <div class="mb-exp-card__img">
+              <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=800&auto=format&fit=crop" alt="Friends celebrating on a football pitch" loading="lazy">
+            </div>
+            <div class="mb-exp-card__content">
+              <h3 class="mb-exp-card__title">EVENTS & CELEBRATIONS</h3>
+              <p class="mb-exp-card__desc">Make birthdays and private occasions memorable.</p>
+              <a href="events.html" class="mb-text-link mb-text-link--dark">Plan →</a>
+            </div>
+          </article>
+          <!-- 5. TEAM EXPERIENCES -->
+          <article class="mb-exp-card">
+            <div class="mb-exp-card__img">
+              <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop" alt="Team huddle on the pitch" loading="lazy">
+            </div>
+            <div class="mb-exp-card__content">
+              <h3 class="mb-exp-card__title">TEAM EXPERIENCES</h3>
+              <p class="mb-exp-card__desc">Bring schools, colleagues, and groups together through football.</p>
+              <a href="events.html" class="mb-text-link mb-text-link--dark">Enquire →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3 – ABOUT THE MATCH-BOX CONCEPT ===== -->
+    <section class="mb-section mb-section--light" aria-labelledby="mb-about-title">
+      <div class="mb-container">
+        <div class="mb-about-split">
+          <div class="mb-about-split__image">
+            <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1200&auto=format&fit=crop" alt="Close-up football action on a small-sided pitch" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="mb-about-split__content">
+            <span class="mb-eyebrow">THE MATCH-BOX CONCEPT</span>
+            <h2 id="mb-about-title" class="mb-h2">BIG FOOTBALL ENERGY.<br>SMALL-SIDED ACTION.</h2>
+            <p class="mb-text-lg" style="margin-top:1.5rem;">
+              MATCH-BOX is built around the excitement of 4-a-side football. A space where friends, teams, and players can come together to play, learn, compete, and enjoy the game.
+            </p>
+            <div class="mb-concept-list">
+              <div class="mb-concept-item">
+                <div class="mb-concept-item__icon">⚡</div>
+                <div><strong>FAST-PACED PLAY:</strong> More involvement, more movement, and more exciting moments.</div>
+              </div>
+              <div class="mb-concept-item">
+                <div class="mb-concept-item__icon">🤝</div>
+                <div><strong>TEAM CONNECTION:</strong> Bring people together through friendly competition.</div>
+              </div>
+              <div class="mb-concept-item">
+                <div class="mb-concept-item__icon">📈</div>
+                <div><strong>FOOTBALL DEVELOPMENT:</strong> Create opportunities to practise and improve.</div>
+              </div>
+            </div>
+            <a href="about.html" class="mb-btn mb-btn--dark">EXPLORE MATCH-BOX</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4 – INTERACTIVE PITCH BOOKING SHOWCASE ===== -->
+    <section class="mb-section mb-section--white" aria-labelledby="mb-booking-title">
+      <div class="mb-container">
+        <span class="mb-eyebrow">YOUR PITCH IS WAITING</span>
+        <h2 id="mb-booking-title" class="mb-h2" style="max-width: 800px;">
+          PICK YOUR TIME. BRING YOUR TEAM. PLAY!
+        </h2>
+        <p class="mb-text-lg" style="margin-top:1rem;margin-bottom:3rem;">
+          Your next football session is just a booking away. Choose your preferred date, find a suitable time, and get your team ready.
+        </p>
+        <div class="mb-booking-wrapper">
+          <!-- left: info & pricing -->
+          <div class="mb-booking-info">
+            <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
+              <div><strong>🕒</strong> 6:00 AM – 12:00 AM</div>
+              <div><strong>⏱️</strong> 1 hour sessions</div>
+            </div>
+            <div class="mb-pricing-cards">
+              <div class="mb-price-tag">
+                <div class="mb-price-tag__label">NON-PEAK</div>
+                <div class="mb-price-tag__value">₹350 <small>/ hour</small></div>
+              </div>
+              <div class="mb-price-tag mb-price-tag--peak">
+                <div class="mb-price-tag__label">PEAK</div>
+                <div class="mb-price-tag__value">₹500 <small>/ hour</small></div>
+              </div>
+            </div>
+            <p class="mb-note">Peak timings and final availability are subject to the current booking schedule.</p>
+          </div>
+          <!-- right: preview form (non-functional, redirects) -->
+          <div class="mb-booking-preview">
+            <div class="mb-booking-preview__label">BOOKING PREVIEW</div>
+            <div class="mb-booking-field">
+              <label for="mb-date-preview">Select date</label>
+              <input type="date" id="mb-date-preview" name="date" min="2025-01-01">
+            </div>
+            <div class="mb-booking-field">
+              <label for="mb-time-preview">Preferred start time</label>
+              <input type="time" id="mb-time-preview" name="time" min="06:00" max="23:00" step="3600" value="18:00">
+            </div>
+            <div class="mb-booking-duration">
+              <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+              Duration: 1 hour
+            </div>
+            <div class="mb-price-row">
+              <span>Estimated price</span>
+              <span>₹350 – ₹500</span>
+            </div>
+            <a href="book-pitch.html" class="mb-btn mb-btn--dark" style="width:100%;">CHECK AVAILABILITY</a>
+            <p class="mb-note" style="text-align:center;margin-top:1rem;">Actual availability and pricing confirmed on booking page.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5 – FOOTBALL COACHING PROGRAMMES ===== -->
+    <section class="mb-section mb-section--light" aria-labelledby="mb-coaching-title">
+      <div class="mb-container">
+        <span class="mb-eyebrow">LEARN. TRAIN. IMPROVE.</span>
+        <h2 id="mb-coaching-title" class="mb-h2">YOUR FOOTBALL JOURNEY STARTS HERE.</h2>
+        <p class="mb-text-lg" style="margin-top:1rem;">
+          Whether you're developing your fundamentals or improving your overall game, MATCH-BOX coaching provides structured opportunities to learn and practise football.
+        </p>
+        <div class="mb-coaching-grid">
+          <!-- Morning -->
+          <div class="mb-coaching-card">
+            <div class="mb-coaching-card__img">
+              <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop" alt="Morning football training session" loading="lazy">
+            </div>
+            <div class="mb-coaching-card__content">
+              <h3 class="mb-coaching-card__title">MORNING TRAINING</h3>
+              <div class="mb-coaching-card__details">
+                <span>🕔 5:00 AM – 6:30 AM</span>
+                <span>👥 Max 10 players</span>
+                <span>⚽ 8 outfield + 2 GK</span>
+              </div>
+              <p>Structured session to sharpen your skills before the day begins.</p>
+            </div>
+          </div>
+          <!-- Afternoon -->
+          <div class="mb-coaching-card">
+            <div class="mb-coaching-card__img">
+              <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=800&auto=format&fit=crop" alt="Afternoon football coaching" loading="lazy">
+            </div>
+            <div class="mb-coaching-card__content">
+              <h3 class="mb-coaching-card__title">AFTERNOON TRAINING</h3>
+              <div class="mb-coaching-card__details">
+                <span>🕒 3:00 PM – 4:30 PM</span>
+                <span>👥 Capacity managed by facility</span>
+              </div>
+              <p>Perfect for after-school or post-work football development.</p>
+            </div>
+          </div>
+        </div>
+        <!-- training focus tags -->
+        <ul class="mb-focus-tags">
+          <li>Ball control</li><li>Passing accuracy</li><li>Dribbling</li><li>Shooting & finishing</li>
+          <li>Positioning & movement</li><li>Teamwork</li><li>Goalkeeping</li>
+        </ul>
+        <a href="coaching.html" class="mb-btn mb-btn--primary">EXPLORE COACHING</a>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6 – TOURNAMENTS ===== -->
+    <section class="mb-section mb-section--dark" aria-labelledby="mb-tournaments-title">
+      <div class="mb-container">
+        <span class="mb-eyebrow">THE COMPETITIVE SIDE</span>
+        <h2 id="mb-tournaments-title" class="mb-h2" style="max-width: 800px;">YOUR TEAM. YOUR MOMENT. YOUR CHALLENGE.</h2>
+        <p class="mb-text-lg" style="margin-top:1rem;color:rgba(255,255,255,0.8);">
+          Bring your team together, test your skills, and experience the excitement of competitive 4-a-side football.
+        </p>
+        <!-- placeholder for future tournament data -->
+        <div class="mb-tournament-placeholder" style="margin-top:3rem;">
+          <h3 style="font-size:2rem;font-weight:800;margin-bottom:1rem;">NEW TOURNAMENTS COMING SOON.</h3>
+          <p style="color:rgba(255,255,255,0.7);max-width:500px;margin:0 auto 2rem;">Stay tuned for upcoming competitions. Register your interest to be notified.</p>
+          <a href="tournaments.html" class="mb-btn mb-btn--primary">EXPLORE TOURNAMENTS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 7 – EVENTS ===== -->
+    <section class="mb-section mb-section--white" aria-labelledby="mb-events-title">
+      <div class="mb-container">
+        <span class="mb-eyebrow">MAKE IT MEMORABLE</span>
+        <h2 id="mb-events-title" class="mb-h2">MORE THAN A MATCH. AN EXPERIENCE.</h2>
+        <p class="mb-text-lg" style="margin-top:1rem;">
+          From birthday celebrations to private football sessions and group activities, make your special occasions more exciting with MATCH-BOX.
+        </p>
+        <div class="mb-events-grid">
+          <div class="mb-event-card">
+            <div class="mb-event-card__img"><img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=800&auto=format&fit=crop" alt="Birthday football celebration" loading="lazy"></div>
+            <div class="mb-event-card__content">
+              <h3 class="mb-event-card__title">BIRTHDAY FOOTBALL</h3>
+              <p>Celebrate your special day with friends, football, and fun.</p>
+            </div>
+          </div>
+          <div class="mb-event-card">
+            <div class="mb-event-card__img"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop" alt="Private football game" loading="lazy"></div>
+            <div class="mb-event-card__content">
+              <h3 class="mb-event-card__title">PRIVATE GAMES</h3>
+              <p>Organise a dedicated football session for your group.</p>
+            </div>
+          </div>
+          <div class="mb-event-card">
+            <div class="mb-event-card__img"><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop" alt="School or corporate football event" loading="lazy"></div>
+            <div class="mb-event-card__content">
+              <h3 class="mb-event-card__title">SCHOOL & CORPORATE EVENTS</h3>
+              <p>Bring students, colleagues, and teams together through football.</p>
+            </div>
+          </div>
+        </div>
+        <p class="mb-note" style="margin:2rem 0;">All event bookings require enquiry and management confirmation.</p>
+        <a href="events.html" class="mb-btn mb-btn--dark">PLAN YOUR EVENT</a>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8 – WHY MATCH-BOX ===== -->
+    <section class="mb-section mb-section--light" aria-labelledby="mb-why-title">
+      <div class="mb-container">
+        <h2 id="mb-why-title" class="mb-h2" style="max-width:800px;">WHY MAKE MATCH-BOX YOUR NEXT PLAYING DESTINATION?</h2>
+        <div class="mb-benefits-grid">
+          <div class="mb-benefit">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="4"/></svg>
+            <h3 class="mb-benefit__title">4-A-SIDE FOOTBALL</h3>
+            <p class="mb-benefit__desc">Enjoy the excitement and fast pace of small-sided football.</p>
+          </div>
+          <div class="mb-benefit">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <h3 class="mb-benefit__title">SIMPLE BOOKING</h3>
+            <p class="mb-benefit__desc">Find your preferred date and book through a straightforward process.</p>
+          </div>
+          <div class="mb-benefit">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <h3 class="mb-benefit__title">MORE THAN PLAYING</h3>
+            <p class="mb-benefit__desc">Access coaching, tournaments, and group experiences.</p>
+          </div>
+          <div class="mb-benefit">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-3.5l-3-3 1.41-1.41L10 14.67l5.59-5.59L17 10.5 10 17.5z"/></svg>
+            <h3 class="mb-benefit__title">A PLACE FOR EVERY TEAM</h3>
+            <p class="mb-benefit__desc">Enjoy football with friends, teammates, students, and groups.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 9 – VISUAL GALLERY ===== -->
+    <section class="mb-section mb-section--white" aria-labelledby="mb-gallery-title">
+      <div class="mb-container">
+        <h2 id="mb-gallery-title" class="mb-h2">FEEL THE GAME. LIVE THE MOMENT.</h2>
+        <div class="mb-gallery-grid" id="mb-gallery-grid">
+          <!-- data-src for lightbox -->
+          <div class="mb-gallery-item" data-src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="Enlarge football action image">
+            <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=600&auto=format&fit=crop" alt="4-a-side football action" loading="lazy">
+          </div>
+          <div class="mb-gallery-item" data-src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="Enlarge player controlling ball">
+            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop" alt="Player controlling the ball" loading="lazy">
+          </div>
+          <div class="mb-gallery-item" data-src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="Enlarge goalkeeping moment">
+            <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=600&auto=format&fit=crop" alt="Goalkeeper in action" loading="lazy">
+          </div>
+          <div class="mb-gallery-item" data-src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="Enlarge team celebration">
+            <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=600&auto=format&fit=crop" alt="Team celebration" loading="lazy">
+          </div>
+          <div class="mb-gallery-item" data-src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="Enlarge training activity">
+            <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=600&auto=format&fit=crop" alt="Training activities" loading="lazy">
+          </div>
+          <div class="mb-gallery-item" data-src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="Enlarge small-sided pitch atmosphere">
+            <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=600&auto=format&fit=crop" alt="Small-sided pitch atmosphere" loading="lazy">
+          </div>
+        </div>
+        <p class="mb-note" style="margin-top:1.5rem;">Images are illustrative. Actual facility may vary.</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 10 – FINAL BOOKING CONVERSION ===== -->
+    <section class="mb-section" style="padding-bottom:6rem;">
+      <div class="mb-container">
+        <div class="mb-final-cta">
+          <h2 class="mb-h2" style="font-size:clamp(2rem,6vw,4rem);">DON'T JUST WATCH FOOTBALL.<br><span style="color:var(--mb-lime);">PLAY IT.</span></h2>
+          <p class="mb-text-lg" style="color:rgba(255,255,255,0.85);max-width:600px;margin:1rem auto 0;">
+            Get your team together, choose your slot, and experience the excitement of MATCH-BOX. Your next game starts here.
+          </p>
+          <div class="mb-final-cta__actions">
+            <a href="book-pitch.html" class="mb-btn mb-btn--primary">BOOK YOUR PITCH</a>
+            <a href="contact.html" class="mb-btn mb-btn--outline">CONTACT MATCH-BOX</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Simple lightbox (only used for gallery, non-intrusive) -->
+  <div class="mb-lightbox" id="mb-lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="mb-lightbox-close" id="mb-lightbox-close" aria-label="Close preview">&times;</button>
+    <img id="mb-lightbox-img" src="" alt="Enlarged gallery image">
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-cta">
+      <div class="container">
+        <h2>YOUR NEXT GAME IS WAITING.</h2>
+        <p>Bring your friends, make a team, and experience the excitement of 4-a-side football.</p>
+        <div class="footer-cta-btns">
+          <a href="book-to-play.html" class="btn btn-lime">BOOK YOUR GAME</a>
+          <a href="about.html" class="btn btn-dark-outline" style="background: transparent; border-color: var(--white); color: var(--white);">EXPLORE MATCH-BOX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo-area">
+              <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+              <div class="logo-text">
+                <span class="brand-name">MATCH-BOX</span>
+                <span class="tagline">Small Field. Big Fun!</span>
+              </div>
+            </a>
+            <p>Match-Box brings people together through the excitement of small-sided football. Enjoy the game, develop your skills, and create memorable moments.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Match-Box</a></li>
+              <li><a href="book-to-play.html">Book to Play</a></li>
+              <li><a href="coaching.html">Coaching</a></li>
+              <li><a href="tournaments.html">Tournaments</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Play & Participate</h4>
+            <ul>
+              <li><a href="book-to-play.html">Book a Pitch</a></li>
+              <li><a href="coaching-registration.html">Coaching Registration</a></li>
+              <li><a href="tournaments.html">Upcoming Tournaments</a></li>
+              <li><a href="tournament-register.html">Register Your Team</a></li>
+              <li><a href="events.html#birthday">Birthday Events</a></li>
+              <li><a href="events.html#private">Private Events</a></li>
+              <li><a href="contact.html">Ask a Question</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><a href="customer/dashboard.html">My Account</a></li>
+              <li><a href="customer/bookings.html">My Bookings</a></li>
+              <li><a href="customer/booking-history.html">Booking History</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="contact.html">Contact Support</a></li>
+              <li><a href="booking-information.html">Booking Information</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Legal Information</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="refund-policy.html">Cancellation & Refund Policy</a></li>
+              <li><a href="pages/facility-rules.html">Facility Rules & Safety Guidelines</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h4 style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lime-green); margin-bottom: 1.25rem;">Contact</h4>
+            <ul class="footer-contact-info">
+              <li><i class="fas fa-envelope"></i> <span>hello@match-box.example</span></li>
+              <li><i class="fas fa-phone-alt"></i> <span>+91 00000 00000</span></li>
+              <li><i class="fas fa-map-marker-alt"></i> <span>Match-Box Facility, Address Placeholder</span></li>
+              <li><i class="fas fa-clock"></i> <span>Operating hours: 6:00 AM – 12:00 midnight</span></li>
+            </ul>
+          </div>
+          <div class="newsletter">
+            <h4>STAY IN THE GAME.</h4>
+            <p>Get updates about upcoming tournaments, coaching, and Match-Box events.</p>
+            <form class="newsletter-form" id="newsletterForm" novalidate>
+              <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+              <button type="submit" class="btn btn-lime" id="newsletterSubmit">SUBSCRIBE</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg"></div>
+            <p style="font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem;">Demo only. Subscriptions are not stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; <span id="copyrightYear"></span> MATCH-BOX. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const header = document.getElementById('mainHeader');
+      const announceBar = document.getElementById('announceBar');
+      const headerPlaceholder = document.getElementById('headerPlaceholder');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const drawerClose = document.getElementById('drawerClose');
+      const authModalOverlay = document.getElementById('authModalOverlay');
+      const authModalClose = document.getElementById('authModalClose');
+
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const forgotPanel = document.getElementById('forgotPanel');
+      const resetPanel = document.getElementById('resetPanel');
+
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+      const drawerRegisterBtn = document.getElementById('drawerRegisterBtn');
+      const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+      const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+      const switchToLoginBtn = document.getElementById('switchToLoginBtn');
+      const switchToLoginLink = document.getElementById('switchToLoginLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+      const backToLoginFromReset = document.getElementById('backToLoginFromReset');
+
+      const accountMenuWrapper = document.getElementById('accountMenuWrapper');
+      const accountTrigger = document.getElementById('accountTrigger');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const drawerLogoutBtn = document.getElementById('drawerLogoutBtn');
+      const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const resetForm = document.getElementById('resetForm');
+      const newsletterForm = document.getElementById('newsletterForm');
+
+      let isLoggedIn = false;
+
+      /* =========================================================
+         STICKY HEADER LOGIC
+         - At page top: header sits naturally below announce bar
+         - After scrolling past announce bar: header pins to viewport top
+         - Scroll back up: header returns to natural position
+         ========================================================= */
+      const announceHeight = announceBar.offsetHeight;
+      let headerIsFixed = false;
+
+      function updateHeaderState() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > announceHeight) {
+          if (!headerIsFixed) {
+            headerIsFixed = true;
+            header.classList.add('is-fixed');
+            headerPlaceholder.classList.add('active');
+          }
+        } else {
+          if (headerIsFixed) {
+            headerIsFixed = false;
+            header.classList.remove('is-fixed');
+            headerPlaceholder.classList.remove('active');
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+      window.addEventListener('resize', function() {
+        // Recompute announce height on resize
+        // (unlikely to change, but safe)
+        updateHeaderState();
+      });
+      updateHeaderState();
+
+      /* Drawer */
+      function openDrawer() {
+        mobileDrawer.classList.add('open');
+        drawerOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeDrawer() {
+        mobileDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileDrawer.classList.contains('open')) closeDrawer();
+          if (authModalOverlay.classList.contains('active')) closeAuthModal();
+          if (accountMenuWrapper.classList.contains('open')) {
+            accountMenuWrapper.classList.remove('open');
+            accountTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      document.querySelectorAll('.drawer-link[data-sub]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const subId = this.getAttribute('data-sub');
+          const sub = document.getElementById(subId);
+          const isOpen = sub.classList.contains('open');
+          document.querySelectorAll('.drawer-sub').forEach(function(s) { s.classList.remove('open'); });
+          document.querySelectorAll('.drawer-link[data-sub]').forEach(function(b) { b.setAttribute('aria-expanded', 'false'); });
+          if (!isOpen) {
+            sub.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { closeDrawer(); });
+      });
+
+      /* Auth modal */
+      function openAuthModal(panel) {
+        authModalOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        showPanel(panel || 'login');
+      }
+
+      function closeAuthModal() {
+        authModalOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        clearMessages();
+        resetForms();
+      }
+
+      function showPanel(panelName) {
+        loginPanel.style.display = 'none';
+        registerPanel.style.display = 'none';
+        forgotPanel.style.display = 'none';
+        resetPanel.style.display = 'none';
+
+        if (panelName === 'login') loginPanel.style.display = 'block';
+        else if (panelName === 'register') registerPanel.style.display = 'block';
+        else if (panelName === 'forgot') forgotPanel.style.display = 'block';
+        else if (panelName === 'reset') resetPanel.style.display = 'block';
+      }
+
+      function clearMessages() {
+        document.querySelectorAll('.message-area').forEach(function(el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        });
+      }
+
+      function resetForms() {
+        loginForm.reset();
+        registerForm.reset();
+        forgotForm.reset();
+        resetForm.reset();
+        document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('visible'); });
+        document.querySelectorAll('.strength-bar').forEach(function(bar) { bar.className = 'strength-bar'; });
+        document.querySelectorAll('.strength-text').forEach(function(el) { el.textContent = ''; });
+      }
+
+      loginBtn.addEventListener('click', function() { openAuthModal('login'); });
+      registerBtn.addEventListener('click', function() { openAuthModal('register'); });
+      drawerLoginBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('login'); });
+      drawerRegisterBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('register'); });
+      mobileAccountBtn.addEventListener('click', function() {
+        if (isLoggedIn) openDrawer();
+        else openAuthModal('login');
+      });
+
+      switchToRegisterBtn.addEventListener('click', function() { showPanel('register'); });
+      switchToRegisterLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('register'); });
+      switchToLoginBtn.addEventListener('click', function() { showPanel('login'); });
+      switchToLoginLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('login'); });
+      forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('forgot'); });
+      backToLoginFromForgot.addEventListener('click', function() { showPanel('login'); });
+      backToLoginFromReset.addEventListener('click', function() { showPanel('login'); });
+
+      authModalClose.addEventListener('click', closeAuthModal);
+      authModalOverlay.addEventListener('click', function(e) {
+        if (e.target === authModalOverlay) closeAuthModal();
+      });
+
+      /* Password toggles */
+      function setupPasswordToggle(toggleBtnId, inputId) {
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+
+      setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+      setupPasswordToggle('toggleRegPassword', 'regPassword');
+      setupPasswordToggle('toggleRegConfirmPassword', 'regConfirmPassword');
+      setupPasswordToggle('toggleResetPassword', 'resetPassword');
+      setupPasswordToggle('toggleResetConfirmPassword', 'resetConfirmPassword');
+
+      /* Password strength */
+      function evaluatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        return Math.min(score, 3);
+      }
+
+      function updateStrengthBars(password, barIds, textId) {
+        const score = evaluatePasswordStrength(password);
+        const bars = barIds.map(function(id) { return document.getElementById(id); });
+        const textEl = document.getElementById(textId);
+
+        bars.forEach(function(bar, i) {
+          bar.className = 'strength-bar';
+          if (score > i) {
+            if (score === 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('medium');
+            else bar.classList.add('strong');
+          }
+        });
+
+        if (textEl) {
+          if (password.length === 0) textEl.textContent = '';
+          else if (score === 1) textEl.textContent = 'Weak password';
+          else if (score === 2) textEl.textContent = 'Medium strength';
+          else textEl.textContent = 'Strong password';
+        }
+      }
+
+      document.getElementById('regPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['strengthBar1', 'strengthBar2', 'strengthBar3'], 'strengthText');
+      });
+
+      document.getElementById('resetPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['resetBar1', 'resetBar2', 'resetBar3'], 'resetStrengthText');
+      });
+
+      /* Validation helpers */
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function isValidMobile(mobile) {
+        return /^[\+]?[\d\s\-]{10,15}$/.test(mobile);
+      }
+
+      function showError(errorId, show) {
+        const el = document.getElementById(errorId);
+        if (el) el.classList.toggle('visible', show);
+      }
+
+      function showMessage(containerId, text, type) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.className = 'message-area ' + type;
+        el.textContent = text;
+      }
+
+      function clearMessage(containerId) {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        }
+      }
+
+      /* Login */
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('loginMessage');
+        let valid = true;
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        showError('loginEmailError', false);
+        showError('loginPasswordError', false);
+
+        if (!email || !isValidEmail(email)) { showError('loginEmailError', true); valid = false; }
+        if (!password) { showError('loginPasswordError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('loginSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Signing in...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('loginMessage', 'This is a demo interface. Real authentication is handled by the future PHP backend.', 'success');
+        }, 800);
+      });
+
+      /* Register */
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('registerMessage');
+        let valid = true;
+
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const terms = document.getElementById('termsCheck').checked;
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        ['regFullNameError', 'regEmailError', 'regMobileError', 'regPasswordError', 'regConfirmPasswordError', 'termsError'].forEach(function(id) {
+          showError(id, false);
+        });
+
+        if (!fullName || fullName.length < 2) { showError('regFullNameError', true); valid = false; }
+        if (!email || !isValidEmail(email)) { showError('regEmailError', true); valid = false; }
+        if (!mobile || !isValidMobile(mobile)) { showError('regMobileError', true); valid = false; }
+        if (!password || password.length < 8) { showError('regPasswordError', true); valid = false; }
+        if (password !== confirmPassword) { showError('regConfirmPasswordError', true); valid = false; }
+        if (!terms || !privacy) { showError('termsError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('registerSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating account...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('registerMessage', 'This is a demo interface. Registration will be handled by the PHP/MySQL backend.', 'success');
+        }, 1000);
+      });
+
+      /* Forgot */
+      forgotForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('forgotMessage');
+        const email = document.getElementById('forgotEmail').value.trim();
+        showError('forgotEmailError', false);
+        if (!email || !isValidEmail(email)) { showError('forgotEmailError', true); return; }
+
+        const btn = document.getElementById('forgotSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Sending...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('forgotMessage', 'If an account exists with this email, password reset instructions will be sent. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Reset */
+      resetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('resetMessage');
+        let valid = true;
+
+        const password = document.getElementById('resetPassword').value;
+        const confirm = document.getElementById('resetConfirmPassword').value;
+
+        showError('resetPasswordError', false);
+        showError('resetConfirmError', false);
+
+        if (!password || password.length < 8) { showError('resetPasswordError', true); valid = false; }
+        if (password !== confirm) { showError('resetConfirmError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('resetSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Resetting...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('resetMessage', 'Password reset would be processed by the backend. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Newsletter */
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msgEl = document.getElementById('newsletterMsg');
+        msgEl.className = 'newsletter-msg';
+        msgEl.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          msgEl.className = 'newsletter-msg error';
+          msgEl.textContent = 'Please enter a valid email address.';
+          return;
+        }
+
+        const btn = document.getElementById('newsletterSubmit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          msgEl.className = 'newsletter-msg success';
+          msgEl.textContent = 'Thanks! (Demo only – no subscription is stored.)';
+          document.getElementById('newsletterEmail').value = '';
+        }, 700);
+      });
+
+      /* Logout (demo) */
+      function simulateLogout() {
+        isLoggedIn = false;
+        document.querySelectorAll('.auth-btn').forEach(function(b) { b.style.display = ''; });
+        accountMenuWrapper.style.display = 'none';
+        accountMenuWrapper.classList.remove('open');
+        document.getElementById('drawerAuth').style.display = 'flex';
+        document.getElementById('drawerAccount').style.display = 'none';
+        document.getElementById('avatarInitials').textContent = 'JD';
+        document.getElementById('accountName').textContent = 'John';
+        document.getElementById('drawerAvatar').textContent = 'JD';
+        document.getElementById('drawerName').textContent = 'John';
+      }
+
+      accountTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = accountMenuWrapper.classList.toggle('open');
+        accountTrigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!accountMenuWrapper.contains(e.target)) {
+          accountMenuWrapper.classList.remove('open');
+          accountTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        simulateLogout();
+      });
+
+      drawerLogoutBtn.addEventListener('click', function() {
+        simulateLogout();
+        closeDrawer();
+      });
+
+      /* Back to top */
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      }, { passive: true });
+
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Copyright year */
+      document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+      /* Close drawer if resized to desktop */
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth >= 1024) closeDrawer();
+        }, 150);
+      });
+
+      /* Keyboard support for desktop dropdowns */
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        const link = item.querySelector('.nav-link');
+        const panel = item.querySelector('.dropdown-panel');
+        if (!link || !panel) return;
+
+        link.addEventListener('focus', function() {
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.transform = 'translateY(0)';
+          panel.style.pointerEvents = 'auto';
+        });
+
+        item.addEventListener('mouseleave', function() {
+          if (!item.contains(document.activeElement)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+
+        item.addEventListener('focusout', function(e) {
+          if (!item.contains(e.relatedTarget)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+      });
+
+    })();
+  </script>
+
+
+    <!-- 
+    SCOPED JAVASCRIPT: only for homepage-specific functionality.
+    No global scripts are duplicated. Lightweight.
+  -->
+  <script>
+    (function() {
+      'use strict';
+
+      // Only run if main exists
+      const main = document.querySelector('.mb-main-content');
+      if (!main) return;
+
+      // --- Gallery Lightbox ---
+      const galleryItems = document.querySelectorAll('.mb-gallery-item');
+      const lightbox = document.getElementById('mb-lightbox');
+      const lightboxImg = document.getElementById('mb-lightbox-img');
+      const closeBtn = document.getElementById('mb-lightbox-close');
+
+      if (lightbox && lightboxImg && closeBtn) {
+        function openLightbox(src) {
+          lightboxImg.src = src;
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden'; // prevent background scroll
+          closeBtn.focus();
+        }
+
+        function closeLightbox() {
+          lightbox.classList.remove('active');
+          lightboxImg.src = '';
+          document.body.style.overflow = '';
+        }
+
+        galleryItems.forEach(item => {
+          const src = item.getAttribute('data-src');
+          // click
+          item.addEventListener('click', () => openLightbox(src));
+          // keyboard
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openLightbox(src);
+            }
+          });
+        });
+
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+          }
+        });
+      }
+
+      // --- Scroll reveal (subtle, optional) ---
+      // apply .mb-reveal to selected elements for fade-up
+      const revealTargets = main.querySelectorAll('.mb-h2, .mb-exp-card, .mb-about-split__content, .mb-coaching-card, .mb-benefit, .mb-event-card');
+      revealTargets.forEach(el => el.classList.add('mb-reveal'));
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('mb-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        revealTargets.forEach(el => observer.observe(el));
+      } else {
+        // fallback: show everything
+        revealTargets.forEach(el => el.classList.add('mb-visible'));
+      }
+
+      // --- Date input: set min to today (optional, for demo) ---
+      const dateInput = document.getElementById('mb-date-preview');
+      if (dateInput) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+        // if empty, set to today for preview
+        if (!dateInput.value) {
+          dateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+      }
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match-Box · Advanced Header, Auth & Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-charcoal: #101511;
+      --almost-black: #080B09;
+      --lime-green: #B7F34A;
+      --football-green: #285C35;
+      --white: #FFFFFF;
+      --light-bg: #F5F7F3;
+      --muted-grey: #777F78;
+      --font-primary: 'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --transition: 0.25s ease;
+      --header-height: 72px;
+      --announce-height: 38px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--light-bg);
+      color: var(--deep-charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========== REUSABLE ========== */
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+
+    .btn-lime {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-lime:hover {
+      background: #a4e03a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(183, 243, 74, 0.25);
+    }
+
+    .btn-outline-lime {
+      background: transparent;
+      color: var(--lime-green);
+      border: 1px solid var(--lime-green);
+    }
+
+    .btn-outline-lime:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-dark-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-dark-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    /* ========== ANNOUNCEMENT BAR — normal flow, at top ========== */
+    .announce-bar {
+      background: var(--football-green);
+      color: var(--white);
+      height: var(--announce-height);
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      width: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .announce-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .announce-bar span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .announce-bar a {
+      color: var(--lime-green);
+      font-weight: 700;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .announce-bar a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    /* ========== MAIN HEADER — in flow normally, becomes fixed on scroll ========== */
+    .main-header {
+      position: relative; /* in normal document flow at page load */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: var(--deep-charcoal);
+      display: flex;
+      align-items: center;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    /* When scrolled past the announcement bar: pin to top of viewport */
+    .main-header.is-fixed {
+      position: fixed;
+      top: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Placeholder that reserves header space when header becomes fixed */
+    .header-placeholder {
+      display: none;
+      height: var(--header-height);
+    }
+
+    .header-placeholder.active {
+      display: block;
+    }
+
+    .main-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* ----- Logo ----- */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--lime-green);
+      border-radius: 50%;
+      color: var(--almost-black);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .logo-text .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime-green);
+    }
+
+    /* ----- Desktop Navigation ----- */
+    .desktop-nav {
+      display: none;
+      height: 100%;
+    }
+
+    .desktop-nav ul {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0 0.9rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--lime-green);
+    }
+
+    .nav-link i {
+      font-size: 0.7rem;
+      transition: transform var(--transition);
+    }
+
+    .nav-item:hover .nav-link i {
+      transform: rotate(180deg);
+    }
+
+    .nav-link.active {
+      color: var(--lime-green);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: var(--lime-green);
+      border-radius: 2px;
+    }
+
+    /* ----- Dropdown Panel ----- */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 280px;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .nav-item:hover .dropdown-panel,
+    .nav-item:focus-within .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 0.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #e9ece9;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      gap: 12px;
+      padding: 0.65rem 1.5rem;
+      transition: background var(--transition);
+    }
+
+    .dropdown-item:hover {
+      background: #f0f5ec;
+    }
+
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--light-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--football-green);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .dropdown-text p {
+      font-size: 0.75rem;
+      color: var(--muted-grey);
+      line-height: 1.3;
+    }
+
+    /* ----- Header Actions (desktop) ----- */
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .auth-btn {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--lime-green);
+    }
+
+    .account-icon-btn {
+      color: var(--white);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+    }
+
+    .account-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .account-menu-wrapper {
+      position: relative;
+    }
+
+    .account-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      background: transparent;
+      padding: 4px 8px 4px 4px;
+      border-radius: 30px;
+      transition: background var(--transition);
+    }
+
+    .account-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .avatar-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .account-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 240px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .account-menu-wrapper.open .account-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .account-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--deep-charcoal);
+      transition: background var(--transition);
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f5ec;
+      color: var(--football-green);
+    }
+
+    .account-dropdown a i {
+      width: 16px;
+      color: var(--muted-grey);
+    }
+
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e9ece9;
+      margin: 0.4rem 1rem;
+    }
+
+    /* ----- Mobile Header Actions ----- */
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .mobile-book-btn {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hamburger {
+      color: var(--white);
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ----- Mobile Drawer ----- */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 88%;
+      max-width: 380px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--deep-charcoal);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem 1.25rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-drawer.open {
+      right: 0;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.75);
+      z-index: 2400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 12px;
+    }
+
+    .drawer-close {
+      color: var(--white);
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .drawer-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .drawer-nav {
+      flex: 1;
+    }
+
+    .drawer-nav > li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      width: 100%;
+      text-align: left;
+      transition: color var(--transition);
+    }
+
+    .drawer-link:hover {
+      color: var(--lime-green);
+    }
+
+    .drawer-link i {
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+
+    .drawer-sub {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 0.5rem;
+    }
+
+    .drawer-sub.open {
+      max-height: 500px;
+    }
+
+    .drawer-sub a {
+      display: block;
+      color: #b0b8b0;
+      font-size: 0.85rem;
+      padding: 0.6rem 0 0.6rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .drawer-sub a:hover {
+      color: var(--lime-green);
+      border-left-color: var(--lime-green);
+    }
+
+    .drawer-cta {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-auth .btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.85);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-grey);
+      font-size: 1.2rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--deep-charcoal);
+    }
+
+    .auth-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.25rem;
+      padding-right: 2rem;
+    }
+
+    .auth-modal .subtext {
+      font-size: 0.85rem;
+      color: var(--muted-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+      border: 1px solid #d4dcd4;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--football-green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 53, 0.15);
+    }
+
+    .input-wrapper input.error {
+      border-color: #d32f2f;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 10px;
+      background: none;
+      color: var(--muted-grey);
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color var(--transition);
+    }
+
+    .input-icon-right:hover {
+      color: var(--deep-charcoal);
+    }
+
+    .error-msg {
+      font-size: 0.7rem;
+      color: #d32f2f;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .checkbox-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--deep-charcoal);
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--football-green);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .link-text {
+      color: var(--football-green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+
+    .link-text:hover {
+      color: var(--lime-green);
+      text-decoration: underline;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-actions .btn {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted-grey);
+      margin-top: 1rem;
+    }
+
+    .auth-switch .link-text {
+      font-size: 0.8rem;
+    }
+
+    .message-area {
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .message-area.error {
+      display: block;
+      background: #fdecea;
+      color: #b71c1c;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .message-area.success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 3px solid #2e7d32;
+    }
+
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .strength-bar.weak { background: #e53935; }
+    .strength-bar.medium { background: #fbc02d; }
+    .strength-bar.strong { background: #43a047; }
+
+    .strength-text {
+      font-size: 0.7rem;
+      color: var(--muted-grey);
+      margin-top: 2px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--almost-black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--deep-charcoal);
+      color: var(--white);
+      padding-top: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .footer-cta {
+      background: var(--football-green);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-cta p {
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .footer-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-main {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-brand .logo-area {
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      max-width: 300px;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime-green);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--transition), padding-left var(--transition);
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .footer-col ul a:hover {
+      color: var(--lime-green);
+      padding-left: 4px;
+    }
+
+    .footer-contact-info li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.8rem;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    .footer-contact-info i {
+      color: var(--lime-green);
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .newsletter {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .newsletter h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .newsletter p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--lime-green);
+    }
+
+    .newsletter-form .btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .newsletter-msg {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .newsletter-msg.error {
+      display: block;
+      color: #ef9a9a;
+    }
+
+    .newsletter-msg.success {
+      display: block;
+      color: var(--lime-green);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--lime-green);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(183, 243, 74, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: #a4e03a;
+      transform: translateY(-3px);
+    }
+
+    /* ========== RESPONSIVE ========== */
+
+    /* Mobile & tablet: up to 1023px */
+    @media (max-width: 1023px) {
+      .desktop-nav { display: none !important; }
+      .header-actions { display: none !important; }
+      .mobile-header-actions { display: flex !important; }
+
+      .main-header .container { padding: 0 16px; gap: 8px; }
+      .logo-text .brand-name { font-size: 1.25rem; }
+      .logo-text .tagline { font-size: 0.5rem; }
+      .logo-icon { width: 32px; height: 32px; font-size: 1rem; }
+      .container { padding: 0 16px; }
+      .announce-bar .container { padding: 0 16px; gap: 6px; }
+      .announce-bar { font-size: 0.65rem; }
+      .announce-bar span { font-size: 0.65rem; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-cta { padding: 2rem 0; }
+      .footer-cta-btns .btn { width: 100%; max-width: 280px; }
+      .footer-cta p { font-size: 0.9rem; padding: 0 8px; }
+      .auth-modal { padding: 1.5rem 1.25rem; }
+      .auth-modal h2 { font-size: 1.5rem; }
+      .newsletter-form .btn { width: 100%; }
+    }
+
+    /* Very small mobile */
+    @media (max-width: 380px) {
+      .mobile-book-btn span { display: none; }
+      .mobile-book-btn { padding: 0.5rem 0.6rem; }
+      .logo-text .brand-name { font-size: 1.1rem; }
+      .main-header .container { padding: 0 10px; }
+    }
+
+    /* Desktop: 1024px and above */
+    @media (min-width: 1024px) {
+      .desktop-nav { display: block !important; }
+      .header-actions { display: flex !important; }
+      .mobile-header-actions { display: none !important; }
+
+      .footer-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;
+        gap: 2rem;
+      }
+      .footer-brand { grid-column: span 1; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .footer-cta-btns { gap: 1rem; }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* Desktop wide */
+    @media (min-width: 1440px) {
+      .container { padding: 0 40px; }
+      .desktop-nav .nav-link { font-size: 0.85rem; padding: 0 0.9rem; }
+      .header-actions { gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  /*Tearm page goes here......................*/
+      .mb-terms-main {
+      --mb-t-charcoal: #101511;
+      --mb-t-deep: #080B09;
+      --mb-t-lime: #B7F34A;
+      --mb-t-forest: #285C35;
+      --mb-t-white: #FFFFFF;
+      --mb-t-light: #F5F7F2;
+      --mb-t-border: #d9e0d9;
+      --mb-t-muted: #6b7a6e;
+      --mb-t-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.15);
+      --mb-t-radius: 1.25rem;
+      --mb-t-radius-btn: 3rem;
+      --mb-t-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--mb-t-white);
+      color: var(--mb-t-charcoal);
+      font-family: var(--mb-t-font);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    .mb-terms-main *,
+    .mb-terms-main *::before,
+    .mb-terms-main *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mb-terms-container {
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 4rem);
+    }
+
+    .mb-terms-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: var(--mb-t-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      background: transparent;
+      font-family: inherit;
+      line-height: 1.2;
+    }
+
+    .mb-terms-btn:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: 3px; }
+
+    .mb-terms-btn--primary {
+      background: var(--mb-t-lime);
+      color: var(--mb-t-deep);
+      border-color: var(--mb-t-lime);
+    }
+
+    .mb-terms-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+
+    .mb-terms-btn--outline {
+      border-color: rgba(255,255,255,0.4);
+      color: var(--mb-t-white);
+    }
+
+    .mb-terms-btn--outline:hover { border-color: var(--mb-t-lime); color: var(--mb-t-lime); }
+
+    .mb-terms-btn--ghost {
+      border-color: var(--mb-t-border);
+      color: var(--mb-t-charcoal);
+      background: var(--mb-t-white);
+    }
+
+    .mb-terms-btn--ghost:hover { border-color: var(--mb-t-forest); }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .mb-terms-hero {
+      position: relative;
+      background: var(--mb-t-deep);
+      color: var(--mb-t-white);
+      padding-block: clamp(3.5rem, 9vw, 6rem);
+      overflow: hidden;
+    }
+
+    .mb-terms-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(183,243,74,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183,243,74,0.045) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+    }
+
+    .mb-terms-hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 380px;
+      height: 380px;
+      border: 2px solid rgba(183,243,74,0.12);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .mb-terms-hero__content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+    }
+
+    .mb-terms-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183,243,74,0.12);
+      border-left: 4px solid var(--mb-t-lime);
+      padding: 0.45rem 1.1rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-t-lime);
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-terms-hero__title {
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .mb-terms-hero__title span { color: var(--mb-t-lime); }
+
+    .mb-terms-hero__desc {
+      font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+      color: rgba(255,255,255,0.82);
+      max-width: 62ch;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-terms-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .mb-terms-hero__meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .mb-terms-hero__meta-item svg {
+      width: 15px;
+      height: 15px;
+      fill: var(--mb-t-lime);
+      flex-shrink: 0;
+    }
+
+    .mb-terms-hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .mb-terms-section {
+      padding-block: clamp(2.5rem, 6vw, 4.5rem);
+      background: var(--mb-t-white);
+    }
+
+    .mb-terms-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+
+    /* ============================================
+       TABLE OF CONTENTS
+       ============================================ */
+    .mb-terms-toc {
+      position: sticky;
+      top: 1.5rem;
+      background: var(--mb-t-white);
+      border: 1px solid var(--mb-t-border);
+      border-radius: var(--mb-t-radius);
+      box-shadow: var(--mb-t-shadow-sm);
+      padding: 1.5rem 1.25rem;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .mb-terms-toc__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mb-t-forest);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--mb-t-border);
+    }
+
+    .mb-terms-toc__toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--mb-t-border);
+      border-radius: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .mb-terms-toc__toggle:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: 2px; }
+
+    .mb-terms-toc__toggle::before,
+    .mb-terms-toc__toggle::after {
+      content: '';
+      position: absolute;
+      background: var(--mb-t-forest);
+      border-radius: 2px;
+      transition: transform 0.25s ease;
+    }
+
+    .mb-terms-toc__toggle::before { width: 12px; height: 2px; }
+    .mb-terms-toc__toggle::after { width: 2px; height: 12px; }
+
+    .mb-terms-toc__toggle[aria-expanded="true"]::after { transform: rotate(90deg) scaleY(0); }
+
+    .mb-terms-toc__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .mb-terms-toc__link {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 0.6rem;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: #4a5a4e;
+      text-decoration: none;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .mb-terms-toc__link:hover {
+      background: var(--mb-t-light);
+      color: var(--mb-t-charcoal);
+    }
+
+    .mb-terms-toc__link:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: -2px; }
+
+    .mb-terms-toc__link.mb-terms-toc__link--active {
+      background: rgba(40,92,53,0.07);
+      color: var(--mb-t-forest);
+      border-left-color: var(--mb-t-forest);
+      font-weight: 700;
+    }
+
+    .mb-terms-toc__num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--mb-t-forest);
+      background: var(--mb-t-light);
+      border-radius: 0.35rem;
+      padding: 0.1rem 0.4rem;
+      flex-shrink: 0;
+      min-width: 1.5rem;
+      text-align: center;
+    }
+
+    .mb-terms-toc__link--active .mb-terms-toc__num {
+      background: var(--mb-t-forest);
+      color: var(--mb-t-white);
+    }
+
+    .mb-terms-toc__actions {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--mb-t-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .mb-terms-toc__actions .mb-terms-btn {
+      width: 100%;
+      font-size: 0.72rem;
+      padding: 0.6rem 1rem;
+    }
+
+    /* ============================================
+       LEGAL CONTENT
+       ============================================ */
+    .mb-terms-content {
+      min-width: 0;
+    }
+
+    .mb-terms-article {
+      scroll-margin-top: 1.5rem;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--mb-t-border);
+    }
+
+    .mb-terms-article:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .mb-terms-article__header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .mb-terms-article__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 0.65rem;
+      background: var(--mb-t-forest);
+      color: var(--mb-t-white);
+      font-weight: 800;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .mb-terms-article__title {
+      font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--mb-t-charcoal);
+    }
+
+    .mb-terms-article p {
+      font-size: 0.95rem;
+      color: #3a4a3e;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      max-width: 72ch;
+    }
+
+    .mb-terms-article p:last-child { margin-bottom: 0; }
+
+    .mb-terms-sub {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--mb-t-charcoal);
+      margin: 1.5rem 0 0.6rem;
+      letter-spacing: 0.01em;
+    }
+
+    .mb-terms-article ul,
+    .mb-terms-article ol {
+      margin: 0 0 1rem 0;
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 72ch;
+    }
+
+    .mb-terms-article ul li,
+    .mb-terms-article ol li {
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 0.94rem;
+      color: #3a4a3e;
+      line-height: 1.65;
+    }
+
+    .mb-terms-article ul li::before {
+      content: '';
+      position: absolute;
+      left: 0.2rem;
+      top: 0.62rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mb-t-forest);
+    }
+
+    .mb-terms-article a {
+      color: var(--mb-t-forest);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .mb-terms-article a:hover { color: var(--mb-t-deep); }
+    .mb-terms-article a:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: 2px; border-radius: 2px; }
+
+    /* Placeholder note */
+    .mb-terms-placeholder {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      background: #fff8e1;
+      border: 1px solid #f0d97a;
+      border-left: 4px solid #e0b83a;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      color: #6b5a1f;
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    .mb-terms-placeholder svg {
+      width: 18px;
+      height: 18px;
+      fill: #b8962a;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .mb-terms-placeholder strong { font-weight: 800; }
+
+    /* Info note */
+    .mb-terms-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      background: var(--mb-t-light);
+      border-left: 4px solid var(--mb-t-forest);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.87rem;
+      color: #3a4a3e;
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    .mb-terms-note svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--mb-t-forest);
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    /* Data table for pricing */
+    .mb-terms-table-wrap {
+      overflow-x: auto;
+      margin: 1rem 0 1.25rem;
+      border: 1px solid var(--mb-t-border);
+      border-radius: 0.85rem;
+      max-width: 72ch;
+    }
+
+    .mb-terms-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      min-width: 320px;
+    }
+
+    .mb-terms-table th,
+    .mb-terms-table td {
+      text-align: left;
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--mb-t-border);
+    }
+
+    .mb-terms-table th {
+      background: var(--mb-t-light);
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-t-forest);
+    }
+
+    .mb-terms-table tr:last-child td { border-bottom: none; }
+    .mb-terms-table td:last-child { font-weight: 700; color: var(--mb-t-charcoal); }
+
+    /* Back to top inline link */
+    .mb-terms-backtop-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-t-forest);
+      text-decoration: none;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0.25rem 0;
+    }
+
+    .mb-terms-backtop-inline:hover { color: var(--mb-t-deep); text-decoration: underline; }
+    .mb-terms-backtop-inline:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: 2px; border-radius: 2px; }
+
+    .mb-terms-backtop-inline svg { width: 13px; height: 13px; fill: currentColor; }
+
+    /* ============================================
+       IMPORTANT NOTICE
+       ============================================ */
+    .mb-terms-notice {
+      background: var(--mb-t-charcoal);
+      color: var(--mb-t-white);
+      border-radius: var(--mb-t-radius);
+      padding: clamp(1.75rem, 5vw, 3rem);
+      margin-block: clamp(2.5rem, 6vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mb-terms-notice::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      border: 2px solid rgba(183,243,74,0.15);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .mb-terms-notice h2 {
+      position: relative;
+      font-size: clamp(1.25rem, 3vw, 1.7rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .mb-terms-notice p {
+      position: relative;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.65;
+      max-width: 70ch;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-terms-notice__links {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .mb-terms-notice__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 3rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--mb-t-white);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .mb-terms-notice__links a:hover {
+      background: rgba(183,243,74,0.14);
+      border-color: var(--mb-t-lime);
+      color: var(--mb-t-lime);
+    }
+
+    .mb-terms-notice__links a:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: 3px; }
+
+    /* ============================================
+       CONTACT SECTION
+       ============================================ */
+    .mb-terms-contact {
+      text-align: center;
+      padding-block: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    .mb-terms-contact h2 {
+      font-size: clamp(1.4rem, 3.2vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .mb-terms-contact p {
+      font-size: 0.95rem;
+      color: var(--mb-t-muted);
+      max-width: 55ch;
+      margin: 0 auto 1.75rem;
+      line-height: 1.65;
+    }
+
+    .mb-terms-contact__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* ============================================
+       BACK TO TOP FLOATING
+       ============================================ */
+    .mb-terms-backtop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 2.9rem;
+      height: 2.9rem;
+      border-radius: 50%;
+      background: var(--mb-t-forest);
+      color: var(--mb-t-white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px -6px rgba(0,0,0,0.35);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity 0.25s, visibility 0.25s, transform 0.25s, background 0.2s;
+      z-index: 500;
+    }
+
+    .mb-terms-backtop.mb-terms-backtop--visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .mb-terms-backtop:hover { background: var(--mb-t-deep); }
+    .mb-terms-backtop:focus-visible { outline: 3px solid var(--mb-t-lime); outline-offset: 3px; }
+    .mb-terms-backtop svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .mb-terms-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .mb-terms-toc {
+        position: static;
+        max-height: none;
+        padding: 1rem 1.1rem;
+      }
+
+      .mb-terms-toc__toggle { display: flex; }
+
+      .mb-terms-toc__list,
+      .mb-terms-toc__actions {
+        display: none;
+      }
+
+      .mb-terms-toc.mb-terms-toc--open .mb-terms-toc__list,
+      .mb-terms-toc.mb-terms-toc--open .mb-terms-toc__actions {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .mb-terms-hero__actions .mb-terms-btn { width: 100%; }
+      .mb-terms-article__header { gap: 0.7rem; }
+      .mb-terms-article__num { width: 2rem; height: 2rem; font-size: 0.78rem; }
+      .mb-terms-contact__actions .mb-terms-btn { width: 100%; }
+      .mb-terms-backtop { bottom: 1rem; right: 1rem; width: 2.6rem; height: 2.6rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mb-terms-main *,
+      .mb-terms-main *::before,
+      .mb-terms-main *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ============================================
+       PRINT STYLES
+       ============================================ */
+    @media print {
+      .mb-terms-hero {
+        background: #fff !important;
+        color: #000 !important;
+        padding-block: 0.5rem 1rem !important;
+      }
+
+      .mb-terms-hero::before,
+      .mb-terms-hero::after { display: none !important; }
+
+      .mb-terms-hero__badge,
+      .mb-terms-hero__meta,
+      .mb-terms-hero__actions { display: none !important; }
+
+      .mb-terms-hero__title {
+        color: #000 !important;
+        font-size: 22pt !important;
+      }
+
+      .mb-terms-hero__title span { color: #000 !important; }
+
+      .mb-terms-hero__desc {
+        color: #222 !important;
+        font-size: 10pt !important;
+      }
+
+      .mb-terms-toc,
+      .mb-terms-backtop,
+      .mb-terms-backtop-inline,
+      .mb-terms-notice__links,
+      .mb-terms-contact__actions,
+      .mb-terms-toc__toggle {
+        display: none !important;
+      }
+
+      .mb-terms-layout {
+        display: block !important;
+      }
+
+      .mb-terms-section { padding-block: 0 !important; }
+
+      .mb-terms-article {
+        break-inside: avoid-page;
+        page-break-inside: avoid;
+        border-bottom: 1px solid #ccc !important;
+      }
+
+      .mb-terms-article__num {
+        background: #eee !important;
+        color: #000 !important;
+        border: 1px solid #999 !important;
+      }
+
+      .mb-terms-article p,
+      .mb-terms-article li,
+      .mb-terms-sub {
+        color: #000 !important;
+        font-size: 10pt !important;
+      }
+
+      .mb-terms-article a {
+        color: #000 !important;
+        text-decoration: none !important;
+      }
+
+      .mb-terms-placeholder,
+      .mb-terms-note {
+        background: #f4f4f4 !important;
+        border-color: #999 !important;
+        color: #222 !important;
+      }
+
+      .mb-terms-notice {
+        background: #f4f4f4 !important;
+        color: #000 !important;
+        border: 1px solid #999 !important;
+      }
+
+      .mb-terms-notice p { color: #222 !important; }
+
+      .mb-terms-main::before {
+        content: 'MATCH-BOX — Terms & Conditions';
+        display: block;
+        font-weight: 800;
+        font-size: 12pt;
+        margin-bottom: 0.5rem;
+        color: #000;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR — at top of page, scrolls with the page -->
+  <div class="announce-bar" id="announceBar">
+    <div class="container">
+      <span>READY FOR YOUR NEXT GAME? BOOK YOUR MATCH-BOX SESSION TODAY.</span>
+      <a href="pages/book-to-play.html">BOOK NOW →</a>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER — starts in normal flow, becomes fixed after scrolling past the announcement bar -->
+  <header class="main-header" id="mainHeader">
+    <div class="container">
+      <a href="index.html" class="logo-area" aria-label="Match-Box home">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <ul>
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item">
+            <a href="book-to-play.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Play <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">PLAY AT MATCH-BOX</div>
+              <a href="book-to-play.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="dropdown-text"><h4>Book a Pitch</h4><p>Reserve a one-hour football session with your friends.</p></div>
+              </a>
+              <a href="about.html#concept" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="dropdown-text"><h4>How It Works</h4><p>Discover how 4-a-side football works at Match-Box.</p></div>
+              </a>
+              <a href="price.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-tag"></i></div>
+                <div class="dropdown-text"><h4>Pricing</h4><p>Explore peak and non-peak playing rates.</p></div>
+              </a>
+              <a href="about.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-building"></i></div>
+                <div class="dropdown-text"><h4>Facility Information</h4><p>Explore the football experience and facility information.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="coaching.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Coaching <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">COACHING PROGRAMS</div>
+              <a href="coaching.html#elite" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-star"></i></div>
+                <div class="dropdown-text"><h4>Elite Coaching</h4><p>Advanced sessions for competitive players.</p></div>
+              </a>
+              <a href="coaching.html#morning" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-sun"></i></div>
+                <div class="dropdown-text"><h4>Morning Coaching</h4><p>Start your day with focused training.</p></div>
+              </a>
+              <a href="coaching.html#afternoon" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="dropdown-text"><h4>Afternoon Coaching</h4><p>Develop skills after school or work.</p></div>
+              </a>
+              <a href="coaching-registration.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="dropdown-text"><h4>Player Registration</h4><p>Explore sessions and register based on capacity.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="tournaments.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Tournaments <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">TOURNAMENTS</div>
+              <a href="tournaments.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-trophy"></i></div>
+                <div class="dropdown-text"><h4>Upcoming Tournaments</h4><p>See what's coming up on the pitch.</p></div>
+              </a>
+              <a href="tournament-details.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="dropdown-text"><h4>Tournament Details</h4><p>Rules, format, and schedules.</p></div>
+              </a>
+              <a href="tournament-register.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-users"></i></div>
+                <div class="dropdown-text"><h4>Register Your Team</h4><p>Sign up your squad for the next event.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="events.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Events <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">EVENTS</div>
+              <a href="events.html#birthday" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-birthday-cake"></i></div>
+                <div class="dropdown-text"><h4>Birthday Celebrations</h4><p>Host a memorable football birthday.</p></div>
+              </a>
+              <a href="events.html#private" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                <div class="dropdown-text"><h4>Private Football Games</h4><p>Book the pitch for your own group.</p></div>
+              </a>
+              <a href="events.html#school" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-school"></i></div>
+                <div class="dropdown-text"><h4>School Activities</h4><p>Organized football sessions for schools.</p></div>
+              </a>
+              <a href="events.html#corporate" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="dropdown-text"><h4>Corporate Team Building</h4><p>Bring your team together on the pitch.</p></div>
+              </a>
+              <a href="event-enquiry.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-envelope"></i></div>
+                <div class="dropdown-text"><h4>Submit Event Enquiry</h4><p>Tell us about your event plans.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="auth-btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+        <button class="auth-btn" id="registerBtn" aria-haspopup="dialog">Register</button>
+        <div class="account-menu-wrapper" id="accountMenuWrapper" style="display: none;">
+          <button class="account-trigger" id="accountTrigger" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar-initials" id="avatarInitials">JD</span>
+            <span class="account-name" id="accountName">John</span>
+            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <div class="account-dropdown" id="accountDropdown" role="menu">
+            <a href="customer/dashboard.html" role="menuitem"><i class="fas fa-th-large"></i> My Account</a>
+            <a href="customer/bookings.html" role="menuitem"><i class="fas fa-calendar-alt"></i> My Bookings</a>
+            <a href="customer/booking-history.html" role="menuitem"><i class="fas fa-history"></i> Booking History</a>
+            <a href="customer/coaching-registrations.html" role="menuitem"><i class="fas fa-chalkboard-teacher"></i> Coaching Registrations</a>
+            <a href="customer/tournament-registrations.html" role="menuitem"><i class="fas fa-trophy"></i> Tournament Registrations</a>
+            <a href="customer/event-enquiries.html" role="menuitem"><i class="fas fa-envelope-open-text"></i> Event Enquiries</a>
+            <div class="divider"></div>
+            <a href="customer/settings.html" role="menuitem"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="#" id="logoutBtn" role="menuitem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <a href="book-to-play.html" class="btn btn-lime">BOOK NOW</a>
+      </div>
+
+      <div class="mobile-header-actions">
+        <a href="book-to-play.html" class="mobile-book-btn"><i class="fas fa-calendar-check"></i> <span>BOOK NOW</span></a>
+        <button class="account-icon-btn" id="mobileAccountBtn" aria-label="My account"><i class="fas fa-user-circle"></i></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Placeholder that reserves space when the header becomes fixed -->
+  <div class="header-placeholder" id="headerPlaceholder" aria-hidden="true"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    </div>
+
+    <ul class="drawer-nav">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="about.html" class="drawer-link">About</a></li>
+      <li>
+        <button class="drawer-link" data-sub="playSub" aria-expanded="false">Play Football <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="playSub">
+          <a href="book-to-play.html">Book a Pitch</a>
+          <a href="about.html#concept">How It Works</a>
+          <a href="price.html">Pricing</a>
+          <a href="about.html">Facility Information</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="coachingSub" aria-expanded="false">Coaching <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="coachingSub">
+          <a href="coaching.html#elite">Elite Coaching</a>
+          <a href="coaching.html#morning">Morning Coaching</a>
+          <a href="coaching.html#afternoon">Afternoon Coaching</a>
+          <a href="coaching-registration.html">Player Registration</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="tournamentsSub" aria-expanded="false">Tournaments <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="tournamentsSub">
+          <a href="tournaments.html">Upcoming Tournaments</a>
+          <a href="tournament-details.html">Tournament Details</a>
+          <a href="tournament-register.html">Register Your Team</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="eventsSub" aria-expanded="false">Events <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="eventsSub">
+          <a href="events.html#birthday">Birthday Celebrations</a>
+          <a href="events.html#private">Private Football Games</a>
+          <a href="events.html#school">School Activities</a>
+          <a href="events.html#corporate">Corporate Team Building</a>
+          <a href="event-enquiry.html">Submit Event Enquiry</a>
+        </div>
+      </li>
+      <li><a href="contact.html" class="drawer-link">Contact</a></li>
+    </ul>
+
+    <div class="drawer-auth" id="drawerAuth">
+      <button class="btn btn-outline-lime" id="drawerLoginBtn">Login</button>
+      <button class="btn btn-lime" id="drawerRegisterBtn">Create Account</button>
+    </div>
+
+    <div class="drawer-auth" id="drawerAccount" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span class="avatar-initials" id="drawerAvatar">JD</span>
+        <span style="color: white; font-weight: 600; font-size: 0.9rem;" id="drawerName">John</span>
+      </div>
+      <a href="customer/dashboard.html" class="btn btn-outline-lime">My Account</a>
+      <a href="customer/bookings.html" class="btn btn-outline-lime">My Bookings</a>
+      <button class="btn btn-outline-lime" id="drawerLogoutBtn">Logout</button>
+    </div>
+
+    <a href="book-to-play.html" class="btn btn-lime drawer-cta">BOOK YOUR GAME</a>
+  </aside>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="authModalClose" aria-label="Close modal"><i class="fas fa-times"></i></button>
+
+      <div id="loginPanel">
+        <h2 id="authModalTitle">WELCOME BACK TO MATCH-BOX</h2>
+        <p class="subtext">Sign in to access your Match-Box experience.</p>
+        <div class="message-area" id="loginMessage"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="error-msg" id="loginEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" id="toggleLoginPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="loginPasswordError">Password is required.</div>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="link-text" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="loginSubmitBtn">LOGIN</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToRegisterBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">CREATE AN ACCOUNT</button>
+          </div>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" class="link-text" id="switchToRegisterLink">Create one</a></p>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">Demo interface. No real authentication is performed.</p>
+      </div>
+
+      <div id="registerPanel" style="display: none;">
+        <h2 id="registerTitle">JOIN THE MATCH-BOX COMMUNITY</h2>
+        <p class="subtext">Create your account and make your next football experience easier.</p>
+        <div class="message-area" id="registerMessage"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="regFullName">Full name</label>
+            <div class="input-wrapper"><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required></div>
+            <div class="error-msg" id="regFullNameError">Full name is required.</div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrapper"><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="regEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="regMobile">Mobile number</label>
+            <div class="input-wrapper"><input type="tel" id="regMobile" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" required></div>
+            <div class="error-msg" id="regMobileError">Please enter a valid mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar" id="strengthBar1"></div>
+              <div class="strength-bar" id="strengthBar2"></div>
+              <div class="strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="strength-text" id="strengthText"></div>
+            <div class="error-msg" id="regPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="regConfirmPassword">Confirm password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="regConfirmPasswordError">Passwords do not match.</div>
+          </div>
+          <div class="checkbox-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <label><input type="checkbox" id="termsCheck" required> I accept the <a href="terms.html" class="link-text">Terms & Conditions</a></label>
+            <label><input type="checkbox" id="privacyCheck" required> I accept the <a href="privacy.html" class="link-text">Privacy Policy</a></label>
+            <div class="error-msg" id="termsError">You must accept the terms and privacy policy.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="registerSubmitBtn">CREATE ACCOUNT</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToLoginBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" class="link-text" id="switchToLoginLink">Sign in</a></p>
+      </div>
+
+      <div id="forgotPanel" style="display: none;">
+        <h2>RESET YOUR PASSWORD</h2>
+        <p class="subtext">Enter your registered email address and we'll send reset instructions if the account exists.</p>
+        <div class="message-area" id="forgotMessage"></div>
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label for="forgotEmail">Registered email address</label>
+            <div class="input-wrapper"><input type="email" id="forgotEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="forgotEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="forgotSubmitBtn">SEND RESET LINK</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromForgot" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">For security, we do not reveal whether an email is registered.</p>
+      </div>
+
+      <div id="resetPanel" style="display: none;">
+        <h2>CREATE NEW PASSWORD</h2>
+        <p class="subtext">Enter your new password below.</p>
+        <div class="message-area" id="resetMessage"></div>
+        <form id="resetForm" novalidate>
+          <div class="form-group">
+            <label for="resetPassword">New password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetPassword" name="newPassword" placeholder="New password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="resetStrength">
+              <div class="strength-bar" id="resetBar1"></div>
+              <div class="strength-bar" id="resetBar2"></div>
+              <div class="strength-bar" id="resetBar3"></div>
+            </div>
+            <div class="strength-text" id="resetStrengthText"></div>
+            <div class="error-msg" id="resetPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="resetConfirmPassword">Confirm new password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetConfirmPassword" name="confirmPassword" placeholder="Confirm new password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="resetConfirmError">Passwords do not match.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="resetSubmitBtn">RESET PASSWORD</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromReset" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main class="mb-terms-main" id="mb-terms-main">
+
+    <!-- ===== HERO ===== -->
+    <section class="mb-terms-hero" id="mb-terms-top" aria-labelledby="mb-terms-hero-title">
+      <div class="mb-terms-container">
+        <div class="mb-terms-hero__content">
+          <div class="mb-terms-hero__badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            MATCH-BOX LEGAL INFORMATION
+          </div>
+          <h1 id="mb-terms-hero-title" class="mb-terms-hero__title">
+            TERMS &amp;<br><span>CONDITIONS.</span>
+          </h1>
+          <p class="mb-terms-hero__desc">
+            Please read these terms carefully before using MATCH-BOX services. These terms explain the conditions applicable to bookings, coaching registrations, tournaments, events, and your use of our website.
+          </p>
+          <div class="mb-terms-hero__meta">
+            <span class="mb-terms-hero__meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              Last Updated: <strong style="color:rgba(255,255,255,0.9);font-weight:700;">[Placeholder — awaiting approval]</strong>
+            </span>
+            <span class="mb-terms-hero__meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              Applies to: Bookings, Coaching, Tournaments, Events &amp; Website Use
+            </span>
+          </div>
+          <div class="mb-terms-hero__actions">
+            <a href="#mb-terms-content" class="mb-terms-btn mb-terms-btn--primary">READ TERMS</a>
+            <a href="#mb-terms-toc" class="mb-terms-btn mb-terms-btn--outline">VIEW CONTENTS</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <section class="mb-terms-section" aria-label="Terms and Conditions">
+      <div class="mb-terms-container">
+        <div class="mb-terms-layout">
+
+          <!-- ===== TABLE OF CONTENTS ===== -->
+          <nav class="mb-terms-toc" id="mb-terms-toc" aria-label="Table of contents">
+            <div class="mb-terms-toc__title">
+              <span>Contents</span>
+              <button type="button" class="mb-terms-toc__toggle" id="mb-terms-toc-toggle" aria-expanded="false" aria-controls="mb-terms-toc-list" aria-label="Toggle table of contents"></button>
+            </div>
+            <ul class="mb-terms-toc__list" id="mb-terms-toc-list">
+              <li><a href="#mb-terms-s1" class="mb-terms-toc__link"><span class="mb-terms-toc__num">01</span> Introduction</a></li>
+              <li><a href="#mb-terms-s2" class="mb-terms-toc__link"><span class="mb-terms-toc__num">02</span> Acceptance of Terms</a></li>
+              <li><a href="#mb-terms-s3" class="mb-terms-toc__link"><span class="mb-terms-toc__num">03</span> Website Use</a></li>
+              <li><a href="#mb-terms-s4" class="mb-terms-toc__link"><span class="mb-terms-toc__num">04</span> Booking Terms</a></li>
+              <li><a href="#mb-terms-s5" class="mb-terms-toc__link"><span class="mb-terms-toc__num">05</span> Booking Payments</a></li>
+              <li><a href="#mb-terms-s6" class="mb-terms-toc__link"><span class="mb-terms-toc__num">06</span> Cancellation &amp; Refunds</a></li>
+              <li><a href="#mb-terms-s7" class="mb-terms-toc__link"><span class="mb-terms-toc__num">07</span> Coaching Terms</a></li>
+              <li><a href="#mb-terms-s8" class="mb-terms-toc__link"><span class="mb-terms-toc__num">08</span> Tournament Registration</a></li>
+              <li><a href="#mb-terms-s9" class="mb-terms-toc__link"><span class="mb-terms-toc__num">09</span> Events &amp; Private Bookings</a></li>
+              <li><a href="#mb-terms-s10" class="mb-terms-toc__link"><span class="mb-terms-toc__num">10</span> Customer Responsibilities</a></li>
+              <li><a href="#mb-terms-s11" class="mb-terms-toc__link"><span class="mb-terms-toc__num">11</span> Safety &amp; Conduct</a></li>
+              <li><a href="#mb-terms-s12" class="mb-terms-toc__link"><span class="mb-terms-toc__num">12</span> Minors &amp; Consent</a></li>
+              <li><a href="#mb-terms-s13" class="mb-terms-toc__link"><span class="mb-terms-toc__num">13</span> Personal Information</a></li>
+              <li><a href="#mb-terms-s14" class="mb-terms-toc__link"><span class="mb-terms-toc__num">14</span> Intellectual Property</a></li>
+              <li><a href="#mb-terms-s15" class="mb-terms-toc__link"><span class="mb-terms-toc__num">15</span> Website Availability</a></li>
+              <li><a href="#mb-terms-s16" class="mb-terms-toc__link"><span class="mb-terms-toc__num">16</span> Limitation of Liability</a></li>
+              <li><a href="#mb-terms-s17" class="mb-terms-toc__link"><span class="mb-terms-toc__num">17</span> Changes to Terms</a></li>
+              <li><a href="#mb-terms-s18" class="mb-terms-toc__link"><span class="mb-terms-toc__num">18</span> Governing Law</a></li>
+              <li><a href="#mb-terms-s19" class="mb-terms-toc__link"><span class="mb-terms-toc__num">19</span> Contact Information</a></li>
+            </ul>
+            <div class="mb-terms-toc__actions">
+              <button type="button" class="mb-terms-btn mb-terms-btn--ghost" id="mb-terms-print">PRINT TERMS</button>
+              <a href="#mb-terms-top" class="mb-terms-btn mb-terms-btn--ghost">BACK TO TOP</a>
+            </div>
+          </nav>
+
+          <!-- ===== LEGAL CONTENT ===== -->
+          <div class="mb-terms-content" id="mb-terms-content">
+
+            <!-- 1 -->
+            <article class="mb-terms-article" id="mb-terms-s1">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">01</span>
+                <h2 class="mb-terms-article__title">Introduction</h2>
+              </div>
+              <p>
+                MATCH-BOX operates a 4-a-side football facility and provides football-related services. Depending on availability and published information, these services may include football pitch bookings, football coaching, football tournaments, private football games, birthday football events, school and student football events, corporate football events, and group football experiences.
+              </p>
+              <p>
+                These Terms &amp; Conditions govern the use of the MATCH-BOX website and the applicable services offered through it. Individual services may also have specific conditions that apply in addition to these terms.
+              </p>
+              <div class="mb-terms-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Where these terms refer to specific service information (such as prices, timings, or capacities), the details published on the relevant service page at the time of your booking or registration apply.</span>
+              </div>
+            </article>
+
+            <!-- 2 -->
+            <article class="mb-terms-article" id="mb-terms-s2">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">02</span>
+                <h2 class="mb-terms-article__title">Acceptance of Terms</h2>
+              </div>
+              <p>
+                You should read and understand the applicable terms before making a booking, registering for coaching, registering a team for a tournament, submitting an event enquiry, or using other website services.
+              </p>
+              <p>
+                Where a specific service requires you to accept its conditions, an acceptance checkbox will be provided before submission. When a submission is made, the following may be recorded:
+              </p>
+              <ul>
+                <li>Your user or registration reference.</li>
+                <li>The terms version applicable at the time.</li>
+                <li>The acceptance timestamp.</li>
+                <li>The relevant service or transaction reference.</li>
+              </ul>
+              <p>
+                Visiting the website does not by itself constitute acceptance of every service-specific agreement. Acceptance applies to the specific service you submit.
+              </p>
+            </article>
+
+            <!-- 3 -->
+            <article class="mb-terms-article" id="mb-terms-s3">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">03</span>
+                <h2 class="mb-terms-article__title">Website Use</h2>
+              </div>
+              <p>When using the MATCH-BOX website, you agree to:</p>
+              <ul>
+                <li>Provide accurate information in all forms and submissions.</li>
+                <li>Not submit false or misleading booking or registration details.</li>
+                <li>Not misuse website forms or enquiry systems.</li>
+                <li>Not attempt unauthorised access to restricted areas or systems.</li>
+                <li>Not interfere with website functionality or security.</li>
+                <li>Not use the website for unlawful or prohibited activities.</li>
+              </ul>
+            </article>
+
+            <!-- 4 -->
+            <article class="mb-terms-article" id="mb-terms-s4">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">04</span>
+                <h2 class="mb-terms-article__title">Football Pitch Booking Terms</h2>
+              </div>
+              <p>
+                The following information applies to football pitch bookings at MATCH-BOX.
+              </p>
+
+              <h3 class="mb-terms-sub">4.1 Booking Information</h3>
+              <ul>
+                <li>Customers must provide an accurate name, email address, and mobile number.</li>
+                <li>Customers must select a valid date and an available time slot.</li>
+                <li>Optional remarks may be submitted together with the booking.</li>
+              </ul>
+
+              <h3 class="mb-terms-sub">4.2 Slot Availability</h3>
+              <ul>
+                <li>Bookings depend on actual pitch availability.</li>
+                <li>A single time slot cannot be booked by multiple customers.</li>
+                <li>Time slots blocked by administration are unavailable for booking.</li>
+                <li>Availability displayed on the website should reflect current backend booking data.</li>
+              </ul>
+
+              <h3 class="mb-terms-sub">4.3 Booking Confirmation</h3>
+              <p>
+                A booking is confirmed only when the booking system or an authorised MATCH-BOX administrator confirms it according to the actual booking workflow. Where available, the booking reference should be retained for your records. An enquiry or incomplete form submission is not a confirmed booking.
+              </p>
+
+              <h3 class="mb-terms-sub">4.4 Operating Hours</h3>
+              <ul>
+                <li>Operating hours are 6:00 AM to 12:00 midnight.</li>
+                <li>The standard booking duration is one hour.</li>
+                <li>Customers should respect the selected booking period.</li>
+                <li>Any additional time is subject to availability and applicable approval.</li>
+              </ul>
+            </article>
+
+            <!-- 5 -->
+            <article class="mb-terms-article" id="mb-terms-s5">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">05</span>
+                <h2 class="mb-terms-article__title">Booking Payments</h2>
+              </div>
+              <p>
+                The initial payment method for pitch bookings is <strong>Pay at Venue</strong>. Online payments are not part of the initial booking implementation. Customers should follow the payment instructions communicated through the official booking process.
+              </p>
+
+              <div class="mb-terms-table-wrap">
+                <table class="mb-terms-table">
+                  <thead>
+                    <tr>
+                      <th>Pricing Category</th>
+                      <th>Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Non-Peak</td><td>₹350 / hour</td></tr>
+                    <tr><td>Peak</td><td>₹500 / hour</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p>
+                Peak timings are configured by the administration and are subject to the published booking information at the time of booking. The applicable booking charge should be displayed clearly during the booking process.
+              </p>
+            </article>
+
+            <!-- 6 -->
+            <article class="mb-terms-article" id="mb-terms-s6">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">06</span>
+                <h2 class="mb-terms-article__title">Cancellation and Refunds</h2>
+              </div>
+              <p>
+                Cancellation and refund conditions for MATCH-BOX bookings, coaching registrations, tournaments, and events depend on the official policies published by the business. These conditions may cover customer-requested cancellation, rescheduling, late cancellation, no-shows, refund eligibility, refund processing, business-initiated cancellation, and unforeseen circumstances.
+              </p>
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Cancellation and refund conditions will be communicated through the official MATCH-BOX booking policy. Specific deadlines, refund percentages, and processing times must be approved by the business before publication.</span>
+              </div>
+              <p>
+                Where an official cancellation and refund policy page is available, please review it before submitting a booking or registration. If you have questions about cancellation or refunds, please contact MATCH-BOX through the official contact channels.
+              </p>
+            </article>
+
+            <!-- 7 -->
+            <article class="mb-terms-article" id="mb-terms-s7">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">07</span>
+                <h2 class="mb-terms-article__title">Football Coaching Terms</h2>
+              </div>
+              <p>
+                The following information applies to football coaching registrations at MATCH-BOX.
+              </p>
+
+              <h3 class="mb-terms-sub">Coaching Sessions</h3>
+              <ul>
+                <li><strong>Morning session:</strong> 5:00 AM – 6:30 AM, 90 minutes, capacity 10 players (8 outfield players and 2 goalkeepers).</li>
+                <li><strong>Afternoon session:</strong> 3:00 PM – 4:30 PM, 90 minutes, capacity configurable by the administrator.</li>
+              </ul>
+
+              <h3 class="mb-terms-sub">Registration Conditions</h3>
+              <ul>
+                <li>Players must provide accurate registration details.</li>
+                <li>Registration is subject to session capacity and review.</li>
+                <li>Registration submission does not automatically guarantee acceptance.</li>
+                <li>Players under 18 must provide the required parent or guardian information.</li>
+                <li>Any coaching-specific rules displayed on the coaching registration page apply in addition to these terms.</li>
+              </ul>
+
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Coaching fees, weekly schedules, age eligibility, coach qualifications, equipment requirements, attendance rules, and medical or fitness requirements must be approved by the business before publication.</span>
+              </div>
+            </article>
+
+            <!-- 8 -->
+            <article class="mb-terms-article" id="mb-terms-s8">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">08</span>
+                <h2 class="mb-terms-article__title">Tournament Registration Terms</h2>
+              </div>
+              <p>
+                The following conditions apply to MATCH-BOX football tournament participation.
+              </p>
+              <ul>
+                <li>Team captains must provide accurate team details.</li>
+                <li>Player information must be submitted accurately.</li>
+                <li>Tournament registration is subject to the published requirements of the selected tournament.</li>
+                <li>Registration deadlines must be respected.</li>
+                <li>Maximum team limits are determined by each tournament.</li>
+                <li>Tournament participation is subject to actual confirmation by MATCH-BOX.</li>
+              </ul>
+
+              <div class="mb-terms-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span><strong>4-a-side clarification:</strong> MATCH-BOX uses a 4-a-side football format. This does not automatically mean a team can register only four squad members. Squad size, substitutes, eligibility, and other competition rules must be defined separately for each tournament.</span>
+              </div>
+
+              <h3 class="mb-terms-sub">Tournament-Specific Conditions</h3>
+              <p>
+                Each tournament may define its own conditions. These may include team eligibility, squad size, substitute rules, match format, tournament schedule, entry fee (if applicable), cancellation and withdrawal conditions, and tournament-specific conduct. Where tournament-specific rules exist, they are published with the relevant tournament details.
+              </p>
+
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Tournament prizes, match rules, age limits, fees, squad restrictions, and deadlines must be approved by the business and published per tournament.</span>
+              </div>
+            </article>
+
+            <!-- 9 -->
+            <article class="mb-terms-article" id="mb-terms-s9">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">09</span>
+                <h2 class="mb-terms-article__title">Events and Private Bookings</h2>
+              </div>
+              <p>
+                MATCH-BOX may accept enquiries for birthday football parties, private football games, school and student football events, corporate football events, and group football experiences.
+              </p>
+              <ul>
+                <li>Event enquiries are subject to review by MATCH-BOX.</li>
+                <li>Submitting an enquiry does not automatically reserve the pitch or confirm the event.</li>
+                <li>Event dates and times require approval.</li>
+                <li>Only approved and confirmed events should block the booking calendar.</li>
+                <li>Any applicable event conditions will be communicated during the confirmation process.</li>
+              </ul>
+              <p>
+                Specific event services, arrangements, or inclusions that are not confirmed during the enquiry and confirmation process do not form part of the event.
+              </p>
+            </article>
+
+            <!-- 10 -->
+            <article class="mb-terms-article" id="mb-terms-s10">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">10</span>
+                <h2 class="mb-terms-article__title">Customer Responsibilities</h2>
+              </div>
+              <p>Customers using MATCH-BOX services are expected to:</p>
+              <ul>
+                <li>Provide accurate booking and registration information.</li>
+                <li>Follow confirmed booking times.</li>
+                <li>Respect other players, teams, and visitors.</li>
+                <li>Follow authorised facility instructions.</li>
+                <li>Treat MATCH-BOX property and equipment responsibly.</li>
+                <li>Avoid disruptive, abusive, or unlawful conduct.</li>
+                <li>Follow applicable tournament or coaching-specific rules.</li>
+              </ul>
+            </article>
+
+            <!-- 11 -->
+            <article class="mb-terms-article" id="mb-terms-s11">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">11</span>
+                <h2 class="mb-terms-article__title">Facility Safety and Conduct</h2>
+              </div>
+              <p>
+                Football activities involve physical movement and interaction. Customers using MATCH-BOX facilities are expected to follow general safety and conduct expectations, including:
+              </p>
+              <ul>
+                <li>Respect fellow players and MATCH-BOX staff.</li>
+                <li>Avoid dangerous or intentionally harmful behaviour.</li>
+                <li>Follow reasonable safety instructions provided by authorised staff.</li>
+                <li>Use the facility responsibly.</li>
+                <li>Report accidents, damage, or safety concerns to the appropriate staff member.</li>
+                <li>Follow any officially published facility rules.</li>
+              </ul>
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Specific facility safety rules, protective equipment requirements, medical screening, injury arrangements, amenities, and emergency procedures must be reviewed and approved by the business before publication.</span>
+              </div>
+            </article>
+
+            <!-- 12 -->
+            <article class="mb-terms-article" id="mb-terms-s12">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">12</span>
+                <h2 class="mb-terms-article__title">Minors and Parental Consent</h2>
+              </div>
+              <p>
+                Players under 18 may require parent or guardian involvement for coaching or other applicable registrations.
+              </p>
+              <ul>
+                <li>Parent or guardian contact information may be required where applicable.</li>
+                <li>Appropriate consent should be provided before submitting a minor's registration.</li>
+                <li>Player information should be accurate and submitted with the appropriate consent.</li>
+                <li>Personal information relating to minors should be handled carefully and in accordance with the applicable privacy policy.</li>
+              </ul>
+            </article>
+
+            <!-- 13 -->
+            <article class="mb-terms-article" id="mb-terms-s13">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">13</span>
+                <h2 class="mb-terms-article__title">Personal Information and Privacy</h2>
+              </div>
+              <p>
+                Customer information may be collected when users book the football pitch, register for coaching, register teams for tournaments, submit event enquiries, or contact MATCH-BOX.
+              </p>
+              <p>Information collected may include:</p>
+              <ul>
+                <li>Name.</li>
+                <li>Email address.</li>
+                <li>Mobile number.</li>
+                <li>Booking information.</li>
+                <li>Player information.</li>
+                <li>Team information.</li>
+                <li>Event enquiry details.</li>
+              </ul>
+              <p>
+                Personal information should be handled according to the applicable MATCH-BOX privacy policy. Where a privacy policy page is available, please review it for details on how personal information is processed.
+              </p>
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Data-sharing arrangements, advertising practices, retention periods, and security certifications must be approved by the business and documented in the privacy policy before publication.</span>
+              </div>
+            </article>
+
+            <!-- 14 -->
+            <article class="mb-terms-article" id="mb-terms-s14">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">14</span>
+                <h2 class="mb-terms-article__title">Intellectual Property</h2>
+              </div>
+              <p>
+                Website content, branding, graphics, logos, text, and original design elements may be protected by applicable intellectual property laws. Users should not reproduce or commercially use protected MATCH-BOX material without appropriate permission.
+              </p>
+              <p>
+                Third-party images, materials, or content used on the website remain the property of their respective owners where applicable.
+              </p>
+            </article>
+
+            <!-- 15 -->
+            <article class="mb-terms-article" id="mb-terms-s15">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">15</span>
+                <h2 class="mb-terms-article__title">Website Availability and Changes</h2>
+              </div>
+              <ul>
+                <li>Website information may be updated from time to time.</li>
+                <li>Booking availability can change.</li>
+                <li>Published tournament information may be updated by authorised administrators.</li>
+                <li>Technical interruptions may occasionally affect website availability.</li>
+                <li>MATCH-BOX will communicate relevant service changes through its official channels where applicable.</li>
+              </ul>
+              <p>
+                MATCH-BOX does not promise uninterrupted website availability. Where possible, reasonable efforts are made to keep the website operating correctly.
+              </p>
+            </article>
+
+            <!-- 16 -->
+            <article class="mb-terms-article" id="mb-terms-s16">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">16</span>
+                <h2 class="mb-terms-article__title">Limitation of Liability</h2>
+              </div>
+              <p>
+                To the extent permitted by applicable law, MATCH-BOX is responsible for providing its services with reasonable care. Nothing in these terms excludes or limits responsibility for matters that cannot lawfully be excluded or limited, including liability for personal injury or death caused by negligence, or for any rights you have under applicable consumer protection laws.
+              </p>
+              <p>
+                Customers should follow safety instructions, use the facility responsibly, and report any safety concerns promptly.
+              </p>
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Any liability provisions must be reviewed by a qualified legal professional before publication. Sweeping exclusions of responsibility that are not permitted under applicable law should not be relied upon.</span>
+              </div>
+            </article>
+
+            <!-- 17 -->
+            <article class="mb-terms-article" id="mb-terms-s17">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">17</span>
+                <h2 class="mb-terms-article__title">Changes to These Terms</h2>
+              </div>
+              <p>
+                MATCH-BOX may update these terms when business services, operational policies, or legal requirements change.
+              </p>
+              <ul>
+                <li>The last updated date and terms version are recorded at the top of this page.</li>
+                <li>Where material changes are made, an indication of the change may be provided where appropriate.</li>
+                <li>Where a customer needs to accept updated terms for a new booking or registration, the accepted version and timestamp should be recorded.</li>
+                <li>Updated terms are not applied retroactively to claim that a customer accepted a new version for a previous submission.</li>
+              </ul>
+            </article>
+
+            <!-- 18 -->
+            <article class="mb-terms-article" id="mb-terms-s18">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">18</span>
+                <h2 class="mb-terms-article__title">Governing Law and Dispute Resolution</h2>
+              </div>
+              <p>
+                The governing law, jurisdiction, and dispute resolution process applicable to these terms should be approved by the business owner and legal adviser before publication, in accordance with applicable Indian law.
+              </p>
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Court jurisdiction, city, state, arbitration arrangements, and dispute-resolution processes must be approved by the business owner and legal adviser. No jurisdiction or process has been assumed on this page.</span>
+              </div>
+            </article>
+
+            <!-- 19 -->
+            <article class="mb-terms-article" id="mb-terms-s19">
+              <div class="mb-terms-article__header">
+                <span class="mb-terms-article__num">19</span>
+                <h2 class="mb-terms-article__title">Contact Information</h2>
+              </div>
+              <p>
+                If you have questions about these Terms &amp; Conditions, please contact MATCH-BOX through the official contact channels.
+              </p>
+              <div class="mb-terms-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Development placeholder.</strong> Official business email, phone number, and physical address must be supplied and approved by the business before publication. Contact details have not been invented on this page.</span>
+              </div>
+              <p>
+                Please use the official <a href="contact.html">contact page</a> for enquiries related to these terms.
+              </p>
+            </article>
+
+            <button type="button" class="mb-terms-backtop-inline" data-backtop>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>
+              Back to top
+            </button>
+
+          </div>
+        </div>
+
+        <!-- ===== IMPORTANT NOTICE ===== -->
+        <div class="mb-terms-notice" id="mb-terms-notice">
+          <h2>PLEASE READ BEFORE USING OUR SERVICES</h2>
+          <p>
+            Different MATCH-BOX services may have additional conditions. Please review the relevant booking, coaching, tournament, event, cancellation, and privacy information before submitting your request or registration.
+          </p>
+          <div class="mb-terms-notice__links">
+            <a href="book-to-play.html">Book to Play</a>
+            <a href="coaching.html">Coaching</a>
+            <a href="tournaments.html">Tournaments</a>
+            <a href="events.html">Events</a>
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+          </div>
+        </div>
+
+        <!-- ===== CONTACT CTA ===== -->
+        <div class="mb-terms-contact">
+          <h2>QUESTIONS ABOUT OUR TERMS?</h2>
+          <p>If you have questions about these Terms &amp; Conditions, please contact MATCH-BOX through our official contact channels.</p>
+          <div class="mb-terms-contact__actions">
+            <a href="contact.html" class="mb-terms-btn mb-terms-btn--primary">CONTACT MATCH-BOX</a>
+            <button type="button" class="mb-terms-btn mb-terms-btn--ghost" id="mb-terms-print-bottom">PRINT TERMS</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating back-to-top -->
+  <button type="button" class="mb-terms-backtop" id="mb-terms-backtop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>
+  </button>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-cta">
+      <div class="container">
+        <h2>YOUR NEXT GAME IS WAITING.</h2>
+        <p>Bring your friends, make a team, and experience the excitement of 4-a-side football.</p>
+        <div class="footer-cta-btns">
+          <a href="book-to-play.html" class="btn btn-lime">BOOK YOUR GAME</a>
+          <a href="about.html" class="btn btn-dark-outline" style="background: transparent; border-color: var(--white); color: var(--white);">EXPLORE MATCH-BOX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo-area">
+              <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+              <div class="logo-text">
+                <span class="brand-name">MATCH-BOX</span>
+                <span class="tagline">Small Field. Big Fun!</span>
+              </div>
+            </a>
+            <p>Match-Box brings people together through the excitement of small-sided football. Enjoy the game, develop your skills, and create memorable moments.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Match-Box</a></li>
+              <li><a href="book-to-play.html">Book to Play</a></li>
+              <li><a href="coaching.html">Coaching</a></li>
+              <li><a href="tournaments.html">Tournaments</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Play & Participate</h4>
+            <ul>
+              <li><a href="book-to-play.html">Book a Pitch</a></li>
+              <li><a href="coaching-registration.html">Coaching Registration</a></li>
+              <li><a href="tournaments.html">Upcoming Tournaments</a></li>
+              <li><a href="tournament-register.html">Register Your Team</a></li>
+              <li><a href="events.html#birthday">Birthday Events</a></li>
+              <li><a href="events.html#private">Private Events</a></li>
+              <li><a href="contact.html">Ask a Question</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><a href="customer/dashboard.html">My Account</a></li>
+              <li><a href="customer/bookings.html">My Bookings</a></li>
+              <li><a href="customer/booking-history.html">Booking History</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="contact.html">Contact Support</a></li>
+              <li><a href="booking-information.html">Booking Information</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Legal Information</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="refund-policy.html">Cancellation & Refund Policy</a></li>
+              <li><a href="facility-rules.html">Facility Rules & Safety Guidelines</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h4 style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lime-green); margin-bottom: 1.25rem;">Contact</h4>
+            <ul class="footer-contact-info">
+              <li><i class="fas fa-envelope"></i> <span>hello@match-box.example</span></li>
+              <li><i class="fas fa-phone-alt"></i> <span>+91 00000 00000</span></li>
+              <li><i class="fas fa-map-marker-alt"></i> <span>Match-Box Facility, Address Placeholder</span></li>
+              <li><i class="fas fa-clock"></i> <span>Operating hours: 6:00 AM – 12:00 midnight</span></li>
+            </ul>
+          </div>
+          <div class="newsletter">
+            <h4>STAY IN THE GAME.</h4>
+            <p>Get updates about upcoming tournaments, coaching, and Match-Box events.</p>
+            <form class="newsletter-form" id="newsletterForm" novalidate>
+              <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+              <button type="submit" class="btn btn-lime" id="newsletterSubmit">SUBSCRIBE</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg"></div>
+            <p style="font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem;">Demo only. Subscriptions are not stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; <span id="copyrightYear"></span> MATCH-BOX. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const header = document.getElementById('mainHeader');
+      const announceBar = document.getElementById('announceBar');
+      const headerPlaceholder = document.getElementById('headerPlaceholder');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const drawerClose = document.getElementById('drawerClose');
+      const authModalOverlay = document.getElementById('authModalOverlay');
+      const authModalClose = document.getElementById('authModalClose');
+
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const forgotPanel = document.getElementById('forgotPanel');
+      const resetPanel = document.getElementById('resetPanel');
+
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+      const drawerRegisterBtn = document.getElementById('drawerRegisterBtn');
+      const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+      const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+      const switchToLoginBtn = document.getElementById('switchToLoginBtn');
+      const switchToLoginLink = document.getElementById('switchToLoginLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+      const backToLoginFromReset = document.getElementById('backToLoginFromReset');
+
+      const accountMenuWrapper = document.getElementById('accountMenuWrapper');
+      const accountTrigger = document.getElementById('accountTrigger');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const drawerLogoutBtn = document.getElementById('drawerLogoutBtn');
+      const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const resetForm = document.getElementById('resetForm');
+      const newsletterForm = document.getElementById('newsletterForm');
+
+      let isLoggedIn = false;
+
+      /* =========================================================
+         STICKY HEADER LOGIC
+         - At page top: header sits naturally below announce bar
+         - After scrolling past announce bar: header pins to viewport top
+         - Scroll back up: header returns to natural position
+         ========================================================= */
+      const announceHeight = announceBar.offsetHeight;
+      let headerIsFixed = false;
+
+      function updateHeaderState() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > announceHeight) {
+          if (!headerIsFixed) {
+            headerIsFixed = true;
+            header.classList.add('is-fixed');
+            headerPlaceholder.classList.add('active');
+          }
+        } else {
+          if (headerIsFixed) {
+            headerIsFixed = false;
+            header.classList.remove('is-fixed');
+            headerPlaceholder.classList.remove('active');
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+      window.addEventListener('resize', function() {
+        // Recompute announce height on resize
+        // (unlikely to change, but safe)
+        updateHeaderState();
+      });
+      updateHeaderState();
+
+      /* Drawer */
+      function openDrawer() {
+        mobileDrawer.classList.add('open');
+        drawerOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeDrawer() {
+        mobileDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileDrawer.classList.contains('open')) closeDrawer();
+          if (authModalOverlay.classList.contains('active')) closeAuthModal();
+          if (accountMenuWrapper.classList.contains('open')) {
+            accountMenuWrapper.classList.remove('open');
+            accountTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      document.querySelectorAll('.drawer-link[data-sub]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const subId = this.getAttribute('data-sub');
+          const sub = document.getElementById(subId);
+          const isOpen = sub.classList.contains('open');
+          document.querySelectorAll('.drawer-sub').forEach(function(s) { s.classList.remove('open'); });
+          document.querySelectorAll('.drawer-link[data-sub]').forEach(function(b) { b.setAttribute('aria-expanded', 'false'); });
+          if (!isOpen) {
+            sub.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { closeDrawer(); });
+      });
+
+      /* Auth modal */
+      function openAuthModal(panel) {
+        authModalOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        showPanel(panel || 'login');
+      }
+
+      function closeAuthModal() {
+        authModalOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        clearMessages();
+        resetForms();
+      }
+
+      function showPanel(panelName) {
+        loginPanel.style.display = 'none';
+        registerPanel.style.display = 'none';
+        forgotPanel.style.display = 'none';
+        resetPanel.style.display = 'none';
+
+        if (panelName === 'login') loginPanel.style.display = 'block';
+        else if (panelName === 'register') registerPanel.style.display = 'block';
+        else if (panelName === 'forgot') forgotPanel.style.display = 'block';
+        else if (panelName === 'reset') resetPanel.style.display = 'block';
+      }
+
+      function clearMessages() {
+        document.querySelectorAll('.message-area').forEach(function(el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        });
+      }
+
+      function resetForms() {
+        loginForm.reset();
+        registerForm.reset();
+        forgotForm.reset();
+        resetForm.reset();
+        document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('visible'); });
+        document.querySelectorAll('.strength-bar').forEach(function(bar) { bar.className = 'strength-bar'; });
+        document.querySelectorAll('.strength-text').forEach(function(el) { el.textContent = ''; });
+      }
+
+      loginBtn.addEventListener('click', function() { openAuthModal('login'); });
+      registerBtn.addEventListener('click', function() { openAuthModal('register'); });
+      drawerLoginBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('login'); });
+      drawerRegisterBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('register'); });
+      mobileAccountBtn.addEventListener('click', function() {
+        if (isLoggedIn) openDrawer();
+        else openAuthModal('login');
+      });
+
+      switchToRegisterBtn.addEventListener('click', function() { showPanel('register'); });
+      switchToRegisterLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('register'); });
+      switchToLoginBtn.addEventListener('click', function() { showPanel('login'); });
+      switchToLoginLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('login'); });
+      forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('forgot'); });
+      backToLoginFromForgot.addEventListener('click', function() { showPanel('login'); });
+      backToLoginFromReset.addEventListener('click', function() { showPanel('login'); });
+
+      authModalClose.addEventListener('click', closeAuthModal);
+      authModalOverlay.addEventListener('click', function(e) {
+        if (e.target === authModalOverlay) closeAuthModal();
+      });
+
+      /* Password toggles */
+      function setupPasswordToggle(toggleBtnId, inputId) {
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+
+      setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+      setupPasswordToggle('toggleRegPassword', 'regPassword');
+      setupPasswordToggle('toggleRegConfirmPassword', 'regConfirmPassword');
+      setupPasswordToggle('toggleResetPassword', 'resetPassword');
+      setupPasswordToggle('toggleResetConfirmPassword', 'resetConfirmPassword');
+
+      /* Password strength */
+      function evaluatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        return Math.min(score, 3);
+      }
+
+      function updateStrengthBars(password, barIds, textId) {
+        const score = evaluatePasswordStrength(password);
+        const bars = barIds.map(function(id) { return document.getElementById(id); });
+        const textEl = document.getElementById(textId);
+
+        bars.forEach(function(bar, i) {
+          bar.className = 'strength-bar';
+          if (score > i) {
+            if (score === 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('medium');
+            else bar.classList.add('strong');
+          }
+        });
+
+        if (textEl) {
+          if (password.length === 0) textEl.textContent = '';
+          else if (score === 1) textEl.textContent = 'Weak password';
+          else if (score === 2) textEl.textContent = 'Medium strength';
+          else textEl.textContent = 'Strong password';
+        }
+      }
+
+      document.getElementById('regPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['strengthBar1', 'strengthBar2', 'strengthBar3'], 'strengthText');
+      });
+
+      document.getElementById('resetPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['resetBar1', 'resetBar2', 'resetBar3'], 'resetStrengthText');
+      });
+
+      /* Validation helpers */
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function isValidMobile(mobile) {
+        return /^[\+]?[\d\s\-]{10,15}$/.test(mobile);
+      }
+
+      function showError(errorId, show) {
+        const el = document.getElementById(errorId);
+        if (el) el.classList.toggle('visible', show);
+      }
+
+      function showMessage(containerId, text, type) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.className = 'message-area ' + type;
+        el.textContent = text;
+      }
+
+      function clearMessage(containerId) {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        }
+      }
+
+      /* Login */
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('loginMessage');
+        let valid = true;
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        showError('loginEmailError', false);
+        showError('loginPasswordError', false);
+
+        if (!email || !isValidEmail(email)) { showError('loginEmailError', true); valid = false; }
+        if (!password) { showError('loginPasswordError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('loginSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Signing in...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('loginMessage', 'This is a demo interface. Real authentication is handled by the future PHP backend.', 'success');
+        }, 800);
+      });
+
+      /* Register */
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('registerMessage');
+        let valid = true;
+
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const terms = document.getElementById('termsCheck').checked;
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        ['regFullNameError', 'regEmailError', 'regMobileError', 'regPasswordError', 'regConfirmPasswordError', 'termsError'].forEach(function(id) {
+          showError(id, false);
+        });
+
+        if (!fullName || fullName.length < 2) { showError('regFullNameError', true); valid = false; }
+        if (!email || !isValidEmail(email)) { showError('regEmailError', true); valid = false; }
+        if (!mobile || !isValidMobile(mobile)) { showError('regMobileError', true); valid = false; }
+        if (!password || password.length < 8) { showError('regPasswordError', true); valid = false; }
+        if (password !== confirmPassword) { showError('regConfirmPasswordError', true); valid = false; }
+        if (!terms || !privacy) { showError('termsError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('registerSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating account...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('registerMessage', 'This is a demo interface. Registration will be handled by the PHP/MySQL backend.', 'success');
+        }, 1000);
+      });
+
+      /* Forgot */
+      forgotForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('forgotMessage');
+        const email = document.getElementById('forgotEmail').value.trim();
+        showError('forgotEmailError', false);
+        if (!email || !isValidEmail(email)) { showError('forgotEmailError', true); return; }
+
+        const btn = document.getElementById('forgotSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Sending...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('forgotMessage', 'If an account exists with this email, password reset instructions will be sent. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Reset */
+      resetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('resetMessage');
+        let valid = true;
+
+        const password = document.getElementById('resetPassword').value;
+        const confirm = document.getElementById('resetConfirmPassword').value;
+
+        showError('resetPasswordError', false);
+        showError('resetConfirmError', false);
+
+        if (!password || password.length < 8) { showError('resetPasswordError', true); valid = false; }
+        if (password !== confirm) { showError('resetConfirmError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('resetSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Resetting...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('resetMessage', 'Password reset would be processed by the backend. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Newsletter */
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msgEl = document.getElementById('newsletterMsg');
+        msgEl.className = 'newsletter-msg';
+        msgEl.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          msgEl.className = 'newsletter-msg error';
+          msgEl.textContent = 'Please enter a valid email address.';
+          return;
+        }
+
+        const btn = document.getElementById('newsletterSubmit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          msgEl.className = 'newsletter-msg success';
+          msgEl.textContent = 'Thanks! (Demo only – no subscription is stored.)';
+          document.getElementById('newsletterEmail').value = '';
+        }, 700);
+      });
+
+      /* Logout (demo) */
+      function simulateLogout() {
+        isLoggedIn = false;
+        document.querySelectorAll('.auth-btn').forEach(function(b) { b.style.display = ''; });
+        accountMenuWrapper.style.display = 'none';
+        accountMenuWrapper.classList.remove('open');
+        document.getElementById('drawerAuth').style.display = 'flex';
+        document.getElementById('drawerAccount').style.display = 'none';
+        document.getElementById('avatarInitials').textContent = 'JD';
+        document.getElementById('accountName').textContent = 'John';
+        document.getElementById('drawerAvatar').textContent = 'JD';
+        document.getElementById('drawerName').textContent = 'John';
+      }
+
+      accountTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = accountMenuWrapper.classList.toggle('open');
+        accountTrigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!accountMenuWrapper.contains(e.target)) {
+          accountMenuWrapper.classList.remove('open');
+          accountTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        simulateLogout();
+      });
+
+      drawerLogoutBtn.addEventListener('click', function() {
+        simulateLogout();
+        closeDrawer();
+      });
+
+      /* Back to top */
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      }, { passive: true });
+
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Copyright year */
+      document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+      /* Close drawer if resized to desktop */
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth >= 1024) closeDrawer();
+        }, 150);
+      });
+
+      /* Keyboard support for desktop dropdowns */
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        const link = item.querySelector('.nav-link');
+        const panel = item.querySelector('.dropdown-panel');
+        if (!link || !panel) return;
+
+        link.addEventListener('focus', function() {
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.transform = 'translateY(0)';
+          panel.style.pointerEvents = 'auto';
+        });
+
+        item.addEventListener('mouseleave', function() {
+          if (!item.contains(document.activeElement)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+
+        item.addEventListener('focusout', function(e) {
+          if (!item.contains(e.relatedTarget)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+      });
+
+    })();
+  </script>
+
+    <script>
+    (function() {
+      'use strict';
+
+      const termsMain = document.querySelector('.mb-terms-main');
+      if (!termsMain) return;
+
+      /* ============================================
+         MOBILE TOC TOGGLE
+         ============================================ */
+      const toc = document.getElementById('mb-terms-toc');
+      const tocToggle = document.getElementById('mb-terms-toc-toggle');
+
+      tocToggle?.addEventListener('click', function() {
+        const isOpen = toc.classList.toggle('mb-terms-toc--open');
+        tocToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      // Close mobile TOC after clicking a link
+      termsMain.querySelectorAll('.mb-terms-toc__link').forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 1024) {
+            toc.classList.remove('mb-terms-toc--open');
+            tocToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+
+      /* ============================================
+         ACTIVE SECTION HIGHLIGHTING
+         ============================================ */
+      const tocLinks = termsMain.querySelectorAll('.mb-terms-toc__link');
+      const articles = termsMain.querySelectorAll('.mb-terms-article');
+      const linkMap = {};
+
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          linkMap[href.slice(1)] = link;
+        }
+      });
+
+      function setActiveSection(id) {
+        tocLinks.forEach(l => l.classList.remove('mb-terms-toc__link--active'));
+        const active = linkMap[id];
+        if (active) active.classList.add('mb-terms-toc__link--active');
+      }
+
+      if ('IntersectionObserver' in window && articles.length) {
+        const observer = new IntersectionObserver(entries => {
+          // Pick the entry closest to the top that is intersecting
+          const visible = entries.filter(e => e.isIntersecting);
+          if (visible.length) {
+            visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+            setActiveSection(visible[0].target.id);
+          }
+        }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+
+        articles.forEach(article => observer.observe(article));
+      }
+
+      /* ============================================
+         BACK TO TOP
+         ============================================ */
+      const backtop = document.getElementById('mb-terms-backtop');
+
+      function toggleBacktop() {
+        if (window.scrollY > 600) {
+          backtop.classList.add('mb-terms-backtop--visible');
+        } else {
+          backtop.classList.remove('mb-terms-backtop--visible');
+        }
+      }
+
+      window.addEventListener('scroll', toggleBacktop, { passive: true });
+      toggleBacktop();
+
+      backtop?.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      termsMain.querySelectorAll('[data-backtop]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      /* ============================================
+         PRINT
+         ============================================ */
+      function printTerms() {
+        window.print();
+      }
+
+      document.getElementById('mb-terms-print')?.addEventListener('click', printTerms);
+      document.getElementById('mb-terms-print-bottom')?.addEventListener('click', printTerms);
+
+    })();
+  </script>
+</body>
+</html>

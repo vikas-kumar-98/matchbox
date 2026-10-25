@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Match-Box — Premium Header Component</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+ <link rel="stylesheet" type="text/css" href="../css/style.css">
+  <style>
+/* =========================================================================
+   MATCH-BOX — PITCH BOOKING PAGE STYLES
+   ========================================================================= */
+
+/* ---- Overflow guard ---- */
+html { overflow-x: hidden; overflow-x: clip; scrollbar-gutter: stable; }
+body { overflow-x: hidden; overflow-x: clip; max-width: 100%; }
+
+/* ---- Tokens ---- */
+:root {
+  --bk-forest: #17251D;
+  --bk-lime: #C6F36A;
+  --bk-offwhite: #F7F8F3;
+  --bk-white: #FFFFFF;
+  --bk-muted: #6B746D;
+  --bk-border: rgba(23, 37, 29, 0.1);
+  --bk-danger: #c0392b;
+  --bk-warning-bg: #fff8e1;
+  --bk-warning-border: #f0d979;
+  --bk-warning-text: #7a5c00;
+  --bk-font-heading: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --bk-font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --bk-container: 90rem;
+  --bk-gutter: clamp(1rem, 4vw, 3rem);
+  --bk-radius: 0.875rem;
+  --bk-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --bk-transition: 220ms var(--bk-ease);
+}
+
+.bk-container {
+  width: 100%; max-width: var(--bk-container);
+  margin-inline: auto; padding-inline: var(--bk-gutter);
+  box-sizing: border-box;
+}
+
+/* ---- Typography ---- */
+.bk-eyebrow {
+  display: inline-block;
+  font-family: var(--bk-font-heading);
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--bk-forest); margin-bottom: 0.75rem;
+}
+.bk-eyebrow--lime { color: var(--bk-lime); }
+
+.bk-h2 {
+  font-family: var(--bk-font-heading);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700; line-height: 1.1; letter-spacing: -0.025em;
+  color: var(--bk-forest); text-wrap: balance;
+}
+.bk-lede {
+  font-family: var(--bk-font-body);
+  font-size: clamp(1rem, 1.3vw, 1.125rem);
+  line-height: 1.65; color: var(--bk-muted);
+  max-width: 60ch; text-wrap: pretty;
+}
+
+/* ---- Buttons ---- */
+.bk-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem; min-height: 3rem; padding: 0.75rem 1.5rem;
+  font-family: var(--bk-font-heading); font-weight: 600; font-size: 0.9375rem;
+  text-decoration: none; border-radius: 0.625rem; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap; box-sizing: border-box;
+  transition: background-color var(--bk-transition),
+              color var(--bk-transition),
+              border-color var(--bk-transition),
+              transform var(--bk-transition),
+              box-shadow var(--bk-transition);
+}
+.bk-btn--primary {
+  background: var(--bk-lime); color: var(--bk-forest);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.bk-btn--primary:hover { background: #d4f88a; box-shadow: 0 2px 8px rgba(23,37,29,0.12); }
+.bk-btn--primary:active { transform: translateY(1px); }
+.bk-btn--primary:disabled {
+  background: #e5e5e5; color: #9a9a9a;
+  cursor: not-allowed; box-shadow: none;
+}
+.bk-btn--secondary {
+  background: transparent; color: var(--bk-forest);
+  border-color: rgba(23,37,29,0.25);
+}
+.bk-btn--secondary:hover { background: rgba(23,37,29,0.06); border-color: rgba(23,37,29,0.45); }
+.bk-btn--lg { padding: 0.875rem 1.75rem; font-size: 1rem; min-height: 3.25rem; }
+.bk-btn--block { width: 100%; }
+.bk-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* =========================================================================
+   PAGE HEADER
+   ========================================================================= */
+.bk-page-header {
+  padding-block: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2rem);
+  background: var(--bk-white);
+  border-bottom: 1px solid var(--bk-border);
+}
+.bk-page-header__inner {
+  display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start;
+}
+@media (min-width: 900px) {
+  .bk-page-header__inner { grid-template-columns: 1fr auto; gap: 2rem; }
+}
+.bk-page-header__title {
+  font-family: var(--bk-font-heading);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 700; line-height: 1.02; letter-spacing: -0.03em;
+  color: var(--bk-forest);
+  margin-block: 0.5rem 0.75rem;
+  text-wrap: balance;
+}
+.bk-page-header__lede {
+  font-family: var(--bk-font-body);
+  font-size: clamp(1rem, 1.3vw, 1.0625rem);
+  line-height: 1.55; color: var(--bk-muted);
+  max-width: 48rem;
+}
+.bk-page-header__facts {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--bk-offwhite);
+  border-radius: 0.75rem;
+  border: 1px solid var(--bk-border);
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .bk-page-header__facts { min-width: 20rem; }
+}
+.bk-page-header__facts li {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  font-family: var(--bk-font-body); font-size: 0.875rem;
+  line-height: 1.5; color: var(--bk-forest);
+}
+.bk-page-header__facts li svg { flex-shrink: 0; margin-top: 0.125rem; color: var(--bk-forest); }
+
+/* =========================================================================
+   STEP INDICATOR
+   ========================================================================= */
+.bk-steps {
+  padding-block: 1.25rem;
+  background: var(--bk-white);
+  border-bottom: 1px solid var(--bk-border);
+  position: sticky; top: 0; z-index: 20;
+}
+.bk-steps__list {
+  list-style: none;
+  display: flex; align-items: center; gap: 0.25rem;
+  overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.bk-steps__list::-webkit-scrollbar { display: none; }
+.bk-step-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  flex-shrink: 0;
+  font-family: var(--bk-font-heading); font-size: 0.8125rem;
+  font-weight: 600; letter-spacing: 0.02em;
+  color: var(--bk-muted);
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  transition: color var(--bk-transition), background var(--bk-transition);
+}
+.bk-step-item[aria-current="step"] {
+  color: var(--bk-forest);
+  background: rgba(198, 243, 106, 0.35);
+}
+.bk-step-item.is-complete { color: var(--bk-forest); }
+.bk-step-item__num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  background: var(--bk-offwhite); color: var(--bk-forest);
+  font-size: 0.75rem; font-weight: 700;
+  border: 1.5px solid var(--bk-border);
+  flex-shrink: 0;
+}
+.bk-step-item[aria-current="step"] .bk-step-item__num {
+  background: var(--bk-forest); color: var(--bk-lime); border-color: var(--bk-forest);
+}
+.bk-step-item.is-complete .bk-step-item__num {
+  background: var(--bk-lime); color: var(--bk-forest); border-color: var(--bk-lime);
+}
+.bk-step-item__divider {
+  flex-shrink: 0; width: 1rem; height: 1.5px;
+  background: var(--bk-border); margin-inline: 0.25rem;
+}
+
+/* =========================================================================
+   MAIN BOOKING AREA
+   ========================================================================= */
+.bk-booking {
+  padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 6vw, 5rem);
+  background: var(--bk-offwhite);
+}
+.bk-booking__inner {
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .bk-booking__inner { grid-template-columns: 1fr 24rem; gap: 2rem; }
+}
+
+.bk-panel {
+  background: var(--bk-white);
+  border-radius: var(--bk-radius);
+  border: 1px solid var(--bk-border);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  min-width: 0;
+}
+.bk-panel + .bk-panel { margin-top: 1.5rem; }
+.bk-panel__title {
+  font-family: var(--bk-font-heading);
+  font-size: 1.125rem; font-weight: 700;
+  color: var(--bk-forest); margin-bottom: 0.375rem;
+}
+.bk-panel__subtitle {
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; color: var(--bk-muted);
+  margin-bottom: 1.25rem;
+}
+
+/* =========================================================================
+   STEP 1: DATE + SLOTS
+   ========================================================================= */
+.bk-date-selector {
+  display: flex; flex-wrap: wrap;
+  align-items: flex-end; gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.bk-field {
+  display: flex; flex-direction: column; gap: 0.375rem;
+  min-width: 0; flex: 1 1 200px;
+}
+.bk-field__label {
+  font-family: var(--bk-font-heading);
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--bk-forest);
+}
+.bk-field__control {
+  min-height: 3rem; padding: 0.5rem 0.875rem;
+  font-family: var(--bk-font-body); font-size: 0.9375rem;
+  color: var(--bk-forest); background: var(--bk-white);
+  border: 1px solid rgba(23, 37, 29, 0.18);
+  border-radius: 0.5rem; width: 100%; box-sizing: border-box;
+  transition: border-color var(--bk-transition), box-shadow var(--bk-transition);
+}
+.bk-field__control:focus {
+  outline: none; border-color: var(--bk-forest);
+  box-shadow: 0 0 0 3px rgba(198, 243, 106, 0.5);
+}
+.bk-field__control[aria-invalid="true"] { border-color: var(--bk-danger); }
+.bk-field__error {
+  font-size: 0.75rem; color: var(--bk-danger);
+  min-height: 1rem;
+}
+
+.bk-date-nav {
+  display: flex; align-items: center; gap: 0.5rem;
+  flex-wrap: wrap; margin-bottom: 1.25rem;
+  padding: 0.75rem 0.875rem;
+  background: var(--bk-offwhite);
+  border-radius: 0.5rem;
+  font-family: var(--bk-font-body); font-size: 0.875rem;
+  color: var(--bk-forest);
+}
+.bk-date-nav__label { font-weight: 600; margin-right: auto; }
+.bk-date-nav__btn {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--bk-white);
+  border: 1px solid var(--bk-border);
+  border-radius: 0.375rem;
+  font-family: var(--bk-font-heading);
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--bk-forest);
+  cursor: pointer;
+  transition: background var(--bk-transition), border-color var(--bk-transition);
+}
+.bk-date-nav__btn:hover { background: var(--bk-offwhite); border-color: rgba(23,37,29,0.25); }
+.bk-date-nav__btn:focus-visible { outline: 2px solid var(--bk-forest); outline-offset: 2px; }
+
+.bk-legend {
+  display: flex; flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  padding: 0.75rem 0;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bk-border);
+  font-family: var(--bk-font-body);
+  font-size: 0.75rem; color: var(--bk-muted);
+}
+.bk-legend__item {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+}
+.bk-legend__dot {
+  width: 0.75rem; height: 0.75rem;
+  border-radius: 3px; flex-shrink: 0;
+}
+.bk-legend__dot--offpeak {
+  background: var(--bk-white);
+  border: 1.5px solid var(--bk-border);
+}
+.bk-legend__dot--peak {
+  background: rgba(198, 243, 106, 0.35);
+  border: 1.5px solid var(--bk-lime);
+}
+.bk-legend__dot--selected {
+  background: var(--bk-forest);
+  border: 1.5px solid var(--bk-forest);
+}
+.bk-legend__dot--unavailable {
+  background: var(--bk-offwhite);
+  border: 1.5px dashed var(--bk-border);
+}
+
+.bk-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.bk-slot {
+  display: flex; flex-direction: column;
+  align-items: flex-start; gap: 0.25rem;
+  padding: 0.75rem 0.875rem;
+  min-height: 3.25rem;
+  background: var(--bk-white);
+  border: 1.5px solid var(--bk-border);
+  border-radius: 0.5rem;
+  text-align: left; cursor: pointer;
+  box-sizing: border-box;
+  transition: background var(--bk-transition),
+              border-color var(--bk-transition),
+              color var(--bk-transition),
+              transform var(--bk-transition);
+  position: relative;
+}
+.bk-slot:hover:not(:disabled) {
+  border-color: var(--bk-forest);
+  background: rgba(198, 243, 106, 0.08);
+}
+.bk-slot:focus-visible {
+  outline: 2px solid var(--bk-forest); outline-offset: 2px;
+}
+.bk-slot__time {
+  font-family: var(--bk-font-heading);
+  font-size: 0.875rem; font-weight: 700;
+  color: var(--bk-forest); line-height: 1.15;
+}
+.bk-slot__meta {
+  display: flex; justify-content: space-between;
+  width: 100%; gap: 0.5rem;
+  font-family: var(--bk-font-body);
+  font-size: 0.75rem; color: var(--bk-muted);
+  font-weight: 500;
+}
+.bk-slot__badge {
+  position: absolute; top: -0.5rem; right: -0.5rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 99px;
+  font-family: var(--bk-font-heading);
+  font-size: 0.625rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--bk-lime); color: var(--bk-forest);
+  border: 1px solid rgba(23,37,29,0.15);
+}
+
+.bk-slot--peak {
+  background: rgba(198, 243, 106, 0.15);
+  border-color: var(--bk-lime);
+}
+.bk-slot--peak:hover:not(:disabled) {
+  background: rgba(198, 243, 106, 0.28);
+}
+
+.bk-slot[aria-pressed="true"] {
+  background: var(--bk-forest);
+  border-color: var(--bk-forest);
+  color: var(--bk-white);
+}
+.bk-slot[aria-pressed="true"] .bk-slot__time { color: var(--bk-white); }
+.bk-slot[aria-pressed="true"] .bk-slot__meta { color: var(--bk-lime); }
+.bk-slot[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  top: 0.5rem; right: 0.5rem;
+  width: 0.5rem; height: 0.5rem;
+  border-radius: 50%; background: var(--bk-lime);
+}
+
+.bk-slot:disabled,
+.bk-slot--unavailable {
+  background: var(--bk-offwhite);
+  border-style: dashed;
+  border-color: rgba(23,37,29,0.18);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.bk-slot:disabled .bk-slot__time,
+.bk-slot:disabled .bk-slot__meta { color: var(--bk-muted); }
+
+.bk-slot--loading {
+  background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+  background-size: 200% 100%;
+  animation: bk-shimmer 1.4s ease infinite;
+  border-color: transparent;
+  pointer-events: none;
+}
+@keyframes bk-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =========================================================================
+   STEP 2: FORM
+   ========================================================================= */
+.bk-form {
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+.bk-form__row {
+  display: grid; grid-template-columns: 1fr; gap: 1.25rem;
+}
+@media (min-width: 640px) {
+  .bk-form__row { grid-template-columns: 1fr 1fr; }
+}
+.bk-form textarea.bk-field__control {
+  min-height: 6rem; padding-top: 0.75rem; padding-bottom: 0.75rem;
+  resize: vertical; font-family: var(--bk-font-body);
+}
+.bk-checkbox {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bk-offwhite);
+  border-radius: 0.5rem;
+  border: 1px solid var(--bk-border);
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; line-height: 1.55;
+  color: var(--bk-forest);
+}
+.bk-checkbox input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 1.125rem; height: 1.125rem;
+  margin-top: 0.125rem;
+  accent-color: var(--bk-forest);
+  cursor: pointer;
+}
+.bk-checkbox label { cursor: pointer; }
+.bk-checkbox a {
+  color: var(--bk-forest); font-weight: 600;
+  text-underline-offset: 2px;
+}
+.bk-checkbox a:hover { text-decoration: underline; }
+
+/* =========================================================================
+   STEP 3: REVIEW
+   ========================================================================= */
+.bk-review {
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+.bk-review__block {
+  padding: 1.25rem;
+  background: var(--bk-offwhite);
+  border-radius: 0.75rem;
+  border: 1px solid var(--bk-border);
+}
+.bk-review__block-title {
+  font-family: var(--bk-font-heading);
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--bk-muted); margin-bottom: 0.75rem;
+}
+.bk-review__row {
+  display: flex; justify-content: space-between;
+  align-items: baseline; gap: 1rem;
+  padding-block: 0.375rem;
+  border-bottom: 1px dashed rgba(23,37,29,0.08);
+  font-family: var(--bk-font-body);
+  font-size: 0.9375rem;
+}
+.bk-review__row:last-child { border-bottom: none; }
+.bk-review__row dt { color: var(--bk-muted); flex-shrink: 0; }
+.bk-review__row dd {
+  color: var(--bk-forest); font-weight: 600;
+  text-align: right; overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.bk-review__warning {
+  display: flex; gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--bk-warning-bg);
+  border: 1px solid var(--bk-warning-border);
+  border-radius: 0.75rem;
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; line-height: 1.55;
+  color: var(--bk-warning-text);
+}
+.bk-review__warning svg {
+  flex-shrink: 0; margin-top: 0.125rem; color: #b7791f;
+}
+
+/* =========================================================================
+   BOOKING SUMMARY
+   ========================================================================= */
+.bk-summary {
+  background: var(--bk-forest);
+  color: var(--bk-offwhite);
+  border-radius: var(--bk-radius);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  position: sticky; top: 5.5rem;
+}
+@media (max-width: 1023px) {
+  .bk-summary { position: static; margin-top: 1.5rem; }
+}
+.bk-summary__title {
+  font-family: var(--bk-font-heading);
+  font-size: 1.0625rem; font-weight: 700;
+  color: var(--bk-white); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.bk-summary__title svg { color: var(--bk-lime); }
+.bk-summary__list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 0.75rem;
+  padding-bottom: 1rem; margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(247,248,243,0.14);
+}
+.bk-summary__row {
+  display: flex; justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; line-height: 1.5;
+}
+.bk-summary__row dt {
+  color: rgba(247,248,243,0.6); flex-shrink: 0;
+}
+.bk-summary__row dd {
+  color: var(--bk-offwhite); font-weight: 600;
+  text-align: right; overflow-wrap: break-word; min-width: 0;
+}
+.bk-summary__total {
+  display: flex; justify-content: space-between;
+  align-items: baseline; padding-block: 0.875rem;
+  border-top: 1px solid rgba(247,248,243,0.14);
+  margin-bottom: 1rem;
+}
+.bk-summary__total-label {
+  font-family: var(--bk-font-heading);
+  font-size: 0.8125rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(247,248,243,0.7);
+}
+.bk-summary__total-value {
+  font-family: var(--bk-font-heading);
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--bk-lime); line-height: 1;
+}
+.bk-summary__total-value small {
+  font-size: 0.75rem; font-weight: 500;
+  color: rgba(247,248,243,0.6); margin-left: 0.25rem;
+}
+.bk-summary__cta { width: 100%; }
+.bk-summary__note {
+  margin-top: 1rem;
+  font-family: var(--bk-font-body);
+  font-size: 0.75rem; line-height: 1.5;
+  color: rgba(247,248,243,0.55);
+  display: flex; gap: 0.5rem;
+}
+.bk-summary__note svg {
+  flex-shrink: 0; margin-top: 0.125rem; color: var(--bk-lime);
+}
+
+.bk-summary__empty {
+  padding: 1.5rem 0;
+  text-align: center;
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem;
+  color: rgba(247,248,243,0.55);
+  line-height: 1.55;
+}
+
+/* =========================================================================
+   STEP ACTIONS
+   ========================================================================= */
+.bk-step-actions {
+  display: flex; flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between; align-items: center;
+  margin-top: 1.5rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--bk-border);
+}
+.bk-step-actions__right {
+  display: flex; gap: 0.75rem; margin-left: auto;
+}
+
+/* =========================================================================
+   STEP PANELS
+   ========================================================================= */
+.bk-step-panel { display: none; }
+.bk-step-panel.is-active { display: block; }
+.bk-step-panel:focus { outline: none; }
+.bk-step-panel.is-active:focus-visible {
+  outline: 2px solid var(--bk-forest);
+  outline-offset: 6px;
+  border-radius: 0.5rem;
+}
+
+/* =========================================================================
+   ALERTS + DEMO BANNER
+   ========================================================================= */
+.bk-demo-banner {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--bk-warning-bg);
+  border: 1px solid var(--bk-warning-border);
+  border-radius: 0.75rem;
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; line-height: 1.55;
+  color: var(--bk-warning-text);
+  margin-bottom: 1.25rem;
+}
+.bk-demo-banner svg {
+  flex-shrink: 0; margin-top: 0.125rem; color: #b7791f;
+}
+.bk-demo-banner strong { color: #5c4500; }
+
+.bk-alert {
+  display: none; gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; line-height: 1.55;
+  margin-bottom: 1rem;
+}
+.bk-alert.is-visible { display: flex; }
+.bk-alert svg { flex-shrink: 0; margin-top: 0.125rem; }
+.bk-alert--error {
+  background: #fdecec;
+  border: 1px solid #f5c6c6;
+  color: #7a1c1c;
+}
+.bk-alert--error svg { color: #b02020; }
+.bk-alert--info {
+  background: #eef4ff;
+  border: 1px solid #c5d9f5;
+  color: #1a3d6e;
+}
+.bk-alert--info svg { color: #2c5282; }
+
+/* =========================================================================
+   INFO SECTION
+   ========================================================================= */
+.bk-info {
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--bk-white);
+}
+.bk-info__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+@media (min-width: 640px) {
+  .bk-info__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .bk-info__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+}
+.bk-info-card {
+  padding: 1.5rem;
+  background: var(--bk-offwhite);
+  border-radius: 0.75rem;
+  border: 1px solid var(--bk-border);
+  display: flex; flex-direction: column; gap: 0.5rem;
+  transition: transform var(--bk-transition), box-shadow var(--bk-transition);
+}
+.bk-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(23,37,29,0.08);
+}
+.bk-info-card__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 0.5rem;
+  background: rgba(198,243,106,0.35);
+  color: var(--bk-forest);
+  margin-bottom: 0.25rem;
+}
+.bk-info-card__title {
+  font-family: var(--bk-font-heading);
+  font-size: 1rem; font-weight: 700;
+  color: var(--bk-forest);
+}
+.bk-info-card__desc {
+  font-family: var(--bk-font-body);
+  font-size: 0.875rem; line-height: 1.6;
+  color: var(--bk-muted);
+}
+.bk-info-card__desc a {
+  color: var(--bk-forest); font-weight: 600;
+  text-underline-offset: 2px;
+}
+.bk-info-card__desc a:hover { text-decoration: underline; }
+
+/* =========================================================================
+   FAQ
+   ========================================================================= */
+.bk-faq {
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--bk-offwhite);
+}
+.bk-faq__inner {
+  max-width: 56rem; margin-inline: auto;
+}
+.bk-faq__item {
+  border-bottom: 1px solid var(--bk-border);
+}
+.bk-faq__question {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: 1.25rem 0;
+  background: transparent; border: none;
+  text-align: left;
+  font-family: var(--bk-font-heading);
+  font-size: 1rem; font-weight: 600;
+  color: var(--bk-forest);
+  cursor: pointer; box-sizing: border-box;
+  transition: color var(--bk-transition);
+}
+.bk-faq__question:hover { color: #0d1811; }
+.bk-faq__question:focus-visible {
+  outline: 2px solid var(--bk-forest);
+  outline-offset: 4px;
+  border-radius: 0.25rem;
+}
+.bk-faq__icon {
+  flex-shrink: 0;
+  width: 1.25rem; height: 1.25rem;
+  transition: transform 250ms var(--bk-ease);
+  color: var(--bk-forest);
+}
+.bk-faq__question[aria-expanded="true"] .bk-faq__icon { transform: rotate(45deg); }
+.bk-faq__answer {
+  max-height: 0; overflow: hidden;
+  transition: max-height 300ms var(--bk-ease), padding 300ms var(--bk-ease);
+}
+.bk-faq__answer[data-open="true"] {
+  max-height: 32rem; padding-bottom: 1.25rem;
+}
+.bk-faq__answer p {
+  font-family: var(--bk-font-body);
+  font-size: 0.9375rem; line-height: 1.65;
+  color: var(--bk-muted); max-width: 60ch;
+}
+.bk-faq__answer a { color: var(--bk-forest); font-weight: 600; }
+
+/* =========================================================================
+   REDUCED MOTION
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .bk-slot--loading { animation: none; background: #e0e0e0; }
+}
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       ANNOUNCEMENT BAR
+       ======================================================================== -->
+  <div class="announcement-bar" id="mb-announcement-bar" role="region" aria-label="Announcement">
+    <span class="announcement-bar__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M12 7.5L15.5 9.5L15.5 13.5L12 15.5L8.5 13.5L8.5 9.5L12 7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M12 3V7.5M12 16.5V21M4.5 9.5L8.5 11.5M15.5 11.5L19.5 9.5M4.5 16.5L8.5 14.5M15.5 14.5L19.5 16.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span>Your next match starts here.</span>
+    <a class="announcement-bar__link" id="mb-announcement-link" href="pages/book-pitch.html" data-mb-role="announcement-link">Book a pitch</a>
+  </div>
+
+  <!-- ========================================================================
+       MAIN HEADER
+       ======================================================================== -->
+  <header class="site-header" id="mb-site-header" data-mb-role="site-header">
+    <div class="header-inner">
+
+      <a class="brand" id="mb-brand-home" href="index.html" data-mb-role="brand-home" aria-label="Match-Box home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="34" height="34" rx="8" fill="#17251D"/>
+            <line x1="6" y1="18" x2="30" y2="18" stroke="#C6F36A" stroke-width="1.25" opacity="0.5"/>
+            <circle cx="18" cy="18" r="3.5" stroke="#C6F36A" stroke-width="1.25" opacity="0.5"/>
+            <path d="M8 25V12L14.5 19.5L18 13L21.5 19.5L28 12V25" stroke="#C6F36A" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__wordmark">Match<span class="brand__wordmark-accent">-</span>Box</span>
+      </a>
+
+      <!-- ======================================================================
+           DESKTOP NAVIGATION — STATIC MARKUP
+           Links are hard-coded so they work without JS and are fully crawlable.
+           JS only adds aria-current="page" to the matching link.
+           ====================================================================== -->
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul class="nav-list" id="mb-desktop-nav-list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="pages/book-pitch.html">Book a Pitch</a></li>
+          <li><a class="nav-link" href="pages/coaching.html">Coaching</a></li>
+          <li><a class="nav-link" href="pages/tournaments.html">Tournaments</a></li>
+          <li><a class="nav-link" href="pages/events.html">Events</a></li>
+          <li><a class="nav-link" href="pages/about.html">About</a></li>
+          <li><a class="nav-link" href="pages/contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a class="account-link" id="mb-account-link" href="auth/account.html" data-mb-role="account-link" hidden>
+          <svg class="account-link__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.75"/>
+            <path d="M5 20C5 16.686 8.134 14 12 14C15.866 14 19 16.686 19 20" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+          <span>Account</span>
+        </a>
+
+        <a class="cta-button" id="mb-header-cta" href="pages/book-pitch.html" data-mb-role="header-cta">Book Now</a>
+
+        <button class="menu-toggle" id="mb-menu-toggle" type="button"
+                aria-expanded="false" aria-controls="mb-mobile-drawer" aria-label="Open menu"
+                data-mb-role="menu-toggle">
+          <span class="menu-toggle__lines" aria-hidden="true">
+            <span class="menu-toggle__line"></span>
+            <span class="menu-toggle__line"></span>
+            <span class="menu-toggle__line"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       MOBILE DRAWER + BACKDROP
+       ======================================================================== -->
+  <div class="drawer-backdrop" id="mb-drawer-backdrop" data-mb-role="drawer-backdrop" data-visible="false" aria-hidden="true"></div>
+
+  <aside class="mobile-drawer" id="mb-mobile-drawer" data-mb-role="mobile-drawer"
+         role="dialog" aria-modal="true" aria-label="Mobile navigation menu" data-open="false">
+    <div class="drawer-header">
+      <a class="brand" id="mb-drawer-brand" href="index.html" data-mb-role="drawer-brand" aria-label="Match-Box home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="34" height="34" rx="8" fill="#17251D"/>
+            <line x1="6" y1="18" x2="30" y2="18" stroke="#C6F36A" stroke-width="1.25" opacity="0.5"/>
+            <circle cx="18" cy="18" r="3.5" stroke="#C6F36A" stroke-width="1.25" opacity="0.5"/>
+            <path d="M8 25V12L14.5 19.5L18 13L21.5 19.5L28 12V25" stroke="#C6F36A" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__wordmark">Match<span class="brand__wordmark-accent">-</span>Box</span>
+      </a>
+
+      <button class="drawer-close" id="mb-drawer-close" type="button" aria-label="Close menu" data-mb-role="drawer-close">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         MOBILE NAVIGATION — STATIC MARKUP
+         ====================================================================== -->
+    <nav class="drawer-nav" aria-label="Mobile navigation">
+      <ul class="drawer-list" id="mb-mobile-nav-list">
+        <li><a class="drawer-link" href="index.html">Home</a></li>
+        <li><a class="drawer-link" href="pages/book-pitch.html">Book a Pitch</a></li>
+        <li><a class="drawer-link" href="pages/coaching.html">Coaching</a></li>
+        <li><a class="drawer-link" href="pages/tournaments.html">Tournaments</a></li>
+        <li><a class="drawer-link" href="pages/events.html">Events</a></li>
+        <li><a class="drawer-link" href="pages/about.html">About</a></li>
+        <li><a class="drawer-link" href="pages/contact.html">Contact</a></li>
+      </ul>
+
+      <div class="drawer-account" id="mb-drawer-account-wrapper" data-mb-role="drawer-account-wrapper" hidden>
+        <a class="drawer-link" id="mb-drawer-account-link" href="auth/account.html" data-mb-role="drawer-account-link">
+          <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.75"/>
+            <path d="M5 20C5 16.686 8.134 14 12 14C15.866 14 19 16.686 19 20" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+          <span>My Account</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="drawer-footer">
+      <a class="cta-button" id="mb-drawer-cta" href="pages/book-pitch.html" data-mb-role="drawer-cta">Book Now</a>
+    </div>
+  </aside>
+
+<main id="mb-book-pitch-page">
+
+  <!-- =====================================================================
+       PAGE HEADER
+       ===================================================================== -->
+  <section class="bk-page-header" aria-labelledby="bk-page-title">
+    <div class="bk-container">
+      <div class="bk-page-header__inner">
+        <div>
+          <span class="bk-eyebrow">Match-Box pitch bookings</span>
+          <h1 class="bk-page-header__title" id="bk-page-title">Book your pitch. Own your game.</h1>
+          <p class="bk-page-header__lede">
+            Get your team together and book your next 4-a-side football match.
+            Choose your date, find a suitable one-hour slot, and review your
+            booking details before submitting your request.
+          </p>
+        </div>
+        <ul class="bk-page-header__facts" role="list">
+          <li>
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 7.5L15.5 9.5L15.5 13.5L12 15.5L8.5 13.5L8.5 9.5L12 7.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+            4-a-side football
+          </li>
+          <li>
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+            One-hour pitch slots
+          </li>
+          <li>
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.75"/></svg>
+            6:00 AM – midnight
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       STEP INDICATOR
+       ===================================================================== -->
+  <div class="bk-steps">
+    <div class="bk-container">
+      <ol class="bk-steps__list" role="list" id="bk-steps-list" aria-label="Booking steps">
+        <li class="bk-step-item" data-step-indicator="1" aria-current="step">
+          <span class="bk-step-item__num">1</span>
+          <span>Choose Your Slot</span>
+        </li>
+        <span class="bk-step-item__divider" aria-hidden="true"></span>
+        <li class="bk-step-item" data-step-indicator="2">
+          <span class="bk-step-item__num">2</span>
+          <span>Enter Your Details</span>
+        </li>
+        <span class="bk-step-item__divider" aria-hidden="true"></span>
+        <li class="bk-step-item" data-step-indicator="3">
+          <span class="bk-step-item__num">3</span>
+          <span>Review Your Booking</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MAIN BOOKING AREA
+       ===================================================================== -->
+  <main class="bk-booking">
+    <div class="bk-container">
+      <div class="bk-booking__inner">
+
+        <!-- LEFT COLUMN -->
+        <div>
+
+          <div class="bk-demo-banner" role="note">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 8v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+            <div>
+              <strong>Demo interface.</strong>
+              Slot availability is simulated and not connected to the booking
+              backend yet. The final slot and price are confirmed on the server
+              when your request is submitted.
+            </div>
+          </div>
+
+          <div id="bk-alert-error" class="bk-alert bk-alert--error" role="alert" aria-live="assertive">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span id="bk-alert-error-text"></span>
+          </div>
+
+          <div id="bk-alert-info" class="bk-alert bk-alert--info" role="status" aria-live="polite">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 8h.01M11 12h1v4h1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="bk-alert-info-text"></span>
+          </div>
+
+          <!-- =============================================================
+               STEP 1: DATE + SLOTS
+               ============================================================= -->
+          <section class="bk-step-panel is-active" data-step="1" aria-labelledby="bk-step-1-title" tabindex="-1">
+            <div class="bk-panel">
+              <h2 class="bk-panel__title" id="bk-step-1-title">When are you playing?</h2>
+              <p class="bk-panel__subtitle">Choose a date, then pick your kick-off time.</p>
+
+              <div class="bk-date-selector">
+                <div class="bk-field">
+                  <label class="bk-field__label" for="bk-date-input">Match date</label>
+                  <input class="bk-field__control" type="date" id="bk-date-input" name="booking-date" autocomplete="off">
+                  <div class="bk-field__error" id="bk-date-error" role="alert"></div>
+                </div>
+              </div>
+
+              <div class="bk-date-nav" role="group" aria-label="Quick date navigation">
+                <span class="bk-date-nav__label" id="bk-selected-date-label">Today</span>
+                <button type="button" class="bk-date-nav__btn" data-date-nav="prev" aria-label="Previous day">
+                  <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Prev
+                </button>
+                <button type="button" class="bk-date-nav__btn" data-date-nav="today" aria-label="Jump to today">Today</button>
+                <button type="button" class="bk-date-nav__btn" data-date-nav="next" aria-label="Next day">
+                  Next
+                  <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+
+              <h3 class="bk-panel__title" style="margin-top: 1.5rem; font-size: 1rem;" id="bk-slots-heading">Pick your kick-off time.</h3>
+              <p class="bk-panel__subtitle">Choose a one-hour slot that works for your team.</p>
+
+              <div class="bk-legend" aria-label="Slot legend">
+                <span class="bk-legend__item"><span class="bk-legend__dot bk-legend__dot--offpeak" aria-hidden="true"></span> Off-peak</span>
+                <span class="bk-legend__item"><span class="bk-legend__dot bk-legend__dot--peak" aria-hidden="true"></span> Peak</span>
+                <span class="bk-legend__item"><span class="bk-legend__dot bk-legend__dot--selected" aria-hidden="true"></span> Selected</span>
+                <span class="bk-legend__item"><span class="bk-legend__dot bk-legend__dot--unavailable" aria-hidden="true"></span> Unavailable</span>
+              </div>
+
+              <div class="bk-slot-grid" id="bk-slot-grid" role="group" aria-label="Available one-hour kick-off slots">
+                <div class="bk-slot bk-slot--loading" aria-hidden="true"></div>
+                <div class="bk-slot bk-slot--loading" aria-hidden="true"></div>
+                <div class="bk-slot bk-slot--loading" aria-hidden="true"></div>
+                <div class="bk-slot bk-slot--loading" aria-hidden="true"></div>
+              </div>
+
+              <div class="bk-step-actions">
+                <div></div>
+                <div class="bk-step-actions__right">
+                  <button type="button" class="bk-btn bk-btn--primary" data-goto-step="2" id="bk-step-1-next" disabled>
+                    Continue to details
+                    <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M19 12l-6-6M19 12l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- =============================================================
+               STEP 2: CUSTOMER DETAILS
+               ============================================================= -->
+          <section class="bk-step-panel" data-step="2" aria-labelledby="bk-step-2-title" tabindex="-1">
+            <div class="bk-panel">
+              <h2 class="bk-panel__title" id="bk-step-2-title">Tell us about your match.</h2>
+              <p class="bk-panel__subtitle">We'll use these details to get in touch about your booking.</p>
+
+              <form class="bk-form" id="bk-customer-form" novalidate>
+                <div class="bk-form__row">
+                  <div class="bk-field">
+                    <label class="bk-field__label" for="bk-full-name">Full name</label>
+                    <input class="bk-field__control" type="text" id="bk-full-name" name="fullName" autocomplete="name" required>
+                    <div class="bk-field__error" id="bk-full-name-error" role="alert"></div>
+                  </div>
+                  <div class="bk-field">
+                    <label class="bk-field__label" for="bk-email">Email address</label>
+                    <input class="bk-field__control" type="email" id="bk-email" name="email" autocomplete="email" required>
+                    <div class="bk-field__error" id="bk-email-error" role="alert"></div>
+                  </div>
+                </div>
+
+                <div class="bk-form__row">
+                  <div class="bk-field">
+                    <label class="bk-field__label" for="bk-phone">Phone number</label>
+                    <input class="bk-field__control" type="tel" id="bk-phone" name="phone" autocomplete="tel" required>
+                    <div class="bk-field__error" id="bk-phone-error" role="alert"></div>
+                  </div>
+                  <div class="bk-field">
+                    <label class="bk-field__label" for="bk-players">Number of players</label>
+                    <select class="bk-field__control" id="bk-players" name="players" required>
+                      <option value="4">4 players</option>
+                      <option value="5">5 players</option>
+                      <option value="6">6 players</option>
+                      <option value="7">7 players</option>
+                      <option value="8" selected>8 players</option>
+                      <option value="9">9 players</option>
+                      <option value="10">10 players</option>
+                      <option value="11">11 players</option>
+                      <option value="12">12 players</option>
+                    </select>
+                    <div class="bk-field__error" id="bk-players-error" role="alert"></div>
+                  </div>
+                </div>
+
+                <div class="bk-field">
+                  <label class="bk-field__label" for="bk-team-name">Team name (optional)</label>
+                  <input class="bk-field__control" type="text" id="bk-team-name" name="teamName" autocomplete="organization">
+                </div>
+
+                <div class="bk-field">
+                  <label class="bk-field__label" for="bk-special">Match notes (optional)</label>
+                  <textarea class="bk-field__control" id="bk-special" name="matchNotes" rows="3" placeholder="Anything we should know about your booking?"></textarea>
+                </div>
+
+                <div class="bk-checkbox">
+                  <input type="checkbox" id="bk-terms" name="terms" required>
+                  <label for="bk-terms">
+                    I have read and agree to the
+                    <a href="../legal/terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+                    and the
+                    <a href="../legal/cancellation-refund.html" target="_blank" rel="noopener">Cancellation &amp; Refund Policy</a>.
+                  </label>
+                </div>
+                <div class="bk-field__error" id="bk-terms-error" role="alert"></div>
+              </form>
+
+              <div class="bk-step-actions">
+                <button type="button" class="bk-btn bk-btn--secondary" data-goto-step="1">
+                  <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M5 12l6-6M5 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Back
+                </button>
+                <div class="bk-step-actions__right">
+                  <button type="button" class="bk-btn bk-btn--primary" data-goto-step="3" id="bk-step-2-next">
+                    Continue to review
+                    <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M19 12l-6-6M19 12l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- =============================================================
+               STEP 3: REVIEW
+               ============================================================= -->
+          <section class="bk-step-panel" data-step="3" aria-labelledby="bk-step-3-title" tabindex="-1">
+            <div class="bk-panel">
+              <h2 class="bk-panel__title" id="bk-step-3-title">Review your booking</h2>
+              <p class="bk-panel__subtitle">Check everything looks right before submitting.</p>
+
+              <div class="bk-review">
+                <div class="bk-review__block">
+                  <div class="bk-review__block-title">Slot</div>
+                  <dl>
+                    <div class="bk-review__row"><dt>Date</dt><dd id="bk-review-date">—</dd></div>
+                    <div class="bk-review__row"><dt>Time</dt><dd id="bk-review-time">—</dd></div>
+                    <div class="bk-review__row"><dt>Duration</dt><dd>1 hour</dd></div>
+                    <div class="bk-review__row"><dt>Pitch</dt><dd>4-a-side football</dd></div>
+                    <div class="bk-review__row"><dt>Indicative price</dt><dd id="bk-review-price">—</dd></div>
+                  </dl>
+                </div>
+
+                <div class="bk-review__block">
+                  <div class="bk-review__block-title">Your details</div>
+                  <dl>
+                    <div class="bk-review__row"><dt>Name</dt><dd id="bk-review-name">—</dd></div>
+                    <div class="bk-review__row"><dt>Email</dt><dd id="bk-review-email">—</dd></div>
+                    <div class="bk-review__row"><dt>Phone</dt><dd id="bk-review-phone">—</dd></div>
+                    <div class="bk-review__row"><dt>Players</dt><dd id="bk-review-players">—</dd></div>
+                    <div class="bk-review__row"><dt>Team</dt><dd id="bk-review-team">—</dd></div>
+                  </dl>
+                </div>
+
+                <div class="bk-review__warning">
+                  <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l10 18H2L12 3z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M12 10v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <div>
+                    <strong>Not yet submitted.</strong>
+                    Your booking is not saved until you submit the request and the
+                    backend confirms it. Availability and final price will be
+                    validated server-side.
+                  </div>
+                </div>
+              </div>
+
+              <div class="bk-step-actions">
+                <button type="button" class="bk-btn bk-btn--secondary" data-goto-step="2">
+                  <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M5 12l6-6M5 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Back
+                </button>
+                <div class="bk-step-actions__right">
+                  <button type="button" class="bk-btn bk-btn--primary" id="bk-submit">
+                    Submit booking request
+                    <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN: SUMMARY -->
+        <aside class="bk-summary" aria-labelledby="bk-summary-title">
+          <h2 class="bk-summary__title" id="bk-summary-title">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.75"/><path d="M3 9H21M8 3V7M16 3V7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+            Your match summary
+          </h2>
+
+          <div id="bk-summary-empty" class="bk-summary__empty">
+            Select a date and kick-off time to see your match summary.
+          </div>
+
+          <div id="bk-summary-details" style="display: none;">
+            <dl class="bk-summary__list">
+              <div class="bk-summary__row"><dt>Date</dt><dd id="bk-summary-date">—</dd></div>
+              <div class="bk-summary__row"><dt>Kick-off</dt><dd id="bk-summary-time">—</dd></div>
+              <div class="bk-summary__row"><dt>Duration</dt><dd>1 hour</dd></div>
+              <div class="bk-summary__row"><dt>Pitch</dt><dd>4-a-side football</dd></div>
+              <div class="bk-summary__row"><dt>Payment</dt><dd>Pay at the venue</dd></div>
+            </dl>
+            <div class="bk-summary__total">
+              <span class="bk-summary__total-label">Indicative price</span>
+              <span class="bk-summary__total-value" id="bk-summary-price">₹0 <small>incl. taxes</small></span>
+            </div>
+          </div>
+
+          <button type="button" class="bk-btn bk-btn--primary bk-summary__cta" id="bk-summary-cta" disabled>
+            Continue to details
+            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M19 12l-6-6M19 12l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <div class="bk-summary__note">
+            <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Final price and slot confirmed by the facility when your request is processed.
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- =====================================================================
+       INFO SECTION
+       ===================================================================== -->
+  <section class="bk-info" aria-labelledby="bk-info-title">
+    <div class="bk-container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span class="bk-eyebrow">Before you book</span>
+        <h2 class="bk-h2" id="bk-info-title" style="max-width: 36rem; margin-inline: auto;">Good to know before you book.</h2>
+      </div>
+
+      <div class="bk-info__grid">
+        <div class="bk-info-card">
+          <span class="bk-info-card__icon" aria-hidden="true">
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          </span>
+          <h3 class="bk-info-card__title">Booking duration</h3>
+          <p class="bk-info-card__desc">Each standard pitch booking is one hour.</p>
+        </div>
+
+        <div class="bk-info-card">
+          <span class="bk-info-card__icon" aria-hidden="true">
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 7H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          </span>
+          <h3 class="bk-info-card__title">Pricing</h3>
+          <p class="bk-info-card__desc">Rates depend on the configured peak and off-peak schedule. The final price will be verified when your booking is processed.</p>
+        </div>
+
+        <div class="bk-info-card">
+          <span class="bk-info-card__icon" aria-hidden="true">
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.75"/><path d="M3 9H21M8 3V7M16 3V7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          </span>
+          <h3 class="bk-info-card__title">Availability</h3>
+          <p class="bk-info-card__desc">Your selected time must be checked against the current booking calendar before it can be confirmed.</p>
+        </div>
+
+        <div class="bk-info-card">
+          <span class="bk-info-card__icon" aria-hidden="true">
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.75"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.75"/></svg>
+          </span>
+          <h3 class="bk-info-card__title">Payment</h3>
+          <p class="bk-info-card__desc">The current intended payment method is pay at the venue, subject to the facility's confirmed policy.</p>
+        </div>
+
+        <div class="bk-info-card">
+          <span class="bk-info-card__icon" aria-hidden="true">
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5" stroke="currentColor" stroke-width="1.75"/></svg>
+          </span>
+          <h3 class="bk-info-card__title">Cancellations</h3>
+          <p class="bk-info-card__desc">Please review the <a href="../legal/cancellation-refund.html">cancellation and refund policy</a> before submitting a booking request.</p>
+        </div>
+
+        <div class="bk-info-card">
+          <span class="bk-info-card__icon" aria-hidden="true">
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <h3 class="bk-info-card__title">Server confirmation</h3>
+          <p class="bk-info-card__desc">Slot availability and final prices are validated on the server when you submit your booking request.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       FAQ
+       ===================================================================== -->
+  <section class="bk-faq" aria-labelledby="bk-faq-title">
+    <div class="bk-container">
+      <div class="bk-faq__inner">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <span class="bk-eyebrow">Booking FAQ</span>
+          <h2 class="bk-h2" id="bk-faq-title">Booking questions, answered.</h2>
+        </div>
+
+        <div id="bk-faq-list"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+  <footer class="site-footer" id="mb-site-footer" data-mb-role="site-footer">
+
+    <!-- TOP CTA -->
+    <div class="footer-inner">
+      <div class="footer-cta">
+        <div>
+          <span class="footer-cta__eyebrow">Your next match awaits</span>
+          <h2 class="footer-cta__heading">Bring your team. Own your game.</h2>
+        </div>
+        <p class="footer-cta__support">
+          Find your next pitch, discover coaching opportunities, or bring your
+          team together for your next match.
+        </p>
+        <div class="footer-cta__actions">
+          <a class="footer-btn footer-btn--primary" href="pages/book-pitch.html">
+            <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.75"/>
+              <path d="M3 9H21M8 3V7M16 3V7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+            </svg>
+            Book Your Pitch
+          </a>
+          <a class="footer-btn footer-btn--secondary" href="pages/contact.html">
+            Talk to Match-Box
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN COLUMNS -->
+    <div class="footer-inner">
+      <div class="footer-main">
+
+        <!-- Brand column -->
+        <div class="footer-brand">
+          <a class="footer-brand__logo" href="index.html" aria-label="Match-Box home">
+            <span class="footer-brand__mark" aria-hidden="true">
+              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="1" width="34" height="34" rx="8" fill="#17251D" stroke="#C6F36A" stroke-width="1.5"/>
+                <line x1="6" y1="18" x2="30" y2="18" stroke="#C6F36A" stroke-width="1.25" opacity="0.55"/>
+                <circle cx="18" cy="18" r="3.5" stroke="#C6F36A" stroke-width="1.25" opacity="0.55"/>
+                <path d="M8 25V12L14.5 19.5L18 13L21.5 19.5L28 12V25" stroke="#C6F36A" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="footer-brand__name">Match<span class="footer-brand__name-accent">-</span>Box</span>
+          </a>
+          <p class="footer-brand__desc">
+            Your place for 4-a-side football, pitch bookings, coaching,
+            tournaments, and team events.
+          </p>
+          <span class="footer-brand__tagline">Your game. Your pitch. Your moment.</span>
+        </div>
+
+        <!-- Explore column — STATIC LINKS -->
+        <nav class="footer-col" aria-labelledby="mb-footer-explore-heading">
+          <h3 class="footer-col__heading" id="mb-footer-explore-heading">Explore</h3>
+          <ul class="footer-col__list">
+            <li><a class="footer-col__link" href="index.html">Home</a></li>
+            <li><a class="footer-col__link" href="pages/about.html">About Match-Box</a></li>
+            <li><a class="footer-col__link" href="pages/facilities.html">Facilities</a></li>
+            <li><a class="footer-col__link" href="pages/contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <!-- Play column — STATIC LINKS -->
+        <nav class="footer-col" aria-labelledby="mb-footer-play-heading">
+          <h3 class="footer-col__heading" id="mb-footer-play-heading">Play</h3>
+          <ul class="footer-col__list">
+            <li><a class="footer-col__link" href="pages/book-pitch.html">Book a Pitch</a></li>
+            <li><a class="footer-col__link" href="pages/coaching.html">Coaching</a></li>
+            <li><a class="footer-col__link" href="pages/tournaments.html">Tournaments</a></li>
+            <li><a class="footer-col__link" href="pages/events.html">Events &amp; Private Hire</a></li>
+          </ul>
+        </nav>
+
+        <!-- Information column — STATIC LINKS -->
+        <nav class="footer-col" aria-labelledby="mb-footer-info-heading">
+          <h3 class="footer-col__heading" id="mb-footer-info-heading">Information</h3>
+          <ul class="footer-col__list">
+            <li><a class="footer-col__link" href="pages/faq.html">FAQ</a></li>
+            <li><a class="footer-col__link" href="legal/terms.html">Terms &amp; Conditions</a></li>
+            <li><a class="footer-col__link" href="legal/privacy-policy.html">Privacy Policy</a></li>
+            <li><a class="footer-col__link" href="legal/cancellation-refund.html">Cancellation &amp; Refund Policy</a></li>
+            <li><a class="footer-col__link" href="legal/facility-rules.html">Facility Rules</a></li>
+            <li><a class="footer-col__link" href="legal/accessibility.html">Accessibility</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- CONTACT + SOCIAL -->
+    <div class="footer-inner">
+      <div class="footer-contact">
+
+        <!-- Contact details (JS-driven from FOOTER_CONFIG, hidden if empty) -->
+        <div>
+          <h3 class="footer-contact__heading">Get in touch</h3>
+          <ul class="footer-contact__list" id="mb-footer-contact-list" data-mb-role="contact-list">
+            <!-- Populated by JS from FOOTER_CONFIG -->
+          </ul>
+        </div>
+
+        <!-- Social (JS-driven from FOOTER_CONFIG, hidden if empty) -->
+        <div class="footer-social">
+          <h3 class="footer-contact__heading">Follow Match-Box</h3>
+          <ul class="footer-social__list" id="mb-footer-social-list" data-mb-role="social-list">
+            <!-- Populated by JS from FOOTER_CONFIG -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR — STATIC LINKS -->
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <div class="footer-bottom__copy">
+          <span>&copy; <span id="mb-footer-year" data-mb-role="footer-year">2025</span> Match-Box. All rights reserved.</span>
+        </div>
+        <ul class="footer-bottom__legal">
+          <li><a href="legal/terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="legal/privacy-policy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- BACK-TO-TOP -->
+  <button
+    class="back-to-top"
+    id="mb-back-to-top"
+    type="button"
+    aria-label="Back to top"
+    data-mb-role="back-to-top"
+    data-visible="false"
+  >
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+
+<script type="text/javascript" src="../js/myJavascript.js"></script>
+<script>
+/* =========================================================================
+   MATCH-BOX — PITCH BOOKING PAGE SCRIPT
+   ========================================================================= */
+
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     CONFIGURATION
+     ===================================================================== */
+  var BOOKING_CONFIG = {
+    timezone: 'Asia/Kolkata',
+    currency: 'INR',
+    schedule: {
+      startHour: 6,
+      endHour: 24
+    },
+    pricing: {
+      offPeak: 350,
+      peak: 500,
+      peakWindows: [[17, 21]]
+    },
+    demoUnavailableHours: ['06:00', '07:00', '12:00', '13:00']
+  };
+
+  /* =====================================================================
+     STATE
+     ===================================================================== */
+  var state = {
+    currentStep: 1,
+    selectedDate: null,
+    selectedHour: null,
+    selectedPrice: null,
+    form: {
+      fullName: '', email: '', phone: '',
+      players: '8', teamName: '', matchNotes: '', terms: false
+    }
+  };
+
+  /* =====================================================================
+     DOM REFERENCES
+     ===================================================================== */
+  var el = {};
+
+  function cacheDom() {
+    el.steps = document.querySelectorAll('[data-step-indicator]');
+    el.panels = document.querySelectorAll('.bk-step-panel');
+    el.dateInput = document.getElementById('bk-date-input');
+    el.dateError = document.getElementById('bk-date-error');
+    el.dateLabel = document.getElementById('bk-selected-date-label');
+    el.slotGrid = document.getElementById('bk-slot-grid');
+    el.step1Next = document.getElementById('bk-step-1-next');
+    el.step2Next = document.getElementById('bk-step-2-next');
+    el.summaryEmpty = document.getElementById('bk-summary-empty');
+    el.summaryDetails = document.getElementById('bk-summary-details');
+    el.summaryDate = document.getElementById('bk-summary-date');
+    el.summaryTime = document.getElementById('bk-summary-time');
+    el.summaryPrice = document.getElementById('bk-summary-price');
+    el.summaryCta = document.getElementById('bk-summary-cta');
+    el.reviewDate = document.getElementById('bk-review-date');
+    el.reviewTime = document.getElementById('bk-review-time');
+    el.reviewPrice = document.getElementById('bk-review-price');
+    el.reviewName = document.getElementById('bk-review-name');
+    el.reviewEmail = document.getElementById('bk-review-email');
+    el.reviewPhone = document.getElementById('bk-review-phone');
+    el.reviewPlayers = document.getElementById('bk-review-players');
+    el.reviewTeam = document.getElementById('bk-review-team');
+    el.submitBtn = document.getElementById('bk-submit');
+    el.alertError = document.getElementById('bk-alert-error');
+    el.alertErrorText = document.getElementById('bk-alert-error-text');
+    el.alertInfo = document.getElementById('bk-alert-info');
+    el.alertInfoText = document.getElementById('bk-alert-info-text');
+    el.faqList = document.getElementById('bk-faq-list');
+  }
+
+  /* =====================================================================
+     HELPERS
+     ===================================================================== */
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function formatDateISO(d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  function formatDateHuman(isoDate) {
+    var p = isoDate.split('-');
+    var d = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+    return d.toLocaleDateString('en-GB', {
+      weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+    });
+  }
+
+  function formatHour12(hour) {
+    var suffix = hour >= 12 ? 'PM' : 'AM';
+    var display = hour % 12;
+    if (display === 0) display = 12;
+    return display + ':00 ' + suffix;
+  }
+
+  function formatSlotRange(hour) {
+    return formatHour12(hour) + ' – ' + formatHour12(hour + 1);
+  }
+
+  function formatINR(amount) {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency', currency: BOOKING_CONFIG.currency, maximumFractionDigits: 0
+    }).format(amount);
+  }
+
+  function getTodayISO() { return formatDateISO(new Date()); }
+
+  function getShiftedDateISO(days) {
+    var d = new Date(); d.setDate(d.getDate() + days);
+    return formatDateISO(d);
+  }
+
+  function isPeakHour(hour) {
+    var windows = BOOKING_CONFIG.pricing.peakWindows || [];
+    for (var i = 0; i < windows.length; i++) {
+      var s = windows[i][0], e = windows[i][1];
+      if (s <= e) {
+        if (hour >= s && hour < e) return true;
+      } else {
+        if (hour >= s || hour < e) return true;
+      }
+    }
+    return false;
+  }
+
+  function getPriceForHour(hour) {
+    return isPeakHour(hour)
+      ? BOOKING_CONFIG.pricing.peak
+      : BOOKING_CONFIG.pricing.offPeak;
+  }
+
+  function isUnavailableDemo(hour) {
+    var key = pad(hour) + ':00';
+    return BOOKING_CONFIG.demoUnavailableHours.indexOf(key) !== -1;
+  }
+
+  function showAlert(type, message) {
+    if (type === 'error') {
+      if (el.alertErrorText) el.alertErrorText.textContent = message;
+      if (el.alertError) el.alertError.classList.add('is-visible');
+    } else if (type === 'info') {
+      if (el.alertInfoText) el.alertInfoText.textContent = message;
+      if (el.alertInfo) el.alertInfo.classList.add('is-visible');
+    }
+  }
+
+  function clearAlert(type) {
+    if (type === 'error' && el.alertError) el.alertError.classList.remove('is-visible');
+    if (type === 'info' && el.alertInfo) el.alertInfo.classList.remove('is-visible');
+  }
+
+  /* =====================================================================
+     SLOT RENDERING
+     ===================================================================== */
+  function generateSlots() {
+    var slots = [];
+    for (var h = BOOKING_CONFIG.schedule.startHour; h < BOOKING_CONFIG.schedule.endHour; h++) {
+      slots.push({
+        hour: h,
+        price: getPriceForHour(h),
+        isPeak: isPeakHour(h),
+        unavailable: isUnavailableDemo(h)
+      });
+    }
+    return slots;
+  }
+
+  function renderSlots() {
+    if (!el.slotGrid) return;
+    el.slotGrid.innerHTML = '';
+
+    var slots = generateSlots();
+    var isToday = state.selectedDate === getTodayISO();
+    var currentHour = new Date().getHours();
+
+    slots.forEach(function (slot) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bk-slot';
+      btn.dataset.hour = String(slot.hour);
+      btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-label',
+        formatSlotRange(slot.hour) + ' — ' + formatINR(slot.price));
+
+      var isPast = isToday && slot.hour <= currentHour;
+      var isDisabled = slot.unavailable || isPast;
+
+      if (slot.isPeak) btn.classList.add('bk-slot--peak');
+      if (isDisabled) {
+        btn.disabled = true;
+        btn.classList.add('bk-slot--unavailable');
+      }
+
+      var timeEl = document.createElement('span');
+      timeEl.className = 'bk-slot__time';
+      timeEl.textContent = formatSlotRange(slot.hour);
+
+      var metaEl = document.createElement('span');
+      metaEl.className = 'bk-slot__meta';
+      metaEl.innerHTML = '<span>1 hr</span><span>' + formatINR(slot.price) + '</span>';
+
+      btn.appendChild(timeEl);
+      btn.appendChild(metaEl);
+
+      if (slot.isPeak) {
+        var badge = document.createElement('span');
+        badge.className = 'bk-slot__badge';
+        badge.textContent = 'Peak';
+        btn.appendChild(badge);
+      }
+
+      if (state.selectedHour === slot.hour && !isDisabled) {
+        btn.setAttribute('aria-pressed', 'true');
+      }
+
+      btn.addEventListener('click', function () {
+        if (isDisabled) return;
+        selectSlot(slot.hour, slot.price);
+      });
+
+      el.slotGrid.appendChild(btn);
+    });
+  }
+
+  /* =====================================================================
+     SLOT + DATE HANDLERS
+     ===================================================================== */
+  function selectSlot(hour, price) {
+    state.selectedHour = hour;
+    state.selectedPrice = price;
+
+    var buttons = el.slotGrid.querySelectorAll('.bk-slot');
+    buttons.forEach(function (b) {
+      var isCurrent = parseInt(b.dataset.hour, 10) === hour;
+      b.setAttribute('aria-pressed', isCurrent ? 'true' : 'false');
+    });
+
+    updateSummary();
+    updateStepActions();
+  }
+
+  function handleDateChange(isoDate) {
+    if (!isoDate) return;
+    var today = getTodayISO();
+    if (isoDate < today) {
+      if (el.dateError) el.dateError.textContent = 'Please choose today or a future date.';
+      if (el.dateInput) el.dateInput.value = today;
+      return;
+    }
+    if (el.dateError) el.dateError.textContent = '';
+    state.selectedDate = isoDate;
+    state.selectedHour = null;
+    state.selectedPrice = null;
+
+    updateDateLabel();
+    renderSlots();
+    updateSummary();
+    updateStepActions();
+  }
+
+  function updateDateLabel() {
+    if (!el.dateLabel || !state.selectedDate) return;
+    var today = getTodayISO();
+    var tomorrow = getShiftedDateISO(1);
+    if (state.selectedDate === today) {
+      el.dateLabel.textContent = 'Today — ' + formatDateHuman(state.selectedDate);
+    } else if (state.selectedDate === tomorrow) {
+      el.dateLabel.textContent = 'Tomorrow — ' + formatDateHuman(state.selectedDate);
+    } else {
+      el.dateLabel.textContent = formatDateHuman(state.selectedDate);
+    }
+  }
+
+  /* =====================================================================
+     SUMMARY
+     ===================================================================== */
+  function updateSummary() {
+    if (!el.summaryEmpty || !el.summaryDetails) return;
+    var hasSlot = state.selectedDate && state.selectedHour !== null;
+
+    if (!hasSlot) {
+      el.summaryEmpty.style.display = '';
+      el.summaryDetails.style.display = 'none';
+      el.summaryEmpty.textContent = state.selectedDate
+        ? 'Select a kick-off time to see your match summary.'
+        : 'Select a date and kick-off time to see your match summary.';
+      return;
+    }
+
+    el.summaryEmpty.style.display = 'none';
+    el.summaryDetails.style.display = '';
+
+    if (el.summaryDate) el.summaryDate.textContent = formatDateHuman(state.selectedDate);
+    if (el.summaryTime) el.summaryTime.textContent = formatSlotRange(state.selectedHour);
+    if (el.summaryPrice) el.summaryPrice.innerHTML =
+      formatINR(state.selectedPrice) + ' <small>incl. taxes</small>';
+  }
+
+  /* =====================================================================
+     STEP NAVIGATION
+     ===================================================================== */
+  function goToStep(step) {
+    if (step < 1 || step > 3) return;
+
+    if (state.currentStep === 1 && step > 1) {
+      if (!state.selectedDate) { showAlert('error', 'Please select a date.'); return; }
+      if (state.selectedHour === null) { showAlert('error', 'Please select a kick-off time.'); return; }
+    }
+    if (state.currentStep === 2 && step > 2) {
+      if (!validateForm()) {
+        showAlert('error', 'Please correct the errors in your details.');
+        return;
+      }
+    }
+
+    clearAlert('error');
+    state.currentStep = step;
+
+    el.panels.forEach(function (panel) {
+      var isActive = parseInt(panel.dataset.step, 10) === step;
+      panel.classList.toggle('is-active', isActive);
+      if (isActive) panel.focus({ preventScroll: true });
+    });
+
+    el.steps.forEach(function (ind) {
+      var s = parseInt(ind.dataset.stepIndicator, 10);
+      if (s === step) {
+        ind.setAttribute('aria-current', 'step');
+        ind.classList.remove('is-complete');
+      } else if (s < step) {
+        ind.removeAttribute('aria-current');
+        ind.classList.add('is-complete');
+      } else {
+        ind.removeAttribute('aria-current');
+        ind.classList.remove('is-complete');
+      }
+    });
+
+    if (step === 3) populateReview();
+
+    var booking = document.querySelector('.bk-booking');
+    if (booking) {
+      var top = booking.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  }
+
+  function updateStepActions() {
+    var can = state.selectedDate && state.selectedHour !== null;
+    if (el.step1Next) el.step1Next.disabled = !can;
+    if (el.summaryCta) el.summaryCta.disabled = !can;
+  }
+
+  /* =====================================================================
+     FORM VALIDATION
+     ===================================================================== */
+  function validateForm() {
+    var errors = {};
+    var name = document.getElementById('bk-full-name');
+    var email = document.getElementById('bk-email');
+    var phone = document.getElementById('bk-phone');
+    var terms = document.getElementById('bk-terms');
+
+    if (!name.value.trim()) errors.name = 'Please enter your full name.';
+    else if (name.value.trim().length < 2) errors.name = 'Please enter at least 2 characters.';
+
+    if (!email.value.trim()) errors.email = 'Please enter your email address.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) errors.email = 'Please enter a valid email address.';
+
+    var digits = phone.value.replace(/\D/g, '');
+    if (!phone.value.trim()) errors.phone = 'Please enter your phone number.';
+    else if (digits.length < 5) errors.phone = 'Please enter a valid phone number.';
+
+    if (!terms.checked) errors.terms = 'Please agree to the terms and cancellation policy.';
+
+    setFieldError('bk-full-name', 'bk-full-name-error', errors.name);
+    setFieldError('bk-email', 'bk-email-error', errors.email);
+    setFieldError('bk-phone', 'bk-phone-error', errors.phone);
+    setFieldError('bk-terms', 'bk-terms-error', errors.terms);
+
+    return Object.keys(errors).length === 0;
+  }
+
+  function setFieldError(fieldId, errorId, message) {
+    var field = document.getElementById(fieldId);
+    var error = document.getElementById(errorId);
+    if (!field || !error) return;
+    if (message) {
+      field.setAttribute('aria-invalid', 'true');
+      error.textContent = message;
+    } else {
+      field.removeAttribute('aria-invalid');
+      error.textContent = '';
+    }
+  }
+
+  /* =====================================================================
+     FORM CAPTURE + REVIEW
+     ===================================================================== */
+  function captureFormData() {
+    state.form.fullName = (document.getElementById('bk-full-name') || {}).value || '';
+    state.form.email = (document.getElementById('bk-email') || {}).value || '';
+    state.form.phone = (document.getElementById('bk-phone') || {}).value || '';
+    state.form.players = (document.getElementById('bk-players') || {}).value || '8';
+    state.form.teamName = (document.getElementById('bk-team-name') || {}).value || '';
+    state.form.matchNotes = (document.getElementById('bk-special') || {}).value || '';
+    state.form.terms = (document.getElementById('bk-terms') || {}).checked || false;
+  }
+
+  function populateReview() {
+    captureFormData();
+    if (el.reviewDate) el.reviewDate.textContent = formatDateHuman(state.selectedDate);
+    if (el.reviewTime) el.reviewTime.textContent = formatSlotRange(state.selectedHour);
+    if (el.reviewPrice) el.reviewPrice.textContent = formatINR(state.selectedPrice);
+    if (el.reviewName) el.reviewName.textContent = state.form.fullName || '—';
+    if (el.reviewEmail) el.reviewEmail.textContent = state.form.email || '—';
+    if (el.reviewPhone) el.reviewPhone.textContent = state.form.phone || '—';
+    if (el.reviewPlayers) el.reviewPlayers.textContent = state.form.players + ' players';
+    if (el.reviewTeam) el.reviewTeam.textContent = state.form.teamName || '—';
+  }
+
+  /* =====================================================================
+     SUBMIT (DEMO)
+     ===================================================================== */
+  function handleSubmit() {
+    if (state.selectedHour === null || !state.selectedDate) {
+      showAlert('error', 'Please select a date and kick-off time.');
+      goToStep(1);
+      return;
+    }
+    if (!validateForm()) {
+      showAlert('error', 'Please correct the errors in your details.');
+      goToStep(2);
+      return;
+    }
+
+    if (el.submitBtn) {
+      el.submitBtn.disabled = true;
+      el.submitBtn.textContent = 'Submitting…';
+    }
+
+    window.setTimeout(function () {
+      showAlert('info',
+        'Booking interface ready. In production, this request would be sent to ' +
+        'the backend, which would confirm availability and create the booking. ' +
+        'No reservation has been created in this demo.');
+
+      if (el.submitBtn) {
+        el.submitBtn.disabled = false;
+        el.submitBtn.innerHTML = 'Submit booking request ' +
+          '<svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+          '<path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+
+      if (el.alertInfo) el.alertInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 700);
+  }
+
+  /* =====================================================================
+     FAQ
+     ===================================================================== */
+  var FAQ = [
+    { q: 'How long can I book the pitch for?',
+      a: 'Each standard pitch booking is one hour.' },
+    { q: 'What are the peak and off-peak prices?',
+      a: 'The example rates are ₹350 per hour off-peak and ₹500 per hour during peak periods. Final prices are confirmed by the facility when your booking is processed.' },
+    { q: 'How do I know if a time is available?',
+      a: 'In the live site, availability is checked on the server when you submit your request. The current demo shows simulated availability so you can preview the booking experience.' },
+    { q: 'Can I change my selected slot?',
+      a: 'Yes — you can select a different slot before you submit your booking request. Use the Back button within the flow to return to the slot selection step.' },
+    { q: 'How do I pay?',
+      a: 'The current intended payment method is pay at the venue, subject to the facility\'s confirmed booking policy.' },
+    { q: 'When is my booking confirmed?',
+      a: 'Your booking is confirmed only after the facility processes your request and the server validates the slot and price. This demo does not create real bookings.' },
+    { q: 'Where can I read the cancellation policy?',
+      a: 'See the <a href="../legal/cancellation-refund.html">Cancellation &amp; Refund Policy</a>.' }
+  ];
+
+  function initFAQ() {
+    if (!el.faqList) return;
+    el.faqList.innerHTML = '';
+    FAQ.forEach(function (item, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'bk-faq__item';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bk-faq__question';
+      btn.id = 'bk-faq-q-' + i;
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-controls', 'bk-faq-a-' + i);
+      btn.innerHTML =
+        '<span>' + item.q + '</span>' +
+        '<svg class="bk-faq__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+        '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+      var ans = document.createElement('div');
+      ans.className = 'bk-faq__answer';
+      ans.id = 'bk-faq-a-' + i;
+      ans.setAttribute('role', 'region');
+      ans.setAttribute('aria-labelledby', 'bk-faq-q-' + i);
+      ans.setAttribute('data-open', 'false');
+      ans.innerHTML = '<p>' + item.a + '</p>';
+
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        ans.setAttribute('data-open', String(!open));
+      });
+
+      wrap.appendChild(btn);
+      wrap.appendChild(ans);
+      el.faqList.appendChild(wrap);
+    });
+  }
+
+  /* =====================================================================
+     INIT
+     ===================================================================== */
+  function init() {
+    cacheDom();
+
+    var today = getTodayISO();
+    if (el.dateInput) {
+      el.dateInput.min = today;
+      el.dateInput.value = today;
+    }
+    state.selectedDate = today;
+
+    if (el.dateInput) {
+      el.dateInput.addEventListener('change', function () {
+        handleDateChange(el.dateInput.value);
+      });
+    }
+
+    document.querySelectorAll('[data-date-nav]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var action = btn.dataset.dateNav;
+        var current = state.selectedDate || today;
+        var d = new Date(current + 'T00:00:00');
+        if (action === 'prev') d.setDate(d.getDate() - 1);
+        if (action === 'next') d.setDate(d.getDate() + 1);
+        if (action === 'today') d = new Date();
+        var iso = formatDateISO(d);
+        if (iso < today) iso = today;
+        if (el.dateInput) el.dateInput.value = iso;
+        handleDateChange(iso);
+      });
+    });
+
+    document.querySelectorAll('[data-goto-step]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        goToStep(parseInt(btn.dataset.gotoStep, 10));
+      });
+    });
+
+    if (el.summaryCta) {
+      el.summaryCta.addEventListener('click', function () { goToStep(2); });
+    }
+
+    if (el.submitBtn) {
+      el.submitBtn.addEventListener('click', handleSubmit);
+    }
+
+    ['bk-full-name', 'bk-email', 'bk-phone'].forEach(function (id) {
+      var input = document.getElementById(id);
+      if (input) input.addEventListener('blur', validateForm);
+    });
+
+    document.querySelectorAll('.bk-field__control').forEach(function (input) {
+      input.addEventListener('input', function () {
+        input.removeAttribute('aria-invalid');
+      });
+    });
+
+    updateDateLabel();
+    renderSlots();
+    updateSummary();
+    updateStepActions();
+    initFAQ();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

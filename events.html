@@ -1,0 +1,4005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match-Box · Advanced Header, Auth & Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-charcoal: #101511;
+      --almost-black: #080B09;
+      --lime-green: #B7F34A;
+      --football-green: #285C35;
+      --white: #FFFFFF;
+      --light-bg: #F5F7F3;
+      --muted-grey: #777F78;
+      --font-primary: 'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --transition: 0.25s ease;
+      --header-height: 72px;
+      --announce-height: 38px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--light-bg);
+      color: var(--deep-charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========== REUSABLE ========== */
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+
+    .btn-lime {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-lime:hover {
+      background: #a4e03a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(183, 243, 74, 0.25);
+    }
+
+    .btn-outline-lime {
+      background: transparent;
+      color: var(--lime-green);
+      border: 1px solid var(--lime-green);
+    }
+
+    .btn-outline-lime:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-dark-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-dark-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    /* ========== ANNOUNCEMENT BAR — normal flow, at top ========== */
+    .announce-bar {
+      background: var(--football-green);
+      color: var(--white);
+      height: var(--announce-height);
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      width: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .announce-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .announce-bar span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .announce-bar a {
+      color: var(--lime-green);
+      font-weight: 700;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .announce-bar a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    /* ========== MAIN HEADER — in flow normally, becomes fixed on scroll ========== */
+    .main-header {
+      position: relative; /* in normal document flow at page load */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: var(--deep-charcoal);
+      display: flex;
+      align-items: center;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    /* When scrolled past the announcement bar: pin to top of viewport */
+    .main-header.is-fixed {
+      position: fixed;
+      top: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Placeholder that reserves header space when header becomes fixed */
+    .header-placeholder {
+      display: none;
+      height: var(--header-height);
+    }
+
+    .header-placeholder.active {
+      display: block;
+    }
+
+    .main-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* ----- Logo ----- */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--lime-green);
+      border-radius: 50%;
+      color: var(--almost-black);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .logo-text .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime-green);
+    }
+
+    /* ----- Desktop Navigation ----- */
+    .desktop-nav {
+      display: none;
+      height: 100%;
+    }
+
+    .desktop-nav ul {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0 0.9rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--lime-green);
+    }
+
+    .nav-link i {
+      font-size: 0.7rem;
+      transition: transform var(--transition);
+    }
+
+    .nav-item:hover .nav-link i {
+      transform: rotate(180deg);
+    }
+
+    .nav-link.active {
+      color: var(--lime-green);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: var(--lime-green);
+      border-radius: 2px;
+    }
+
+    /* ----- Dropdown Panel ----- */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 280px;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .nav-item:hover .dropdown-panel,
+    .nav-item:focus-within .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 0.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #e9ece9;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      gap: 12px;
+      padding: 0.65rem 1.5rem;
+      transition: background var(--transition);
+    }
+
+    .dropdown-item:hover {
+      background: #f0f5ec;
+    }
+
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--light-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--football-green);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .dropdown-text p {
+      font-size: 0.75rem;
+      color: var(--muted-grey);
+      line-height: 1.3;
+    }
+
+    /* ----- Header Actions (desktop) ----- */
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .auth-btn {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--lime-green);
+    }
+
+    .account-icon-btn {
+      color: var(--white);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+    }
+
+    .account-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .account-menu-wrapper {
+      position: relative;
+    }
+
+    .account-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      background: transparent;
+      padding: 4px 8px 4px 4px;
+      border-radius: 30px;
+      transition: background var(--transition);
+    }
+
+    .account-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .avatar-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .account-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 240px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .account-menu-wrapper.open .account-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .account-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--deep-charcoal);
+      transition: background var(--transition);
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f5ec;
+      color: var(--football-green);
+    }
+
+    .account-dropdown a i {
+      width: 16px;
+      color: var(--muted-grey);
+    }
+
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e9ece9;
+      margin: 0.4rem 1rem;
+    }
+
+    /* ----- Mobile Header Actions ----- */
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .mobile-book-btn {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hamburger {
+      color: var(--white);
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ----- Mobile Drawer ----- */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 88%;
+      max-width: 380px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--deep-charcoal);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem 1.25rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-drawer.open {
+      right: 0;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.75);
+      z-index: 2400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 12px;
+    }
+
+    .drawer-close {
+      color: var(--white);
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .drawer-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .drawer-nav {
+      flex: 1;
+    }
+
+    .drawer-nav > li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      width: 100%;
+      text-align: left;
+      transition: color var(--transition);
+    }
+
+    .drawer-link:hover {
+      color: var(--lime-green);
+    }
+
+    .drawer-link i {
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+
+    .drawer-sub {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 0.5rem;
+    }
+
+    .drawer-sub.open {
+      max-height: 500px;
+    }
+
+    .drawer-sub a {
+      display: block;
+      color: #b0b8b0;
+      font-size: 0.85rem;
+      padding: 0.6rem 0 0.6rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .drawer-sub a:hover {
+      color: var(--lime-green);
+      border-left-color: var(--lime-green);
+    }
+
+    .drawer-cta {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-auth .btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.85);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-grey);
+      font-size: 1.2rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--deep-charcoal);
+    }
+
+    .auth-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.25rem;
+      padding-right: 2rem;
+    }
+
+    .auth-modal .subtext {
+      font-size: 0.85rem;
+      color: var(--muted-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+      border: 1px solid #d4dcd4;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--football-green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 53, 0.15);
+    }
+
+    .input-wrapper input.error {
+      border-color: #d32f2f;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 10px;
+      background: none;
+      color: var(--muted-grey);
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color var(--transition);
+    }
+
+    .input-icon-right:hover {
+      color: var(--deep-charcoal);
+    }
+
+    .error-msg {
+      font-size: 0.7rem;
+      color: #d32f2f;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .checkbox-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--deep-charcoal);
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--football-green);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .link-text {
+      color: var(--football-green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+
+    .link-text:hover {
+      color: var(--lime-green);
+      text-decoration: underline;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-actions .btn {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted-grey);
+      margin-top: 1rem;
+    }
+
+    .auth-switch .link-text {
+      font-size: 0.8rem;
+    }
+
+    .message-area {
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .message-area.error {
+      display: block;
+      background: #fdecea;
+      color: #b71c1c;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .message-area.success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 3px solid #2e7d32;
+    }
+
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .strength-bar.weak { background: #e53935; }
+    .strength-bar.medium { background: #fbc02d; }
+    .strength-bar.strong { background: #43a047; }
+
+    .strength-text {
+      font-size: 0.7rem;
+      color: var(--muted-grey);
+      margin-top: 2px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--almost-black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--deep-charcoal);
+      color: var(--white);
+      padding-top: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .footer-cta {
+      background: var(--football-green);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-cta p {
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .footer-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-main {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-brand .logo-area {
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      max-width: 300px;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime-green);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--transition), padding-left var(--transition);
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .footer-col ul a:hover {
+      color: var(--lime-green);
+      padding-left: 4px;
+    }
+
+    .footer-contact-info li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.8rem;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    .footer-contact-info i {
+      color: var(--lime-green);
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .newsletter {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .newsletter h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .newsletter p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--lime-green);
+    }
+
+    .newsletter-form .btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .newsletter-msg {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .newsletter-msg.error {
+      display: block;
+      color: #ef9a9a;
+    }
+
+    .newsletter-msg.success {
+      display: block;
+      color: var(--lime-green);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--lime-green);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(183, 243, 74, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: #a4e03a;
+      transform: translateY(-3px);
+    }
+
+    /* ========== RESPONSIVE ========== */
+
+    /* Mobile & tablet: up to 1023px */
+    @media (max-width: 1023px) {
+      .desktop-nav { display: none !important; }
+      .header-actions { display: none !important; }
+      .mobile-header-actions { display: flex !important; }
+
+      .main-header .container { padding: 0 16px; gap: 8px; }
+      .logo-text .brand-name { font-size: 1.25rem; }
+      .logo-text .tagline { font-size: 0.5rem; }
+      .logo-icon { width: 32px; height: 32px; font-size: 1rem; }
+      .container { padding: 0 16px; }
+      .announce-bar .container { padding: 0 16px; gap: 6px; }
+      .announce-bar { font-size: 0.65rem; }
+      .announce-bar span { font-size: 0.65rem; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-cta { padding: 2rem 0; }
+      .footer-cta-btns .btn { width: 100%; max-width: 280px; }
+      .footer-cta p { font-size: 0.9rem; padding: 0 8px; }
+      .auth-modal { padding: 1.5rem 1.25rem; }
+      .auth-modal h2 { font-size: 1.5rem; }
+      .newsletter-form .btn { width: 100%; }
+    }
+
+    /* Very small mobile */
+    @media (max-width: 380px) {
+      .mobile-book-btn span { display: none; }
+      .mobile-book-btn { padding: 0.5rem 0.6rem; }
+      .logo-text .brand-name { font-size: 1.1rem; }
+      .main-header .container { padding: 0 10px; }
+    }
+
+    /* Desktop: 1024px and above */
+    @media (min-width: 1024px) {
+      .desktop-nav { display: block !important; }
+      .header-actions { display: flex !important; }
+      .mobile-header-actions { display: none !important; }
+
+      .footer-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;
+        gap: 2rem;
+      }
+      .footer-brand { grid-column: span 1; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .footer-cta-btns { gap: 1rem; }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* Desktop wide */
+    @media (min-width: 1440px) {
+      .container { padding: 0 40px; }
+      .desktop-nav .nav-link { font-size: 0.85rem; padding: 0 0.9rem; }
+      .header-actions { gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .mb-events-main {
+      --mb-e-charcoal: #101511;
+      --mb-e-deep: #080B09;
+      --mb-e-lime: #B7F34A;
+      --mb-e-forest: #285C35;
+      --mb-e-white: #FFFFFF;
+      --mb-e-light: #F5F7F2;
+      --mb-e-border: #d9e0d9;
+      --mb-e-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+      --mb-e-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.2);
+      --mb-e-radius: 1.5rem;
+      --mb-e-radius-btn: 3rem;
+      --mb-e-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--mb-e-white);
+      color: var(--mb-e-charcoal);
+      font-family: var(--mb-e-font);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .mb-events-main *,
+    .mb-events-main *::before,
+    .mb-events-main *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mb-events-main img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .mb-events-container {
+      width: 100%;
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 4rem);
+    }
+
+    .mb-events-section {
+      padding-block: clamp(3rem, 8vw, 6rem);
+    }
+
+    .mb-events-section--light { background: var(--mb-e-light); color: var(--mb-e-charcoal); }
+    .mb-events-section--white { background: var(--mb-e-white); color: var(--mb-e-charcoal); }
+
+    .mb-events-eyebrow {
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mb-e-lime);
+      margin-bottom: 0.75rem;
+    }
+
+    .mb-events-section--light .mb-events-eyebrow,
+    .mb-events-section--white .mb-events-eyebrow {
+      color: var(--mb-e-forest);
+    }
+
+    .mb-events-h2 {
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .mb-events-text-lg {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+
+    .mb-events-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.875rem;
+      padding: 0.9rem 2rem;
+      border-radius: var(--mb-e-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      line-height: 1.2;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .mb-events-btn:focus-visible { outline: 3px solid var(--mb-e-lime); outline-offset: 4px; }
+    .mb-events-btn--primary { background: var(--mb-e-lime); color: var(--mb-e-deep); border-color: var(--mb-e-lime); }
+    .mb-events-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+    .mb-events-btn--outline { border-color: rgba(255,255,255,0.35); color: var(--mb-e-white); background: transparent; }
+    .mb-events-btn--outline:hover { border-color: var(--mb-e-lime); color: var(--mb-e-lime); }
+    .mb-events-btn--dark { background: var(--mb-e-charcoal); color: var(--mb-e-white); border-color: var(--mb-e-charcoal); }
+    .mb-events-btn--dark:hover { background: #1f2a21; border-color: #1f2a21; }
+    .mb-events-btn--full { width: 100%; }
+    .mb-events-btn--sm { padding: 0.65rem 1.25rem; font-size: 0.75rem; }
+    .mb-events-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .mb-events-reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .mb-events-reveal.mb-events-visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== HERO ===== */
+    .mb-events-hero {
+      position: relative;
+      background: var(--mb-e-deep);
+      color: var(--mb-e-white);
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .mb-events-hero__bg { position: absolute; inset: 0; z-index: 1; }
+    .mb-events-hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+
+    .mb-events-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(8,11,9,0.94) 0%, rgba(8,11,9,0.7) 55%, rgba(8,11,9,0.4) 100%);
+      z-index: 2;
+    }
+
+    .mb-events-hero__content {
+      position: relative;
+      z-index: 3;
+      padding-block: clamp(4rem, 12vw, 8rem);
+      max-width: 900px;
+    }
+
+    .mb-events-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183, 243, 74, 0.12);
+      border-left: 4px solid var(--mb-e-lime);
+      padding: 0.5rem 1.2rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-e-lime);
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-events-hero__title {
+      font-size: clamp(2.2rem, 7.5vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .mb-events-hero__title span { color: var(--mb-e-lime); }
+
+    .mb-events-hero__desc {
+      max-width: 55ch;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .mb-events-hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+
+    /* ===== INTRO ===== */
+    .mb-events-intro { display: flex; flex-wrap: wrap; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+
+    .mb-events-intro__image {
+      flex: 1 1 380px;
+      border-radius: var(--mb-e-radius);
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      box-shadow: var(--mb-e-shadow);
+    }
+
+    .mb-events-intro__image img { width: 100%; height: 100%; object-fit: cover; }
+    .mb-events-intro__content { flex: 1 1 380px; }
+
+    .mb-events-intro__concepts { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1.75rem; }
+
+    .mb-events-intro__concept {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--mb-e-white);
+      border-radius: 1.1rem;
+      padding: 1.1rem 1.25rem;
+      border: 1px solid var(--mb-e-border);
+    }
+
+    .mb-events-intro__concept-icon {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 0.75rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-events-intro__concept-icon svg { width: 22px; height: 22px; fill: var(--mb-e-forest); }
+
+    .mb-events-intro__concept h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--mb-e-charcoal); }
+    .mb-events-intro__concept p { font-size: 0.85rem; color: #5a6a5e; line-height: 1.5; }
+
+    /* ===== CATEGORIES ===== */
+    .mb-events-categories { display: flex; flex-direction: column; gap: 2.5rem; margin-top: 3rem; }
+
+    .mb-events-category {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: stretch;
+      border-radius: var(--mb-e-radius);
+      overflow: hidden;
+      background: var(--mb-e-white);
+      box-shadow: var(--mb-e-shadow-sm);
+      border: 1px solid var(--mb-e-border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .mb-events-category:hover { transform: translateY(-4px); box-shadow: var(--mb-e-shadow); }
+    .mb-events-category:nth-child(even) { flex-direction: row-reverse; }
+
+    .mb-events-category__media {
+      flex: 1 1 340px;
+      aspect-ratio: 16 / 11;
+      overflow: hidden;
+      background: #d9e0d9;
+      position: relative;
+    }
+
+    .mb-events-category__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .mb-events-category:hover .mb-events-category__media img { transform: scale(1.04); }
+
+    .mb-events-category__tag {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(16,21,17,0.8);
+      backdrop-filter: blur(6px);
+      color: var(--mb-e-white);
+      padding: 0.4rem 1rem;
+      border-radius: 3rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-left: 3px solid var(--mb-e-lime);
+    }
+
+    .mb-events-category__body {
+      flex: 1 1 360px;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mb-events-category__title { font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 800; margin-bottom: 0.75rem; line-height: 1.2; }
+    .mb-events-category__desc { font-size: 0.95rem; color: #4a5a4e; line-height: 1.6; margin-bottom: 1.25rem; }
+
+    .mb-events-category__highlights {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+      flex: 1;
+    }
+
+    .mb-events-category__highlights li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.9rem; color: #3a4a3e; }
+    .mb-events-category__highlights li::before { content: '✓'; color: var(--mb-e-forest); font-weight: 800; flex-shrink: 0; }
+    .mb-events-category__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+    /* ===== WHY ===== */
+    .mb-events-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-top: 3rem; }
+
+    .mb-events-why-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--mb-e-white);
+      border-radius: var(--mb-e-radius);
+      padding: 1.5rem;
+      border: 1px solid var(--mb-e-border);
+    }
+
+    .mb-events-why-item__icon {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 0.75rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-events-why-item__icon svg { width: 22px; height: 22px; fill: var(--mb-e-forest); }
+    .mb-events-why-item__title { font-size: 1rem; font-weight: 800; margin-bottom: 0.25rem; color: var(--mb-e-charcoal); }
+    .mb-events-why-item__desc { font-size: 0.85rem; color: #4a5a4e; line-height: 1.5; }
+
+    /* ===== HOW ===== */
+    .mb-events-steps { display: flex; gap: 0; margin-top: 3rem; position: relative; }
+    .mb-events-step { flex: 1; position: relative; padding: 0 1rem; text-align: center; }
+
+    .mb-events-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 1.75rem;
+      right: -50%;
+      width: 100%;
+      height: 2px;
+      background: #d0d9d0;
+      z-index: 0;
+    }
+
+    .mb-events-step__number {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background: var(--mb-e-lime);
+      color: var(--mb-e-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin: 0 auto 1rem;
+      position: relative;
+      z-index: 1;
+      border: 4px solid var(--mb-e-white);
+    }
+
+    .mb-events-step__title { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.35rem; color: var(--mb-e-charcoal); text-transform: uppercase; letter-spacing: 0.02em; }
+    .mb-events-step__desc { font-size: 0.85rem; color: #5a6a5e; line-height: 1.4; }
+
+    /* ===== FORM ===== */
+    .mb-events-form-wrapper { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.5rem; align-items: start; margin-top: 3rem; }
+    .mb-events-form-info { position: sticky; top: 1.5rem; }
+    .mb-events-form-info h3 { font-size: clamp(1.3rem, 2.5vw, 1.6rem); font-weight: 800; margin-bottom: 1rem; }
+    .mb-events-form-info p { font-size: 0.95rem; color: #4a5a4e; line-height: 1.6; margin-bottom: 1.25rem; }
+
+    .mb-events-form-info__list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .mb-events-form-info__list li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--mb-e-forest); font-weight: 600; }
+    .mb-events-form-info__list li::before { content: '✓'; color: var(--mb-e-forest); font-weight: 800; }
+
+    .mb-events-form {
+      background: var(--mb-e-white);
+      border-radius: var(--mb-e-radius);
+      box-shadow: var(--mb-e-shadow-sm);
+      padding: clamp(1.5rem, 3vw, 2rem);
+      border: 1px solid var(--mb-e-border);
+    }
+
+    .mb-events-form__title { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .mb-events-form__subtitle { font-size: 0.85rem; color: #6b7a6e; margin-bottom: 1.5rem; }
+
+    .mb-events-field { margin-bottom: 1.1rem; }
+
+    .mb-events-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--mb-e-charcoal);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .mb-events-field label .mb-events-required { color: #c0392b; margin-left: 0.15rem; }
+
+    .mb-events-field input,
+    .mb-events-field select,
+    .mb-events-field textarea {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: 2px solid var(--mb-e-border);
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      background: var(--mb-e-white);
+      color: var(--mb-e-charcoal);
+    }
+
+    .mb-events-field input:focus,
+    .mb-events-field select:focus,
+    .mb-events-field textarea:focus { outline: none; border-color: var(--mb-e-forest); }
+
+    .mb-events-field input.mb-events-input-error,
+    .mb-events-field select.mb-events-input-error,
+    .mb-events-field textarea.mb-events-input-error { border-color: #c0392b; }
+
+    .mb-events-field textarea { resize: vertical; min-height: 80px; }
+    .mb-events-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .mb-events-error-msg { display: none; font-size: 0.75rem; color: #c0392b; margin-top: 0.25rem; font-weight: 600; }
+    .mb-events-error-msg.visible { display: block; }
+
+    .mb-events-conditional { display: none; }
+    .mb-events-conditional.visible { display: block; }
+
+    .mb-events-checkbox { display: flex; align-items: flex-start; gap: 0.6rem; margin: 1.25rem 0; font-size: 0.8rem; line-height: 1.5; color: #4a5a4e; }
+
+    .mb-events-checkbox input {
+      width: 18px;
+      height: 18px;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--mb-e-forest);
+      cursor: pointer;
+    }
+
+    .mb-events-checkbox label { cursor: pointer; font-weight: 400; text-transform: none; letter-spacing: normal; font-size: 0.8rem; }
+    .mb-events-checkbox a { color: var(--mb-e-forest); font-weight: 600; text-decoration: underline; }
+
+    .mb-events-form__note { font-size: 0.75rem; color: #8a9a8e; margin-top: 0.75rem; text-align: center; line-height: 1.4; }
+
+    .mb-events-confirm {
+      display: none;
+      background: #eaf7e6;
+      border: 2px solid #5cb85c;
+      border-radius: var(--mb-e-radius);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .mb-events-confirm.visible { display: block; }
+
+    .mb-events-confirm__icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      background: #5cb85c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-events-confirm__icon svg { width: 26px; height: 26px; fill: white; }
+    .mb-events-confirm__title { font-size: 1.1rem; font-weight: 800; color: #2e6b2e; margin-bottom: 0.5rem; }
+    .mb-events-confirm__desc { font-size: 0.9rem; color: #3a5a3a; line-height: 1.5; }
+
+    /* ===== AVAILABILITY ===== */
+    .mb-events-availability {
+      background: var(--mb-e-white);
+      border-radius: var(--mb-e-radius);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      border: 1px solid var(--mb-e-border);
+      box-shadow: var(--mb-e-shadow-sm);
+      margin-top: 2.5rem;
+    }
+
+    .mb-events-availability__note {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--mb-e-light);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .mb-events-availability__note svg { width: 24px; height: 24px; fill: var(--mb-e-forest); flex-shrink: 0; margin-top: 0.15rem; }
+    .mb-events-availability__note p { font-size: 0.9rem; color: #4a5a4e; line-height: 1.6; }
+
+    /* ===== GALLERY ===== */
+    .mb-events-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+
+    .mb-events-gallery__item {
+      border-radius: 1.25rem;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: #1e2a20;
+      aspect-ratio: 4 / 3;
+    }
+
+    .mb-events-gallery__item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .mb-events-gallery__item:hover img { transform: scale(1.05); }
+
+    .mb-events-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,9,0.94);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .mb-events-lightbox.active { display: flex; }
+
+    .mb-events-lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 1rem;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.8);
+      object-fit: contain;
+    }
+
+    .mb-events-lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.5rem;
+      z-index: 10000;
+    }
+
+    .mb-events-lightbox-close:focus-visible { outline: 3px solid var(--mb-e-lime); }
+
+    /* ===== PLANNING ===== */
+    .mb-events-planning { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem; }
+
+    .mb-events-planning-card {
+      background: var(--mb-e-white);
+      border-radius: var(--mb-e-radius);
+      padding: 1.75rem 1.5rem;
+      border: 1px solid var(--mb-e-border);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .mb-events-planning-card:hover { transform: translateY(-5px); box-shadow: var(--mb-e-shadow-sm); }
+
+    .mb-events-planning-card__number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      background: var(--mb-e-lime);
+      color: var(--mb-e-deep);
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .mb-events-planning-card__title { font-size: 1rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--mb-e-charcoal); }
+    .mb-events-planning-card__desc { font-size: 0.85rem; color: #5a6a5e; line-height: 1.5; }
+
+    /* ===== FAQ ===== */
+    .mb-events-faq__list { max-width: 900px; margin: 3rem auto 0; display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .mb-events-faq__item {
+      border: 1px solid var(--mb-e-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      background: var(--mb-e-white);
+      transition: border-color 0.2s;
+    }
+
+    .mb-events-faq__item[data-open="true"] { border-color: var(--mb-e-forest); }
+
+    .mb-events-faq__question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1.1rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      color: var(--mb-e-charcoal);
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    .mb-events-faq__question:hover { background: var(--mb-e-light); }
+    .mb-events-faq__question:focus-visible { outline: 3px solid var(--mb-e-lime); outline-offset: -3px; border-radius: 1rem; }
+
+    .mb-events-faq__icon { flex-shrink: 0; width: 22px; height: 22px; position: relative; display: flex; align-items: center; justify-content: center; }
+
+    .mb-events-faq__icon::before,
+    .mb-events-faq__icon::after {
+      content: '';
+      position: absolute;
+      background: var(--mb-e-forest);
+      border-radius: 2px;
+      transition: transform 0.25s ease;
+    }
+
+    .mb-events-faq__icon::before { width: 14px; height: 2px; }
+    .mb-events-faq__icon::after { width: 2px; height: 14px; }
+    .mb-events-faq__item[data-open="true"] .mb-events-faq__icon::after { transform: rotate(90deg) scaleY(0); }
+    .mb-events-faq__item[data-open="true"] .mb-events-faq__icon::before { background: var(--mb-e-lime); }
+
+    .mb-events-faq__answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 1.25rem; }
+    .mb-events-faq__item[data-open="true"] .mb-events-faq__answer { max-height: 320px; padding: 0 1.25rem 1.25rem; }
+    .mb-events-faq__answer p { font-size: 0.9rem; color: #4a5a4e; line-height: 1.6; }
+
+    /* ===== CTA ===== */
+    .mb-events-cta {
+      position: relative;
+      border-radius: var(--mb-e-radius);
+      overflow: hidden;
+      padding: clamp(2.5rem, 7vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      text-align: center;
+      background-image: url('https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .mb-events-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(8,11,9,0.94), rgba(8,11,9,0.7));
+      z-index: 1;
+    }
+
+    .mb-events-cta > * { position: relative; z-index: 2; }
+    .mb-events-cta__actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; }
+
+    .mb-events-contact {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      background: var(--mb-e-white);
+      border-radius: var(--mb-e-radius);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      border: 1px solid var(--mb-e-border);
+      box-shadow: var(--mb-e-shadow-sm);
+    }
+
+    .mb-events-contact h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 800; margin-bottom: 0.35rem; }
+    .mb-events-contact p { font-size: 0.9rem; color: #5a6a5e; max-width: 50ch; }
+    .mb-events-contact__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .mb-events-form-wrapper { grid-template-columns: 1fr; }
+      .mb-events-form-info { position: static; }
+      .mb-events-why-grid { grid-template-columns: repeat(2, 1fr); }
+      .mb-events-planning { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      .mb-events-steps { flex-direction: column; gap: 2rem; align-items: flex-start; }
+      .mb-events-step { display: flex; text-align: left; gap: 1.25rem; padding: 0; width: 100%; }
+      .mb-events-step:not(:last-child)::after { display: none; }
+      .mb-events-step__number { margin: 0; flex-shrink: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .mb-events-intro { flex-direction: column; }
+      .mb-events-intro__image { width: 100%; }
+      .mb-events-category,
+      .mb-events-category:nth-child(even) { flex-direction: column; }
+      .mb-events-category__media { width: 100%; flex: none; }
+      .mb-events-gallery { grid-template-columns: repeat(2, 1fr); }
+      .mb-events-field-row { grid-template-columns: 1fr; }
+      .mb-events-why-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .mb-events-gallery { grid-template-columns: 1fr; }
+      .mb-events-planning { grid-template-columns: 1fr; }
+      .mb-events-hero__actions .mb-events-btn,
+      .mb-events-cta__actions .mb-events-btn { width: 100%; }
+      .mb-events-category__actions .mb-events-btn { flex: 1 1 100%; }
+      .mb-events-contact { flex-direction: column; align-items: flex-start; }
+      .mb-events-contact__actions { width: 100%; }
+      .mb-events-contact__actions .mb-events-btn { flex: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mb-events-main *,
+      .mb-events-main *::before,
+      .mb-events-main *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .mb-events-reveal { opacity: 1; transform: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR — at top of page, scrolls with the page -->
+  <div class="announce-bar" id="announceBar">
+    <div class="container">
+      <span>READY FOR YOUR NEXT GAME? BOOK YOUR MATCH-BOX SESSION TODAY.</span>
+      <a href="pages/book-to-play.html">BOOK NOW →</a>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER — starts in normal flow, becomes fixed after scrolling past the announcement bar -->
+  <header class="main-header" id="mainHeader">
+    <div class="container">
+      <a href="index.html" class="logo-area" aria-label="Match-Box home">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <ul>
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item">
+            <a href="book-to-play.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Play <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">PLAY AT MATCH-BOX</div>
+              <a href="book-to-play.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="dropdown-text"><h4>Book a Pitch</h4><p>Reserve a one-hour football session with your friends.</p></div>
+              </a>
+              <a href="about.html#concept" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="dropdown-text"><h4>How It Works</h4><p>Discover how 4-a-side football works at Match-Box.</p></div>
+              </a>
+              <a href="price.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-tag"></i></div>
+                <div class="dropdown-text"><h4>Pricing</h4><p>Explore peak and non-peak playing rates.</p></div>
+              </a>
+              <a href="about.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-building"></i></div>
+                <div class="dropdown-text"><h4>Facility Information</h4><p>Explore the football experience and facility information.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="coaching.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Coaching <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">COACHING PROGRAMS</div>
+              <a href="coaching.html#elite" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-star"></i></div>
+                <div class="dropdown-text"><h4>Elite Coaching</h4><p>Advanced sessions for competitive players.</p></div>
+              </a>
+              <a href="coaching.html#morning" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-sun"></i></div>
+                <div class="dropdown-text"><h4>Morning Coaching</h4><p>Start your day with focused training.</p></div>
+              </a>
+              <a href="coaching.html#afternoon" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="dropdown-text"><h4>Afternoon Coaching</h4><p>Develop skills after school or work.</p></div>
+              </a>
+              <a href="coaching-registration.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="dropdown-text"><h4>Player Registration</h4><p>Explore sessions and register based on capacity.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="tournaments.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Tournaments <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">TOURNAMENTS</div>
+              <a href="tournaments.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-trophy"></i></div>
+                <div class="dropdown-text"><h4>Upcoming Tournaments</h4><p>See what's coming up on the pitch.</p></div>
+              </a>
+              <a href="tournament-details.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="dropdown-text"><h4>Tournament Details</h4><p>Rules, format, and schedules.</p></div>
+              </a>
+              <a href="tournament-register.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-users"></i></div>
+                <div class="dropdown-text"><h4>Register Your Team</h4><p>Sign up your squad for the next event.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="events.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Events <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">EVENTS</div>
+              <a href="events.html#birthday" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-birthday-cake"></i></div>
+                <div class="dropdown-text"><h4>Birthday Celebrations</h4><p>Host a memorable football birthday.</p></div>
+              </a>
+              <a href="events.html#private" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                <div class="dropdown-text"><h4>Private Football Games</h4><p>Book the pitch for your own group.</p></div>
+              </a>
+              <a href="events.html#school" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-school"></i></div>
+                <div class="dropdown-text"><h4>School Activities</h4><p>Organized football sessions for schools.</p></div>
+              </a>
+              <a href="events.html#corporate" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="dropdown-text"><h4>Corporate Team Building</h4><p>Bring your team together on the pitch.</p></div>
+              </a>
+              <a href="event-enquiry.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-envelope"></i></div>
+                <div class="dropdown-text"><h4>Submit Event Enquiry</h4><p>Tell us about your event plans.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="auth-btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+        <button class="auth-btn" id="registerBtn" aria-haspopup="dialog">Register</button>
+        <div class="account-menu-wrapper" id="accountMenuWrapper" style="display: none;">
+          <button class="account-trigger" id="accountTrigger" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar-initials" id="avatarInitials">JD</span>
+            <span class="account-name" id="accountName">John</span>
+            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <div class="account-dropdown" id="accountDropdown" role="menu">
+            <a href="customer/dashboard.html" role="menuitem"><i class="fas fa-th-large"></i> My Account</a>
+            <a href="customer/bookings.html" role="menuitem"><i class="fas fa-calendar-alt"></i> My Bookings</a>
+            <a href="customer/booking-history.html" role="menuitem"><i class="fas fa-history"></i> Booking History</a>
+            <a href="customer/coaching-registrations.html" role="menuitem"><i class="fas fa-chalkboard-teacher"></i> Coaching Registrations</a>
+            <a href="customer/tournament-registrations.html" role="menuitem"><i class="fas fa-trophy"></i> Tournament Registrations</a>
+            <a href="customer/event-enquiries.html" role="menuitem"><i class="fas fa-envelope-open-text"></i> Event Enquiries</a>
+            <div class="divider"></div>
+            <a href="customer/settings.html" role="menuitem"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="#" id="logoutBtn" role="menuitem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <a href="book-to-play.html" class="btn btn-lime">BOOK NOW</a>
+      </div>
+
+      <div class="mobile-header-actions">
+        <a href="book-to-play.html" class="mobile-book-btn"><i class="fas fa-calendar-check"></i> <span>BOOK NOW</span></a>
+        <button class="account-icon-btn" id="mobileAccountBtn" aria-label="My account"><i class="fas fa-user-circle"></i></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Placeholder that reserves space when the header becomes fixed -->
+  <div class="header-placeholder" id="headerPlaceholder" aria-hidden="true"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    </div>
+
+    <ul class="drawer-nav">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="about.html" class="drawer-link">About</a></li>
+      <li>
+        <button class="drawer-link" data-sub="playSub" aria-expanded="false">Play Football <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="playSub">
+          <a href="book-to-play.html">Book a Pitch</a>
+          <a href="about.html#concept">How It Works</a>
+          <a href="price.html">Pricing</a>
+          <a href="about.html">Facility Information</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="coachingSub" aria-expanded="false">Coaching <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="coachingSub">
+          <a href="coaching.html#elite">Elite Coaching</a>
+          <a href="coaching.html#morning">Morning Coaching</a>
+          <a href="coaching.html#afternoon">Afternoon Coaching</a>
+          <a href="coaching-registration.html">Player Registration</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="tournamentsSub" aria-expanded="false">Tournaments <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="tournamentsSub">
+          <a href="tournaments.html">Upcoming Tournaments</a>
+          <a href="tournament-details.html">Tournament Details</a>
+          <a href="tournament-register.html">Register Your Team</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="eventsSub" aria-expanded="false">Events <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="eventsSub">
+          <a href="events.html#birthday">Birthday Celebrations</a>
+          <a href="events.html#private">Private Football Games</a>
+          <a href="events.html#school">School Activities</a>
+          <a href="events.html#corporate">Corporate Team Building</a>
+          <a href="event-enquiry.html">Submit Event Enquiry</a>
+        </div>
+      </li>
+      <li><a href="contact.html" class="drawer-link">Contact</a></li>
+    </ul>
+
+    <div class="drawer-auth" id="drawerAuth">
+      <button class="btn btn-outline-lime" id="drawerLoginBtn">Login</button>
+      <button class="btn btn-lime" id="drawerRegisterBtn">Create Account</button>
+    </div>
+
+    <div class="drawer-auth" id="drawerAccount" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span class="avatar-initials" id="drawerAvatar">JD</span>
+        <span style="color: white; font-weight: 600; font-size: 0.9rem;" id="drawerName">John</span>
+      </div>
+      <a href="customer/dashboard.html" class="btn btn-outline-lime">My Account</a>
+      <a href="customer/bookings.html" class="btn btn-outline-lime">My Bookings</a>
+      <button class="btn btn-outline-lime" id="drawerLogoutBtn">Logout</button>
+    </div>
+
+    <a href="book-to-play.html" class="btn btn-lime drawer-cta">BOOK YOUR GAME</a>
+  </aside>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="authModalClose" aria-label="Close modal"><i class="fas fa-times"></i></button>
+
+      <div id="loginPanel">
+        <h2 id="authModalTitle">WELCOME BACK TO MATCH-BOX</h2>
+        <p class="subtext">Sign in to access your Match-Box experience.</p>
+        <div class="message-area" id="loginMessage"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="error-msg" id="loginEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" id="toggleLoginPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="loginPasswordError">Password is required.</div>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="link-text" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="loginSubmitBtn">LOGIN</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToRegisterBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">CREATE AN ACCOUNT</button>
+          </div>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" class="link-text" id="switchToRegisterLink">Create one</a></p>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">Demo interface. No real authentication is performed.</p>
+      </div>
+
+      <div id="registerPanel" style="display: none;">
+        <h2 id="registerTitle">JOIN THE MATCH-BOX COMMUNITY</h2>
+        <p class="subtext">Create your account and make your next football experience easier.</p>
+        <div class="message-area" id="registerMessage"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="regFullName">Full name</label>
+            <div class="input-wrapper"><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required></div>
+            <div class="error-msg" id="regFullNameError">Full name is required.</div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrapper"><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="regEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="regMobile">Mobile number</label>
+            <div class="input-wrapper"><input type="tel" id="regMobile" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" required></div>
+            <div class="error-msg" id="regMobileError">Please enter a valid mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar" id="strengthBar1"></div>
+              <div class="strength-bar" id="strengthBar2"></div>
+              <div class="strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="strength-text" id="strengthText"></div>
+            <div class="error-msg" id="regPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="regConfirmPassword">Confirm password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="regConfirmPasswordError">Passwords do not match.</div>
+          </div>
+          <div class="checkbox-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <label><input type="checkbox" id="termsCheck" required> I accept the <a href="terms.html" class="link-text">Terms & Conditions</a></label>
+            <label><input type="checkbox" id="privacyCheck" required> I accept the <a href="privacy.html" class="link-text">Privacy Policy</a></label>
+            <div class="error-msg" id="termsError">You must accept the terms and privacy policy.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="registerSubmitBtn">CREATE ACCOUNT</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToLoginBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" class="link-text" id="switchToLoginLink">Sign in</a></p>
+      </div>
+
+      <div id="forgotPanel" style="display: none;">
+        <h2>RESET YOUR PASSWORD</h2>
+        <p class="subtext">Enter your registered email address and we'll send reset instructions if the account exists.</p>
+        <div class="message-area" id="forgotMessage"></div>
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label for="forgotEmail">Registered email address</label>
+            <div class="input-wrapper"><input type="email" id="forgotEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="forgotEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="forgotSubmitBtn">SEND RESET LINK</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromForgot" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">For security, we do not reveal whether an email is registered.</p>
+      </div>
+
+      <div id="resetPanel" style="display: none;">
+        <h2>CREATE NEW PASSWORD</h2>
+        <p class="subtext">Enter your new password below.</p>
+        <div class="message-area" id="resetMessage"></div>
+        <form id="resetForm" novalidate>
+          <div class="form-group">
+            <label for="resetPassword">New password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetPassword" name="newPassword" placeholder="New password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="resetStrength">
+              <div class="strength-bar" id="resetBar1"></div>
+              <div class="strength-bar" id="resetBar2"></div>
+              <div class="strength-bar" id="resetBar3"></div>
+            </div>
+            <div class="strength-text" id="resetStrengthText"></div>
+            <div class="error-msg" id="resetPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="resetConfirmPassword">Confirm new password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetConfirmPassword" name="confirmPassword" placeholder="Confirm new password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="resetConfirmError">Passwords do not match.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="resetSubmitBtn">RESET PASSWORD</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromReset" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main class="mb-events-main" id="mb-events-main">
+
+    <!-- ===== SECTION 01 – HERO ===== -->
+    <!-- UNIQUE IMAGE #1: Dramatic football match action -->
+    <section class="mb-events-hero" id="mb-events-hero" aria-labelledby="mb-events-hero-title">
+      <div class="mb-events-hero__bg">
+        <img 
+          src="https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2070&auto=format&fit=crop" 
+          alt="Dramatic football match action on a pitch" 
+          fetchpriority="high"
+        >
+      </div>
+      <div class="mb-events-hero__overlay"></div>
+      <div class="mb-events-container">
+        <div class="mb-events-hero__content">
+          <div class="mb-events-hero__badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            FOOTBALL. FRIENDS. EXPERIENCES.
+          </div>
+          <h1 id="mb-events-hero-title" class="mb-events-hero__title">
+            MAKE EVERY MOMENT<br>
+            <span>A MATCH TO REMEMBER.</span>
+          </h1>
+          <p class="mb-events-hero__desc">
+            From birthday celebrations and private games to school activities and corporate team experiences, bring your people together at MATCH-BOX.
+          </p>
+          <div class="mb-events-hero__actions">
+            <a href="#mb-events-categories" class="mb-events-btn mb-events-btn--primary">EXPLORE EVENT EXPERIENCES</a>
+            <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--outline">PLAN YOUR EVENT</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 02 – INTRODUCTION ===== -->
+    <!-- UNIQUE IMAGE #2: Team huddle on a football pitch -->
+    <section class="mb-events-section mb-events-section--light" id="mb-events-intro" aria-labelledby="mb-events-intro-title">
+      <div class="mb-events-container">
+        <div class="mb-events-intro">
+          <div class="mb-events-intro__image mb-events-reveal">
+            <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1200&auto=format&fit=crop" alt="Football team huddle on the pitch before a match" loading="lazy">
+          </div>
+          <div class="mb-events-intro__content mb-events-reveal">
+            <span class="mb-events-eyebrow">MORE THAN JUST A MATCH</span>
+            <h2 id="mb-events-intro-title" class="mb-events-h2">BRING PEOPLE TOGETHER. LET THE GAME BEGIN.</h2>
+            <p class="mb-events-text-lg" style="margin-top:1rem;">
+              Some moments are better when shared. Whether you're planning a birthday celebration, organising a private game, bringing students together, or creating a team experience at work, MATCH-BOX gives your group a football-focused way to connect and have fun.
+            </p>
+            <div class="mb-events-intro__concepts">
+              <div class="mb-events-intro__concept">
+                <div class="mb-events-intro__concept-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <div>
+                  <h4>CELEBRATE TOGETHER</h4>
+                  <p>Turn special occasions into memorable football experiences.</p>
+                </div>
+              </div>
+              <div class="mb-events-intro__concept">
+                <div class="mb-events-intro__concept-icon">
+                  <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <div>
+                  <h4>PLAY TOGETHER</h4>
+                  <p>Bring friends, classmates, colleagues, or your group onto the pitch.</p>
+                </div>
+              </div>
+              <div class="mb-events-intro__concept">
+                <div class="mb-events-intro__concept-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="4"/></svg>
+                </div>
+                <div>
+                  <h4>CONNECT THROUGH FOOTBALL</h4>
+                  <p>Enjoy an activity that encourages participation, communication, and teamwork.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 05 – EVENT CATEGORIES ===== -->
+    <section class="mb-events-section mb-events-section--white" id="mb-events-categories" aria-labelledby="mb-events-categories-title">
+      <div class="mb-events-container">
+        <span class="mb-events-eyebrow">EVENT CATEGORIES</span>
+        <h2 id="mb-events-categories-title" class="mb-events-h2">FIND THE PERFECT WAY TO PLAY.</h2>
+        <div class="mb-events-categories">
+
+          <!-- 1. Birthday – UNIQUE IMAGE #3: Football celebration with friends -->
+          <article class="mb-events-category mb-events-reveal">
+            <div class="mb-events-category__media">
+              <img src="https://images.unsplash.com/photo-1511882150382-421056c89033?q=80&w=1000&auto=format&fit=crop" alt="Friends celebrating together at a football birthday party" loading="lazy">
+              <span class="mb-events-category__tag">BIRTHDAY</span>
+            </div>
+            <div class="mb-events-category__body">
+              <h3 class="mb-events-category__title">MAKE YOUR BIRTHDAY A FOOTBALL DAY.</h3>
+              <p class="mb-events-category__desc">
+                Celebrate your special day with friends, football, and a fun group experience at MATCH-BOX.
+              </p>
+              <ul class="mb-events-category__highlights">
+                <li>Football with friends</li>
+                <li>Group playing experience</li>
+                <li>Birthday celebration planning</li>
+                <li>A memorable alternative to a traditional party</li>
+              </ul>
+              <div class="mb-events-category__actions">
+                <button class="mb-events-btn mb-events-btn--primary mb-events-btn--sm" data-event-type="birthday">PLAN A BIRTHDAY EVENT</button>
+                <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--dark mb-events-btn--sm" data-event-type="birthday">EXPLORE DETAILS</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. Private – UNIQUE IMAGE #4: Goalkeeper diving save -->
+          <article class="mb-events-category mb-events-reveal">
+            <div class="mb-events-category__media">
+              <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1000&auto=format&fit=crop" alt="Goalkeeper making a save during a private football game" loading="lazy">
+              <span class="mb-events-category__tag">PRIVATE GAME</span>
+            </div>
+            <div class="mb-events-category__body">
+              <h3 class="mb-events-category__title">YOUR PEOPLE. YOUR GAME. YOUR PITCH.</h3>
+              <p class="mb-events-category__desc">
+                Get your friends or group together and enjoy a private football experience at MATCH-BOX.
+              </p>
+              <ul class="mb-events-category__highlights">
+                <li>Private group games</li>
+                <li>Friendly competitions</li>
+                <li>Team-versus-team experiences</li>
+                <li>Group football sessions</li>
+              </ul>
+              <div class="mb-events-category__actions">
+                <button class="mb-events-btn mb-events-btn--primary mb-events-btn--sm" data-event-type="private">ENQUIRE ABOUT PRIVATE GAMES</button>
+                <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--dark mb-events-btn--sm" data-event-type="private">EXPLORE DETAILS</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. School – UNIQUE IMAGE #5: Young players training -->
+          <article class="mb-events-category mb-events-reveal">
+            <div class="mb-events-category__media">
+              <img src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=1000&auto=format&fit=crop" alt="Young students training together on a football pitch" loading="lazy">
+              <span class="mb-events-category__tag">SCHOOL</span>
+            </div>
+            <div class="mb-events-category__body">
+              <h3 class="mb-events-category__title">BRING STUDENTS CLOSER THROUGH FOOTBALL.</h3>
+              <p class="mb-events-category__desc">
+                Create an engaging football experience for schools, students, and educational groups.
+              </p>
+              <ul class="mb-events-category__highlights">
+                <li>Group football activities</li>
+                <li>Student participation</li>
+                <li>Teamwork and communication</li>
+                <li>Organised group enquiries</li>
+              </ul>
+              <div class="mb-events-category__actions">
+                <button class="mb-events-btn mb-events-btn--primary mb-events-btn--sm" data-event-type="school">PLAN A SCHOOL EVENT</button>
+                <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--dark mb-events-btn--sm" data-event-type="school">EXPLORE DETAILS</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4. Corporate – UNIQUE IMAGE #6: Players shaking hands after match -->
+          <article class="mb-events-category mb-events-reveal">
+            <div class="mb-events-category__media">
+              <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1000&auto=format&fit=crop" alt="Corporate colleagues shaking hands after a football match" loading="lazy">
+              <span class="mb-events-category__tag">CORPORATE</span>
+            </div>
+            <div class="mb-events-category__body">
+              <h3 class="mb-events-category__title">SWITCH FROM MEETINGS TO MATCHES.</h3>
+              <p class="mb-events-category__desc">
+                Give colleagues an opportunity to connect outside their usual workplace environment through football.
+              </p>
+              <ul class="mb-events-category__highlights">
+                <li>Corporate group games</li>
+                <li>Team interaction</li>
+                <li>Friendly football competitions</li>
+                <li>Workplace group experiences</li>
+              </ul>
+              <div class="mb-events-category__actions">
+                <button class="mb-events-btn mb-events-btn--primary mb-events-btn--sm" data-event-type="corporate">PLAN A CORPORATE EVENT</button>
+                <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--dark mb-events-btn--sm" data-event-type="corporate">EXPLORE DETAILS</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 5. Group – UNIQUE IMAGE #7: Aerial view of football pitch -->
+          <article class="mb-events-category mb-events-reveal">
+            <div class="mb-events-category__media">
+              <img src="https://images.unsplash.com/photo-1459865264687-595d652de67e?q=80&w=1000&auto=format&fit=crop" alt="Aerial view of a football pitch ready for a group event" loading="lazy">
+              <span class="mb-events-category__tag">GROUP</span>
+            </div>
+            <div class="mb-events-category__body">
+              <h3 class="mb-events-category__title">ANY GROUP. ONE SHARED GAME.</h3>
+              <p class="mb-events-category__desc">
+                Planning a football activity with friends, a community group, or another gathering? Tell us what you have in mind.
+              </p>
+              <ul class="mb-events-category__highlights">
+                <li>Group football sessions</li>
+                <li>Friendly competitions</li>
+                <li>Custom event enquiries</li>
+                <li>Flexible event discussions</li>
+              </ul>
+              <div class="mb-events-category__actions">
+                <button class="mb-events-btn mb-events-btn--primary mb-events-btn--sm" data-event-type="group">DISCUSS YOUR GROUP EVENT</button>
+                <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--dark mb-events-btn--sm" data-event-type="group">EXPLORE DETAILS</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 06 – WHY HOST ===== -->
+    <section class="mb-events-section mb-events-section--light" id="mb-events-why" aria-labelledby="mb-events-why-title">
+      <div class="mb-events-container">
+        <span class="mb-events-eyebrow">WHY MATCH-BOX</span>
+        <h2 id="mb-events-why-title" class="mb-events-h2">MAKE YOUR NEXT GATHERING MORE ACTIVE.</h2>
+        <div class="mb-events-why-grid">
+          <div class="mb-events-why-item">
+            <div class="mb-events-why-item__icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="4"/></svg>
+            </div>
+            <div>
+              <h3 class="mb-events-why-item__title">FOOTBALL-FOCUSED EXPERIENCES</h3>
+              <p class="mb-events-why-item__desc">Give your group an opportunity to come together through football.</p>
+            </div>
+          </div>
+          <div class="mb-events-why-item">
+            <div class="mb-events-why-item__icon">
+              <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <div>
+              <h3 class="mb-events-why-item__title">SMALL-SIDED FOOTBALL</h3>
+              <p class="mb-events-why-item__desc">Enjoy a 4-a-side football environment designed around active participation.</p>
+            </div>
+          </div>
+          <div class="mb-events-why-item">
+            <div class="mb-events-why-item__icon">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </div>
+            <div>
+              <h3 class="mb-events-why-item__title">DIFFERENT TYPES OF GROUPS</h3>
+              <p class="mb-events-why-item__desc">Explore experiences for friends, families, schools, companies, and other groups.</p>
+            </div>
+          </div>
+          <div class="mb-events-why-item">
+            <div class="mb-events-why-item__icon">
+              <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+            </div>
+            <div>
+              <h3 class="mb-events-why-item__title">A SHARED ACTIVITY</h3>
+              <p class="mb-events-why-item__desc">Football creates opportunities for people to communicate, participate, and connect.</p>
+            </div>
+          </div>
+          <div class="mb-events-why-item">
+            <div class="mb-events-why-item__icon">
+              <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+            </div>
+            <div>
+              <h3 class="mb-events-why-item__title">ENQUIRY-BASED PLANNING</h3>
+              <p class="mb-events-why-item__desc">Discuss your event requirements with MATCH-BOX before confirming arrangements.</p>
+            </div>
+          </div>
+          <div class="mb-events-why-item">
+            <div class="mb-events-why-item__icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div>
+              <h3 class="mb-events-why-item__title">ONE PLACE FOR DIFFERENT OCCASIONS</h3>
+              <p class="mb-events-why-item__desc">Explore birthdays, private games, school events, and corporate experiences through one platform.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 07 – HOW IT WORKS ===== -->
+    <section class="mb-events-section mb-events-section--white" id="mb-events-how" aria-labelledby="mb-events-how-title">
+      <div class="mb-events-container">
+        <span class="mb-events-eyebrow">HOW EVENT BOOKING WORKS</span>
+        <h2 id="mb-events-how-title" class="mb-events-h2">FROM YOUR IDEA TO GAME DAY.</h2>
+        <div class="mb-events-steps">
+          <div class="mb-events-step">
+            <div class="mb-events-step__number">01</div>
+            <div>
+              <h3 class="mb-events-step__title">Choose Your Event</h3>
+              <p class="mb-events-step__desc">Select the event type that best matches your requirements.</p>
+            </div>
+          </div>
+          <div class="mb-events-step">
+            <div class="mb-events-step__number">02</div>
+            <div>
+              <h3 class="mb-events-step__title">Share Your Details</h3>
+              <p class="mb-events-step__desc">Tell us about your group, preferred date, timing, and event requirements.</p>
+            </div>
+          </div>
+          <div class="mb-events-step">
+            <div class="mb-events-step__number">03</div>
+            <div>
+              <h3 class="mb-events-step__title">Discuss Your Event</h3>
+              <p class="mb-events-step__desc">The MATCH-BOX team reviews your enquiry and discusses availability and arrangements.</p>
+            </div>
+          </div>
+          <div class="mb-events-step">
+            <div class="mb-events-step__number">04</div>
+            <div>
+              <h3 class="mb-events-step__title">Confirm Your Event</h3>
+              <p class="mb-events-step__desc">Your event is confirmed only after arrangements have been reviewed and approved by MATCH-BOX.</p>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:0.8rem;color:#8a9a8e;margin-top:2rem;text-align:center;">
+          Submitting an enquiry is not a confirmed reservation.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 08 – ENQUIRY FORM ===== -->
+    <section class="mb-events-section mb-events-section--light" id="mb-events-enquiry" aria-labelledby="mb-events-enquiry-title">
+      <div class="mb-events-container">
+        <span class="mb-events-eyebrow">EVENT ENQUIRY</span>
+        <h2 id="mb-events-enquiry-title" class="mb-events-h2">LET'S PLAN SOMETHING SPECIAL.</h2>
+        <div class="mb-events-form-wrapper">
+          <div class="mb-events-form-info">
+            <h3>Tell us what you're planning.</h3>
+            <p>Share a few details and the MATCH-BOX team can review your event enquiry. We'll get back to you with availability and next steps.</p>
+            <ul class="mb-events-form-info__list">
+              <li>Choose your event type</li>
+              <li>Share preferred date and time</li>
+              <li>Tell us about your group</li>
+              <li>Submit your enquiry for review</li>
+            </ul>
+            <p style="font-size:0.8rem;color:#8a9a8e;margin-top:1.5rem;">
+              All event enquiries are subject to review and availability. Confirmation is provided by MATCH-BOX.
+            </p>
+          </div>
+
+          <div class="mb-events-form">
+            <h3 class="mb-events-form__title">Event Enquiry Form</h3>
+            <p class="mb-events-form__subtitle">Fields marked * are required.</p>
+
+            <form id="mb-events-enquiry-form" novalidate>
+              <div class="mb-events-field">
+                <label for="mb-events-type">Event Type <span class="mb-events-required">*</span></label>
+                <select id="mb-events-type" name="event_type" required>
+                  <option value="">Select an event type</option>
+                  <option value="birthday">Birthday Football Party</option>
+                  <option value="private">Private Football Game</option>
+                  <option value="school">School / Student Event</option>
+                  <option value="corporate">Corporate Football Event</option>
+                  <option value="group">Group Football Experience</option>
+                  <option value="other">Other</option>
+                </select>
+                <span class="mb-events-error-msg" id="mb-events-type-error">Please select an event type.</span>
+              </div>
+
+              <div class="mb-events-field">
+                <label for="mb-events-name">Full Name <span class="mb-events-required">*</span></label>
+                <input type="text" id="mb-events-name" name="customer_name" placeholder="e.g. Arjun Mehta" required autocomplete="name">
+                <span class="mb-events-error-msg" id="mb-events-name-error">Please enter your full name.</span>
+              </div>
+
+              <div class="mb-events-field-row">
+                <div class="mb-events-field">
+                  <label for="mb-events-email">Email Address <span class="mb-events-required">*</span></label>
+                  <input type="email" id="mb-events-email" name="email" placeholder="e.g. arjun@example.com" required autocomplete="email">
+                  <span class="mb-events-error-msg" id="mb-events-email-error">Please enter a valid email.</span>
+                </div>
+                <div class="mb-events-field">
+                  <label for="mb-events-mobile">Mobile Number <span class="mb-events-required">*</span></label>
+                  <input type="tel" id="mb-events-mobile" name="mobile" placeholder="e.g. 98765 43210" required autocomplete="tel">
+                  <span class="mb-events-error-msg" id="mb-events-mobile-error">Please enter a valid 10-digit mobile number.</span>
+                </div>
+              </div>
+
+              <div class="mb-events-field mb-events-conditional" id="mb-events-org-field">
+                <label for="mb-events-org">Organisation / School / Company Name</label>
+                <input type="text" id="mb-events-org" name="organisation_name" placeholder="e.g. Greenfield School / Acme Ltd">
+              </div>
+
+              <div class="mb-events-field">
+                <label for="mb-events-date">Preferred Event Date <span class="mb-events-required">*</span></label>
+                <input type="date" id="mb-events-date" name="event_date" required>
+                <span class="mb-events-error-msg" id="mb-events-date-error">Please choose a valid future date.</span>
+              </div>
+
+              <div class="mb-events-field-row">
+                <div class="mb-events-field">
+                  <label for="mb-events-start">Preferred Start Time <span class="mb-events-required">*</span></label>
+                  <input type="time" id="mb-events-start" name="preferred_start_time" required>
+                  <span class="mb-events-error-msg" id="mb-events-start-error">Please choose a start time.</span>
+                </div>
+                <div class="mb-events-field">
+                  <label for="mb-events-end">Preferred End Time (Optional)</label>
+                  <input type="time" id="mb-events-end" name="preferred_end_time">
+                  <span class="mb-events-error-msg" id="mb-events-end-error">End time must be after start time.</span>
+                </div>
+              </div>
+
+              <div class="mb-events-field">
+                <label for="mb-events-participants">Estimated Number of Participants <span class="mb-events-required">*</span></label>
+                <input type="number" id="mb-events-participants" name="participant_count" placeholder="e.g. 12" min="1" max="200" required>
+                <span class="mb-events-error-msg" id="mb-events-participants-error">Please enter a valid participant count.</span>
+              </div>
+
+              <div class="mb-events-field mb-events-conditional" id="mb-events-birthday-field">
+                <label for="mb-events-birthday-name">Birthday Person's Name (Optional)</label>
+                <input type="text" id="mb-events-birthday-name" name="birthday_name" placeholder="e.g. Riya">
+              </div>
+
+              <div class="mb-events-field">
+                <label for="mb-events-description">Event Description / Special Requirements <span class="mb-events-required">*</span></label>
+                <textarea id="mb-events-description" name="event_description" placeholder="Tell us about your event, your group, and any specific requirements you'd like to discuss…" required></textarea>
+                <span class="mb-events-error-msg" id="mb-events-description-error">Please describe your event.</span>
+              </div>
+
+              <div class="mb-events-field">
+                <label for="mb-events-remarks">Additional Remarks (Optional)</label>
+                <textarea id="mb-events-remarks" name="additional_remarks" placeholder="Any other information you'd like to share…"></textarea>
+              </div>
+
+              <div class="mb-events-checkbox">
+                <input type="checkbox" id="mb-events-consent" name="privacy_consent" required>
+                <label for="mb-events-consent">
+                  I agree to the MATCH-BOX 
+                  <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and consent to being contacted about this enquiry.
+                </label>
+              </div>
+              <span class="mb-events-error-msg" id="mb-events-consent-error" style="margin-top:-0.5rem;margin-bottom:1rem;">Please provide consent to continue.</span>
+
+              <button type="submit" class="mb-events-btn mb-events-btn--primary mb-events-btn--full" id="mb-events-submit">
+                SUBMIT EVENT ENQUIRY
+              </button>
+              <p class="mb-events-form__note">
+                This submits an enquiry only. Your event is not confirmed until MATCH-BOX reviews and approves the arrangements.
+              </p>
+            </form>
+
+            <div class="mb-events-confirm" id="mb-events-confirm" role="status" aria-live="polite">
+              <div class="mb-events-confirm__icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+              <h4 class="mb-events-confirm__title">Enquiry Submitted!</h4>
+              <p class="mb-events-confirm__desc">
+                Thank you. Your event enquiry has been received. The MATCH-BOX team will review your requirements and get back to you about availability and next steps.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 09 – AVAILABILITY INFO ===== -->
+    <section class="mb-events-section mb-events-section--white" id="mb-events-availability" aria-labelledby="mb-events-availability-title">
+      <div class="mb-events-container">
+        <span class="mb-events-eyebrow">AVAILABILITY</span>
+        <h2 id="mb-events-availability-title" class="mb-events-h2">LET'S FIND A TIME FOR YOUR EVENT.</h2>
+        <div class="mb-events-availability">
+          <p class="mb-events-text-lg">
+            Event dates and times are subject to availability and approval. Share your preferred date and time in the enquiry form, and our team will review availability and get back to you.
+          </p>
+          <div class="mb-events-availability__note">
+            <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            <p>
+              All event enquiries are manually reviewed. An enquiry does not automatically reserve the pitch. Only approved and confirmed events are added to the MATCH-BOX schedule.
+            </p>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--dark">SHARE YOUR PREFERRED DATE</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 10 – GALLERY (UNIQUE IMAGES #8–#13) ===== -->
+    <section class="mb-events-section mb-events-section--light" id="mb-events-gallery" aria-labelledby="mb-events-gallery-title">
+      <div class="mb-events-container">
+        <h2 id="mb-events-gallery-title" class="mb-events-h2">GOOD PEOPLE. GREAT GAMES. MEMORABLE MOMENTS.</h2>
+        <div class="mb-events-gallery" id="mb-events-gallery-grid">
+          <!-- #8: Football on grass -->
+          <div class="mb-events-gallery__item" data-src="https://images.unsplash.com/photo-1614632537190-23e4146777db?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="View larger image of a football on the grass">
+            <img src="https://images.unsplash.com/photo-1614632537190-23e4146777db?q=80&w=600&auto=format&fit=crop" alt="Football resting on the grass" loading="lazy">
+          </div>
+          <!-- #9: Player shooting -->
+          <div class="mb-events-gallery__item" data-src="https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="View larger image of a player taking a shot">
+            <img src="https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?q=80&w=600&auto=format&fit=crop" alt="Football player taking a shot at goal" loading="lazy">
+          </div>
+          <!-- #10: Goalkeeper action -->
+          <div class="mb-events-gallery__item" data-src="https://images.unsplash.com/photo-1624880357913-a8539238245b?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="View larger image of goalkeeper in action">
+            <img src="https://images.unsplash.com/photo-1624880357913-a8539238245b?q=80&w=600&auto=format&fit=crop" alt="Goalkeeper in action during a match" loading="lazy">
+          </div>
+          <!-- #11: Football boots and ball -->
+          <div class="mb-events-gallery__item" data-src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="View larger image of football boots and ball">
+            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop" alt="Football boots and ball on the pitch" loading="lazy">
+          </div>
+          <!-- #12: Team celebration -->
+          <div class="mb-events-gallery__item" data-src="https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="View larger image of football team celebrating">
+            <img src="https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=600&auto=format&fit=crop" alt="Football team celebrating a goal" loading="lazy">
+          </div>
+          <!-- #13: Stadium pitch view -->
+          <div class="mb-events-gallery__item" data-src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&w=1200&auto=format&fit=crop" tabindex="0" role="button" aria-label="View larger image of football pitch from above">
+            <img src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&w=600&auto=format&fit=crop" alt="Football pitch viewed from above" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top:1.5rem;font-size:0.85rem;color:#6b7a6e;">Images are illustrative. Actual facility may vary.</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 11 – PLANNING CARDS ===== -->
+    <section class="mb-events-section mb-events-section--white" id="mb-events-planning" aria-labelledby="mb-events-planning-title">
+      <div class="mb-events-container">
+        <span class="mb-events-eyebrow">PLANNING INFORMATION</span>
+        <h2 id="mb-events-planning-title" class="mb-events-h2">EVERY EVENT STARTS WITH AN IDEA.</h2>
+        <div class="mb-events-planning">
+          <div class="mb-events-planning-card mb-events-reveal">
+            <div class="mb-events-planning-card__number">01</div>
+            <h3 class="mb-events-planning-card__title">EVENT TYPE</h3>
+            <p class="mb-events-planning-card__desc">Tell us what kind of football experience you want.</p>
+          </div>
+          <div class="mb-events-planning-card mb-events-reveal">
+            <div class="mb-events-planning-card__number">02</div>
+            <h3 class="mb-events-planning-card__title">GROUP SIZE</h3>
+            <p class="mb-events-planning-card__desc">Share an approximate number of participants.</p>
+          </div>
+          <div class="mb-events-planning-card mb-events-reveal">
+            <div class="mb-events-planning-card__number">03</div>
+            <h3 class="mb-events-planning-card__title">PREFERRED DATE</h3>
+            <p class="mb-events-planning-card__desc">Tell us when you would like to organise your event.</p>
+          </div>
+          <div class="mb-events-planning-card mb-events-reveal">
+            <div class="mb-events-planning-card__number">04</div>
+            <h3 class="mb-events-planning-card__title">SPECIAL REQUIREMENTS</h3>
+            <p class="mb-events-planning-card__desc">Describe any specific arrangements you would like to discuss.</p>
+          </div>
+        </div>
+        <div style="margin-top:2.5rem;text-align:center;">
+          <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--primary">START YOUR EVENT ENQUIRY</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 12 – FAQ ===== -->
+    <section class="mb-events-section mb-events-section--light" id="mb-events-faq" aria-labelledby="mb-events-faq-title">
+      <div class="mb-events-container">
+        <h2 id="mb-events-faq-title" class="mb-events-h2" style="text-align:center;">EVENTS FAQ</h2>
+        <div class="mb-events-faq__list">
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a1" id="mb-events-faq-q1">
+              What types of events can I organise at MATCH-BOX?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a1" role="region" aria-labelledby="mb-events-faq-q1">
+              <p>MATCH-BOX accepts enquiries for birthday football parties, private football games, school and student events, corporate football events, and other group football experiences.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a2" id="mb-events-faq-q2">
+              Can I organise a birthday football party?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a2" role="region" aria-labelledby="mb-events-faq-q2">
+              <p>Yes. You can submit a birthday event enquiry with your preferred date, group size, and requirements. MATCH-BOX will review availability and contact you.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a3" id="mb-events-faq-q3">
+              Can I book the facility for a private football game?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a3" role="region" aria-labelledby="mb-events-faq-q3">
+              <p>Yes. Submit a private game enquiry with your preferred date and group details. Availability is subject to review and confirmation by MATCH-BOX.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a4" id="mb-events-faq-q4">
+              Can schools organise student football events?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a4" role="region" aria-labelledby="mb-events-faq-q4">
+              <p>Yes. MATCH-BOX accepts school and student event enquiries. Share your group details and requirements, and our team will discuss options with you.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a5" id="mb-events-faq-q5">
+              Are corporate football events available?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a5" role="region" aria-labelledby="mb-events-faq-q5">
+              <p>Yes. You can enquire about corporate football events for colleagues and teams. Submit your enquiry to discuss availability and arrangements.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a6" id="mb-events-faq-q6">
+              How do I enquire about an event?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a6" role="region" aria-labelledby="mb-events-faq-q6">
+              <p>Use the event enquiry form on this page. Choose your event type, share your preferred date and group details, and submit the form.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a7" id="mb-events-faq-q7">
+              Does submitting an enquiry confirm my event?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a7" role="region" aria-labelledby="mb-events-faq-q7">
+              <p>No. Submitting an enquiry does not confirm your event. MATCH-BOX reviews each enquiry and will contact you to confirm arrangements and availability.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a8" id="mb-events-faq-q8">
+              How will I know if my preferred date is available?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a8" role="region" aria-labelledby="mb-events-faq-q8">
+              <p>After you submit your enquiry, the MATCH-BOX team will check availability for your preferred date and time and get back to you.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a9" id="mb-events-faq-q9">
+              Can I request a specific event arrangement?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a9" role="region" aria-labelledby="mb-events-faq-q9">
+              <p>Yes. Describe your requirements in the enquiry form. The team will review your request and discuss what can be arranged.</p>
+            </div>
+          </div>
+
+          <div class="mb-events-faq__item" data-open="false">
+            <button class="mb-events-faq__question" aria-expanded="false" aria-controls="mb-events-faq-a10" id="mb-events-faq-q10">
+              What happens after I submit the enquiry form?
+              <span class="mb-events-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-events-faq__answer" id="mb-events-faq-a10" role="region" aria-labelledby="mb-events-faq-a10">
+              <p>MATCH-BOX reviews your enquiry, checks availability, and contacts you to discuss your event. Your event is only confirmed after the team approves the arrangements.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 13 – CONTACT CTA ===== -->
+    <section class="mb-events-section mb-events-section--white" id="mb-events-contact">
+      <div class="mb-events-container">
+        <div class="mb-events-contact">
+          <div>
+            <h3>HAVE AN EVENT IDEA? LET'S TALK.</h3>
+            <p>Whether you're planning a celebration, a group game, or a corporate football experience, share your idea with MATCH-BOX.</p>
+          </div>
+          <div class="mb-events-contact__actions">
+            <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--primary mb-events-btn--sm">PLAN YOUR EVENT</a>
+            <a href="contact.html" class="mb-events-btn mb-events-btn--dark mb-events-btn--sm">ASK A QUESTION</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 14 – FINAL CTA ===== -->
+    <section class="mb-events-section mb-events-section--light" id="mb-events-final-cta">
+      <div class="mb-events-container">
+        <div class="mb-events-cta">
+          <h2 class="mb-events-h2" style="font-size:clamp(1.8rem,5vw,3.2rem);color:var(--mb-e-white);">
+            MAKE YOUR NEXT EVENT A GAME TO REMEMBER.
+          </h2>
+          <p class="mb-events-text-lg" style="color:rgba(255,255,255,0.8);max-width:600px;margin:1rem auto 0;">
+            Bring your people together, choose your football experience, and start planning your MATCH-BOX event.
+          </p>
+          <div class="mb-events-cta__actions">
+            <a href="#mb-events-enquiry" class="mb-events-btn mb-events-btn--primary">START YOUR EVENT ENQUIRY</a>
+            <a href="#mb-events-categories" class="mb-events-btn mb-events-btn--outline">EXPLORE EVENT TYPES</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Lightbox for gallery -->
+  <div class="mb-events-lightbox" id="mb-events-lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="mb-events-lightbox-close" id="mb-events-lightbox-close" aria-label="Close preview">&times;</button>
+    <img id="mb-events-lightbox-img" src="" alt="Enlarged gallery image">
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-cta">
+      <div class="container">
+        <h2>YOUR NEXT GAME IS WAITING.</h2>
+        <p>Bring your friends, make a team, and experience the excitement of 4-a-side football.</p>
+        <div class="footer-cta-btns">
+          <a href="book-to-play.html" class="btn btn-lime">BOOK YOUR GAME</a>
+          <a href="about.html" class="btn btn-dark-outline" style="background: transparent; border-color: var(--white); color: var(--white);">EXPLORE MATCH-BOX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo-area">
+              <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+              <div class="logo-text">
+                <span class="brand-name">MATCH-BOX</span>
+                <span class="tagline">Small Field. Big Fun!</span>
+              </div>
+            </a>
+            <p>Match-Box brings people together through the excitement of small-sided football. Enjoy the game, develop your skills, and create memorable moments.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Match-Box</a></li>
+              <li><a href="book-to-play.html">Book to Play</a></li>
+              <li><a href="coaching.html">Coaching</a></li>
+              <li><a href="tournaments.html">Tournaments</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Play & Participate</h4>
+            <ul>
+              <li><a href="book-to-play.html">Book a Pitch</a></li>
+              <li><a href="coaching-registration.html">Coaching Registration</a></li>
+              <li><a href="tournaments.html">Upcoming Tournaments</a></li>
+              <li><a href="tournament-register.html">Register Your Team</a></li>
+              <li><a href="events.html#birthday">Birthday Events</a></li>
+              <li><a href="events.html#private">Private Events</a></li>
+              <li><a href="contact.html">Ask a Question</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><a href="customer/dashboard.html">My Account</a></li>
+              <li><a href="customer/bookings.html">My Bookings</a></li>
+              <li><a href="customer/booking-history.html">Booking History</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="contact.html">Contact Support</a></li>
+              <li><a href="booking-information.html">Booking Information</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Legal Information</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="refund-policy.html">Cancellation & Refund Policy</a></li>
+              <li><a href="facility-rules.html">Facility Rules & Safety Guidelines</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h4 style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lime-green); margin-bottom: 1.25rem;">Contact</h4>
+            <ul class="footer-contact-info">
+              <li><i class="fas fa-envelope"></i> <span>hello@match-box.example</span></li>
+              <li><i class="fas fa-phone-alt"></i> <span>+91 00000 00000</span></li>
+              <li><i class="fas fa-map-marker-alt"></i> <span>Match-Box Facility, Address Placeholder</span></li>
+              <li><i class="fas fa-clock"></i> <span>Operating hours: 6:00 AM – 12:00 midnight</span></li>
+            </ul>
+          </div>
+          <div class="newsletter">
+            <h4>STAY IN THE GAME.</h4>
+            <p>Get updates about upcoming tournaments, coaching, and Match-Box events.</p>
+            <form class="newsletter-form" id="newsletterForm" novalidate>
+              <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+              <button type="submit" class="btn btn-lime" id="newsletterSubmit">SUBSCRIBE</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg"></div>
+            <p style="font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem;">Demo only. Subscriptions are not stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; <span id="copyrightYear"></span> MATCH-BOX. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const header = document.getElementById('mainHeader');
+      const announceBar = document.getElementById('announceBar');
+      const headerPlaceholder = document.getElementById('headerPlaceholder');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const drawerClose = document.getElementById('drawerClose');
+      const authModalOverlay = document.getElementById('authModalOverlay');
+      const authModalClose = document.getElementById('authModalClose');
+
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const forgotPanel = document.getElementById('forgotPanel');
+      const resetPanel = document.getElementById('resetPanel');
+
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+      const drawerRegisterBtn = document.getElementById('drawerRegisterBtn');
+      const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+      const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+      const switchToLoginBtn = document.getElementById('switchToLoginBtn');
+      const switchToLoginLink = document.getElementById('switchToLoginLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+      const backToLoginFromReset = document.getElementById('backToLoginFromReset');
+
+      const accountMenuWrapper = document.getElementById('accountMenuWrapper');
+      const accountTrigger = document.getElementById('accountTrigger');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const drawerLogoutBtn = document.getElementById('drawerLogoutBtn');
+      const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const resetForm = document.getElementById('resetForm');
+      const newsletterForm = document.getElementById('newsletterForm');
+
+      let isLoggedIn = false;
+
+      /* =========================================================
+         STICKY HEADER LOGIC
+         - At page top: header sits naturally below announce bar
+         - After scrolling past announce bar: header pins to viewport top
+         - Scroll back up: header returns to natural position
+         ========================================================= */
+      const announceHeight = announceBar.offsetHeight;
+      let headerIsFixed = false;
+
+      function updateHeaderState() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > announceHeight) {
+          if (!headerIsFixed) {
+            headerIsFixed = true;
+            header.classList.add('is-fixed');
+            headerPlaceholder.classList.add('active');
+          }
+        } else {
+          if (headerIsFixed) {
+            headerIsFixed = false;
+            header.classList.remove('is-fixed');
+            headerPlaceholder.classList.remove('active');
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+      window.addEventListener('resize', function() {
+        // Recompute announce height on resize
+        // (unlikely to change, but safe)
+        updateHeaderState();
+      });
+      updateHeaderState();
+
+      /* Drawer */
+      function openDrawer() {
+        mobileDrawer.classList.add('open');
+        drawerOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeDrawer() {
+        mobileDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileDrawer.classList.contains('open')) closeDrawer();
+          if (authModalOverlay.classList.contains('active')) closeAuthModal();
+          if (accountMenuWrapper.classList.contains('open')) {
+            accountMenuWrapper.classList.remove('open');
+            accountTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      document.querySelectorAll('.drawer-link[data-sub]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const subId = this.getAttribute('data-sub');
+          const sub = document.getElementById(subId);
+          const isOpen = sub.classList.contains('open');
+          document.querySelectorAll('.drawer-sub').forEach(function(s) { s.classList.remove('open'); });
+          document.querySelectorAll('.drawer-link[data-sub]').forEach(function(b) { b.setAttribute('aria-expanded', 'false'); });
+          if (!isOpen) {
+            sub.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { closeDrawer(); });
+      });
+
+      /* Auth modal */
+      function openAuthModal(panel) {
+        authModalOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        showPanel(panel || 'login');
+      }
+
+      function closeAuthModal() {
+        authModalOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        clearMessages();
+        resetForms();
+      }
+
+      function showPanel(panelName) {
+        loginPanel.style.display = 'none';
+        registerPanel.style.display = 'none';
+        forgotPanel.style.display = 'none';
+        resetPanel.style.display = 'none';
+
+        if (panelName === 'login') loginPanel.style.display = 'block';
+        else if (panelName === 'register') registerPanel.style.display = 'block';
+        else if (panelName === 'forgot') forgotPanel.style.display = 'block';
+        else if (panelName === 'reset') resetPanel.style.display = 'block';
+      }
+
+      function clearMessages() {
+        document.querySelectorAll('.message-area').forEach(function(el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        });
+      }
+
+      function resetForms() {
+        loginForm.reset();
+        registerForm.reset();
+        forgotForm.reset();
+        resetForm.reset();
+        document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('visible'); });
+        document.querySelectorAll('.strength-bar').forEach(function(bar) { bar.className = 'strength-bar'; });
+        document.querySelectorAll('.strength-text').forEach(function(el) { el.textContent = ''; });
+      }
+
+      loginBtn.addEventListener('click', function() { openAuthModal('login'); });
+      registerBtn.addEventListener('click', function() { openAuthModal('register'); });
+      drawerLoginBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('login'); });
+      drawerRegisterBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('register'); });
+      mobileAccountBtn.addEventListener('click', function() {
+        if (isLoggedIn) openDrawer();
+        else openAuthModal('login');
+      });
+
+      switchToRegisterBtn.addEventListener('click', function() { showPanel('register'); });
+      switchToRegisterLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('register'); });
+      switchToLoginBtn.addEventListener('click', function() { showPanel('login'); });
+      switchToLoginLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('login'); });
+      forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('forgot'); });
+      backToLoginFromForgot.addEventListener('click', function() { showPanel('login'); });
+      backToLoginFromReset.addEventListener('click', function() { showPanel('login'); });
+
+      authModalClose.addEventListener('click', closeAuthModal);
+      authModalOverlay.addEventListener('click', function(e) {
+        if (e.target === authModalOverlay) closeAuthModal();
+      });
+
+      /* Password toggles */
+      function setupPasswordToggle(toggleBtnId, inputId) {
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+
+      setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+      setupPasswordToggle('toggleRegPassword', 'regPassword');
+      setupPasswordToggle('toggleRegConfirmPassword', 'regConfirmPassword');
+      setupPasswordToggle('toggleResetPassword', 'resetPassword');
+      setupPasswordToggle('toggleResetConfirmPassword', 'resetConfirmPassword');
+
+      /* Password strength */
+      function evaluatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        return Math.min(score, 3);
+      }
+
+      function updateStrengthBars(password, barIds, textId) {
+        const score = evaluatePasswordStrength(password);
+        const bars = barIds.map(function(id) { return document.getElementById(id); });
+        const textEl = document.getElementById(textId);
+
+        bars.forEach(function(bar, i) {
+          bar.className = 'strength-bar';
+          if (score > i) {
+            if (score === 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('medium');
+            else bar.classList.add('strong');
+          }
+        });
+
+        if (textEl) {
+          if (password.length === 0) textEl.textContent = '';
+          else if (score === 1) textEl.textContent = 'Weak password';
+          else if (score === 2) textEl.textContent = 'Medium strength';
+          else textEl.textContent = 'Strong password';
+        }
+      }
+
+      document.getElementById('regPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['strengthBar1', 'strengthBar2', 'strengthBar3'], 'strengthText');
+      });
+
+      document.getElementById('resetPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['resetBar1', 'resetBar2', 'resetBar3'], 'resetStrengthText');
+      });
+
+      /* Validation helpers */
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function isValidMobile(mobile) {
+        return /^[\+]?[\d\s\-]{10,15}$/.test(mobile);
+      }
+
+      function showError(errorId, show) {
+        const el = document.getElementById(errorId);
+        if (el) el.classList.toggle('visible', show);
+      }
+
+      function showMessage(containerId, text, type) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.className = 'message-area ' + type;
+        el.textContent = text;
+      }
+
+      function clearMessage(containerId) {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        }
+      }
+
+      /* Login */
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('loginMessage');
+        let valid = true;
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        showError('loginEmailError', false);
+        showError('loginPasswordError', false);
+
+        if (!email || !isValidEmail(email)) { showError('loginEmailError', true); valid = false; }
+        if (!password) { showError('loginPasswordError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('loginSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Signing in...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('loginMessage', 'This is a demo interface. Real authentication is handled by the future PHP backend.', 'success');
+        }, 800);
+      });
+
+      /* Register */
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('registerMessage');
+        let valid = true;
+
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const terms = document.getElementById('termsCheck').checked;
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        ['regFullNameError', 'regEmailError', 'regMobileError', 'regPasswordError', 'regConfirmPasswordError', 'termsError'].forEach(function(id) {
+          showError(id, false);
+        });
+
+        if (!fullName || fullName.length < 2) { showError('regFullNameError', true); valid = false; }
+        if (!email || !isValidEmail(email)) { showError('regEmailError', true); valid = false; }
+        if (!mobile || !isValidMobile(mobile)) { showError('regMobileError', true); valid = false; }
+        if (!password || password.length < 8) { showError('regPasswordError', true); valid = false; }
+        if (password !== confirmPassword) { showError('regConfirmPasswordError', true); valid = false; }
+        if (!terms || !privacy) { showError('termsError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('registerSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating account...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('registerMessage', 'This is a demo interface. Registration will be handled by the PHP/MySQL backend.', 'success');
+        }, 1000);
+      });
+
+      /* Forgot */
+      forgotForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('forgotMessage');
+        const email = document.getElementById('forgotEmail').value.trim();
+        showError('forgotEmailError', false);
+        if (!email || !isValidEmail(email)) { showError('forgotEmailError', true); return; }
+
+        const btn = document.getElementById('forgotSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Sending...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('forgotMessage', 'If an account exists with this email, password reset instructions will be sent. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Reset */
+      resetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('resetMessage');
+        let valid = true;
+
+        const password = document.getElementById('resetPassword').value;
+        const confirm = document.getElementById('resetConfirmPassword').value;
+
+        showError('resetPasswordError', false);
+        showError('resetConfirmError', false);
+
+        if (!password || password.length < 8) { showError('resetPasswordError', true); valid = false; }
+        if (password !== confirm) { showError('resetConfirmError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('resetSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Resetting...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('resetMessage', 'Password reset would be processed by the backend. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Newsletter */
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msgEl = document.getElementById('newsletterMsg');
+        msgEl.className = 'newsletter-msg';
+        msgEl.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          msgEl.className = 'newsletter-msg error';
+          msgEl.textContent = 'Please enter a valid email address.';
+          return;
+        }
+
+        const btn = document.getElementById('newsletterSubmit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          msgEl.className = 'newsletter-msg success';
+          msgEl.textContent = 'Thanks! (Demo only – no subscription is stored.)';
+          document.getElementById('newsletterEmail').value = '';
+        }, 700);
+      });
+
+      /* Logout (demo) */
+      function simulateLogout() {
+        isLoggedIn = false;
+        document.querySelectorAll('.auth-btn').forEach(function(b) { b.style.display = ''; });
+        accountMenuWrapper.style.display = 'none';
+        accountMenuWrapper.classList.remove('open');
+        document.getElementById('drawerAuth').style.display = 'flex';
+        document.getElementById('drawerAccount').style.display = 'none';
+        document.getElementById('avatarInitials').textContent = 'JD';
+        document.getElementById('accountName').textContent = 'John';
+        document.getElementById('drawerAvatar').textContent = 'JD';
+        document.getElementById('drawerName').textContent = 'John';
+      }
+
+      accountTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = accountMenuWrapper.classList.toggle('open');
+        accountTrigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!accountMenuWrapper.contains(e.target)) {
+          accountMenuWrapper.classList.remove('open');
+          accountTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        simulateLogout();
+      });
+
+      drawerLogoutBtn.addEventListener('click', function() {
+        simulateLogout();
+        closeDrawer();
+      });
+
+      /* Back to top */
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      }, { passive: true });
+
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Copyright year */
+      document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+      /* Close drawer if resized to desktop */
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth >= 1024) closeDrawer();
+        }, 150);
+      });
+
+      /* Keyboard support for desktop dropdowns */
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        const link = item.querySelector('.nav-link');
+        const panel = item.querySelector('.dropdown-panel');
+        if (!link || !panel) return;
+
+        link.addEventListener('focus', function() {
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.transform = 'translateY(0)';
+          panel.style.pointerEvents = 'auto';
+        });
+
+        item.addEventListener('mouseleave', function() {
+          if (!item.contains(document.activeElement)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+
+        item.addEventListener('focusout', function(e) {
+          if (!item.contains(e.relatedTarget)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+      });
+
+    })();
+  </script>
+
+    <script>
+    (function() {
+      'use strict';
+
+      const eventsMain = document.querySelector('.mb-events-main');
+      if (!eventsMain) return;
+
+      const form = document.getElementById('mb-events-enquiry-form');
+      const typeSelect = document.getElementById('mb-events-type');
+      const nameInput = document.getElementById('mb-events-name');
+      const emailInput = document.getElementById('mb-events-email');
+      const mobileInput = document.getElementById('mb-events-mobile');
+      const orgField = document.getElementById('mb-events-org-field');
+      const orgInput = document.getElementById('mb-events-org');
+      const dateInput = document.getElementById('mb-events-date');
+      const startInput = document.getElementById('mb-events-start');
+      const endInput = document.getElementById('mb-events-end');
+      const participantsInput = document.getElementById('mb-events-participants');
+      const birthdayField = document.getElementById('mb-events-birthday-field');
+      const descriptionInput = document.getElementById('mb-events-description');
+      const consentCheckbox = document.getElementById('mb-events-consent');
+      const submitBtn = document.getElementById('mb-events-submit');
+      const confirmBox = document.getElementById('mb-events-confirm');
+
+      function showError(input, errorEl) {
+        if (input) input.classList.add('mb-events-input-error');
+        if (errorEl) errorEl.classList.add('visible');
+      }
+
+      function clearError(input, errorEl) {
+        if (input) input.classList.remove('mb-events-input-error');
+        if (errorEl) errorEl.classList.remove('visible');
+      }
+
+      function updateConditionalFields() {
+        const type = typeSelect.value;
+        if (type === 'school' || type === 'corporate') {
+          orgField.classList.add('visible');
+        } else {
+          orgField.classList.remove('visible');
+          orgInput.value = '';
+        }
+        if (type === 'birthday') {
+          birthdayField.classList.add('visible');
+        } else {
+          birthdayField.classList.remove('visible');
+        }
+      }
+
+      typeSelect?.addEventListener('change', function() {
+        updateConditionalFields();
+        clearError(typeSelect, document.getElementById('mb-events-type-error'));
+      });
+
+      document.querySelectorAll('[data-event-type]').forEach(el => {
+        el.addEventListener('click', function() {
+          const type = this.getAttribute('data-event-type');
+          if (type && typeSelect) {
+            typeSelect.value = type;
+            updateConditionalFields();
+            clearError(typeSelect, document.getElementById('mb-events-type-error'));
+          }
+        });
+      });
+
+      if (dateInput) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+      }
+
+      nameInput?.addEventListener('input', () => clearError(nameInput, document.getElementById('mb-events-name-error')));
+      emailInput?.addEventListener('input', () => clearError(emailInput, document.getElementById('mb-events-email-error')));
+      mobileInput?.addEventListener('input', () => clearError(mobileInput, document.getElementById('mb-events-mobile-error')));
+      dateInput?.addEventListener('change', () => clearError(dateInput, document.getElementById('mb-events-date-error')));
+      startInput?.addEventListener('change', () => clearError(startInput, document.getElementById('mb-events-start-error')));
+      endInput?.addEventListener('change', () => clearError(endInput, document.getElementById('mb-events-end-error')));
+      participantsInput?.addEventListener('input', () => clearError(participantsInput, document.getElementById('mb-events-participants-error')));
+      descriptionInput?.addEventListener('input', () => clearError(descriptionInput, document.getElementById('mb-events-description-error')));
+      consentCheckbox?.addEventListener('change', () => {
+        if (consentCheckbox.checked) document.getElementById('mb-events-consent-error').classList.remove('visible');
+      });
+
+      function validateForm() {
+        let valid = true;
+
+        if (!typeSelect.value) {
+          showError(typeSelect, document.getElementById('mb-events-type-error'));
+          valid = false;
+        }
+
+        if (nameInput.value.trim().length < 2) {
+          showError(nameInput, document.getElementById('mb-events-name-error'));
+          valid = false;
+        }
+
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(emailInput.value.trim())) {
+          showError(emailInput, document.getElementById('mb-events-email-error'));
+          valid = false;
+        }
+
+        const mobile = mobileInput.value.replace(/[\s\-+]/g, '');
+        const mobileRe = /^(91)?[6-9]\d{9}$/;
+        if (!mobileRe.test(mobile)) {
+          showError(mobileInput, document.getElementById('mb-events-mobile-error'));
+          valid = false;
+        }
+
+        if (!dateInput.value) {
+          showError(dateInput, document.getElementById('mb-events-date-error'));
+          valid = false;
+        } else {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const selected = new Date(dateInput.value + 'T00:00:00');
+          if (isNaN(selected.getTime()) || selected < today) {
+            showError(dateInput, document.getElementById('mb-events-date-error'));
+            valid = false;
+          }
+        }
+
+        if (!startInput.value) {
+          showError(startInput, document.getElementById('mb-events-start-error'));
+          valid = false;
+        }
+
+        if (endInput.value && startInput.value && endInput.value <= startInput.value) {
+          showError(endInput, document.getElementById('mb-events-end-error'));
+          valid = false;
+        }
+
+        const participants = parseInt(participantsInput.value, 10);
+        if (isNaN(participants) || participants < 1) {
+          showError(participantsInput, document.getElementById('mb-events-participants-error'));
+          valid = false;
+        }
+
+        if (descriptionInput.value.trim().length < 10) {
+          showError(descriptionInput, document.getElementById('mb-events-description-error'));
+          valid = false;
+        }
+
+        if (!consentCheckbox.checked) {
+          document.getElementById('mb-events-consent-error').classList.add('visible');
+          valid = false;
+        }
+
+        return valid;
+      }
+
+      form?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'SUBMITTING ENQUIRY…';
+
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'SUBMIT EVENT ENQUIRY';
+          form.style.display = 'none';
+          confirmBox.classList.add('visible');
+          confirmBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 1200);
+      });
+
+      const faqItems = eventsMain.querySelectorAll('.mb-events-faq__item');
+      faqItems.forEach(item => {
+        const button = item.querySelector('.mb-events-faq__question');
+        button.addEventListener('click', function() {
+          const isOpen = item.getAttribute('data-open') === 'true';
+          const newState = !isOpen;
+
+          faqItems.forEach(other => {
+            if (other !== item) {
+              other.setAttribute('data-open', 'false');
+              other.querySelector('.mb-events-faq__question').setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          item.setAttribute('data-open', String(newState));
+          button.setAttribute('aria-expanded', String(newState));
+        });
+      });
+
+      const galleryItems = eventsMain.querySelectorAll('.mb-events-gallery__item');
+      const lightbox = document.getElementById('mb-events-lightbox');
+      const lightboxImg = document.getElementById('mb-events-lightbox-img');
+      const lightboxClose = document.getElementById('mb-events-lightbox-close');
+
+      if (lightbox && lightboxImg && lightboxClose) {
+        function openLightbox(src) {
+          lightboxImg.src = src;
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          lightboxClose.focus();
+        }
+        function closeLightbox() {
+          lightbox.classList.remove('active');
+          lightboxImg.src = '';
+          document.body.style.overflow = '';
+        }
+
+        galleryItems.forEach(item => {
+          const src = item.getAttribute('data-src');
+          item.addEventListener('click', () => openLightbox(src));
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openLightbox(src);
+            }
+          });
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+        });
+      }
+
+      const revealTargets = eventsMain.querySelectorAll('.mb-events-reveal');
+
+      if ('IntersectionObserver' in window && revealTargets.length) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('mb-events-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        revealTargets.forEach(el => observer.observe(el));
+      } else {
+        revealTargets.forEach(el => el.classList.add('mb-events-visible'));
+      }
+
+    })();
+  </script>
+</body>
+</html>

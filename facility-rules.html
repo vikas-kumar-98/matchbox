@@ -1,0 +1,4119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match-Box · Advanced Header, Auth & Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-charcoal: #101511;
+      --almost-black: #080B09;
+      --lime-green: #B7F34A;
+      --football-green: #285C35;
+      --white: #FFFFFF;
+      --light-bg: #F5F7F3;
+      --muted-grey: #777F78;
+      --font-primary: 'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --transition: 0.25s ease;
+      --header-height: 72px;
+      --announce-height: 38px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--light-bg);
+      color: var(--deep-charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========== REUSABLE ========== */
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+
+    .btn-lime {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-lime:hover {
+      background: #a4e03a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(183, 243, 74, 0.25);
+    }
+
+    .btn-outline-lime {
+      background: transparent;
+      color: var(--lime-green);
+      border: 1px solid var(--lime-green);
+    }
+
+    .btn-outline-lime:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-dark-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-dark-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    /* ========== ANNOUNCEMENT BAR — normal flow, at top ========== */
+    .announce-bar {
+      background: var(--football-green);
+      color: var(--white);
+      height: var(--announce-height);
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      width: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .announce-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .announce-bar span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .announce-bar a {
+      color: var(--lime-green);
+      font-weight: 700;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .announce-bar a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    /* ========== MAIN HEADER — in flow normally, becomes fixed on scroll ========== */
+    .main-header {
+      position: relative; /* in normal document flow at page load */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: var(--deep-charcoal);
+      display: flex;
+      align-items: center;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    /* When scrolled past the announcement bar: pin to top of viewport */
+    .main-header.is-fixed {
+      position: fixed;
+      top: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Placeholder that reserves header space when header becomes fixed */
+    .header-placeholder {
+      display: none;
+      height: var(--header-height);
+    }
+
+    .header-placeholder.active {
+      display: block;
+    }
+
+    .main-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* ----- Logo ----- */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--lime-green);
+      border-radius: 50%;
+      color: var(--almost-black);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .logo-text .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime-green);
+    }
+
+    /* ----- Desktop Navigation ----- */
+    .desktop-nav {
+      display: none;
+      height: 100%;
+    }
+
+    .desktop-nav ul {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0 0.9rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--lime-green);
+    }
+
+    .nav-link i {
+      font-size: 0.7rem;
+      transition: transform var(--transition);
+    }
+
+    .nav-item:hover .nav-link i {
+      transform: rotate(180deg);
+    }
+
+    .nav-link.active {
+      color: var(--lime-green);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: var(--lime-green);
+      border-radius: 2px;
+    }
+
+    /* ----- Dropdown Panel ----- */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 280px;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .nav-item:hover .dropdown-panel,
+    .nav-item:focus-within .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 0.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #e9ece9;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      gap: 12px;
+      padding: 0.65rem 1.5rem;
+      transition: background var(--transition);
+    }
+
+    .dropdown-item:hover {
+      background: #f0f5ec;
+    }
+
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--light-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--football-green);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .dropdown-text p {
+      font-size: 0.75rem;
+      color: var(--muted-grey);
+      line-height: 1.3;
+    }
+
+    /* ----- Header Actions (desktop) ----- */
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .auth-btn {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--lime-green);
+    }
+
+    .account-icon-btn {
+      color: var(--white);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+    }
+
+    .account-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .account-menu-wrapper {
+      position: relative;
+    }
+
+    .account-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      background: transparent;
+      padding: 4px 8px 4px 4px;
+      border-radius: 30px;
+      transition: background var(--transition);
+    }
+
+    .account-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .avatar-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .account-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 240px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .account-menu-wrapper.open .account-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .account-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--deep-charcoal);
+      transition: background var(--transition);
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f5ec;
+      color: var(--football-green);
+    }
+
+    .account-dropdown a i {
+      width: 16px;
+      color: var(--muted-grey);
+    }
+
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e9ece9;
+      margin: 0.4rem 1rem;
+    }
+
+    /* ----- Mobile Header Actions ----- */
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .mobile-book-btn {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hamburger {
+      color: var(--white);
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ----- Mobile Drawer ----- */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 88%;
+      max-width: 380px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--deep-charcoal);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem 1.25rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-drawer.open {
+      right: 0;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.75);
+      z-index: 2400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 12px;
+    }
+
+    .drawer-close {
+      color: var(--white);
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .drawer-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .drawer-nav {
+      flex: 1;
+    }
+
+    .drawer-nav > li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      width: 100%;
+      text-align: left;
+      transition: color var(--transition);
+    }
+
+    .drawer-link:hover {
+      color: var(--lime-green);
+    }
+
+    .drawer-link i {
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+
+    .drawer-sub {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 0.5rem;
+    }
+
+    .drawer-sub.open {
+      max-height: 500px;
+    }
+
+    .drawer-sub a {
+      display: block;
+      color: #b0b8b0;
+      font-size: 0.85rem;
+      padding: 0.6rem 0 0.6rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .drawer-sub a:hover {
+      color: var(--lime-green);
+      border-left-color: var(--lime-green);
+    }
+
+    .drawer-cta {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-auth .btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.85);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-grey);
+      font-size: 1.2rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--deep-charcoal);
+    }
+
+    .auth-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.25rem;
+      padding-right: 2rem;
+    }
+
+    .auth-modal .subtext {
+      font-size: 0.85rem;
+      color: var(--muted-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+      border: 1px solid #d4dcd4;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--football-green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 53, 0.15);
+    }
+
+    .input-wrapper input.error {
+      border-color: #d32f2f;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 10px;
+      background: none;
+      color: var(--muted-grey);
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color var(--transition);
+    }
+
+    .input-icon-right:hover {
+      color: var(--deep-charcoal);
+    }
+
+    .error-msg {
+      font-size: 0.7rem;
+      color: #d32f2f;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .checkbox-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--deep-charcoal);
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--football-green);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .link-text {
+      color: var(--football-green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+
+    .link-text:hover {
+      color: var(--lime-green);
+      text-decoration: underline;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-actions .btn {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted-grey);
+      margin-top: 1rem;
+    }
+
+    .auth-switch .link-text {
+      font-size: 0.8rem;
+    }
+
+    .message-area {
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .message-area.error {
+      display: block;
+      background: #fdecea;
+      color: #b71c1c;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .message-area.success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 3px solid #2e7d32;
+    }
+
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .strength-bar.weak { background: #e53935; }
+    .strength-bar.medium { background: #fbc02d; }
+    .strength-bar.strong { background: #43a047; }
+
+    .strength-text {
+      font-size: 0.7rem;
+      color: var(--muted-grey);
+      margin-top: 2px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--almost-black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--deep-charcoal);
+      color: var(--white);
+      padding-top: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .footer-cta {
+      background: var(--football-green);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-cta p {
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .footer-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-main {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-brand .logo-area {
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      max-width: 300px;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime-green);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--transition), padding-left var(--transition);
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .footer-col ul a:hover {
+      color: var(--lime-green);
+      padding-left: 4px;
+    }
+
+    .footer-contact-info li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.8rem;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    .footer-contact-info i {
+      color: var(--lime-green);
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .newsletter {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .newsletter h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .newsletter p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--lime-green);
+    }
+
+    .newsletter-form .btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .newsletter-msg {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .newsletter-msg.error {
+      display: block;
+      color: #ef9a9a;
+    }
+
+    .newsletter-msg.success {
+      display: block;
+      color: var(--lime-green);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--lime-green);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(183, 243, 74, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: #a4e03a;
+      transform: translateY(-3px);
+    }
+
+    /* ========== RESPONSIVE ========== */
+
+    /* Mobile & tablet: up to 1023px */
+    @media (max-width: 1023px) {
+      .desktop-nav { display: none !important; }
+      .header-actions { display: none !important; }
+      .mobile-header-actions { display: flex !important; }
+
+      .main-header .container { padding: 0 16px; gap: 8px; }
+      .logo-text .brand-name { font-size: 1.25rem; }
+      .logo-text .tagline { font-size: 0.5rem; }
+      .logo-icon { width: 32px; height: 32px; font-size: 1rem; }
+      .container { padding: 0 16px; }
+      .announce-bar .container { padding: 0 16px; gap: 6px; }
+      .announce-bar { font-size: 0.65rem; }
+      .announce-bar span { font-size: 0.65rem; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-cta { padding: 2rem 0; }
+      .footer-cta-btns .btn { width: 100%; max-width: 280px; }
+      .footer-cta p { font-size: 0.9rem; padding: 0 8px; }
+      .auth-modal { padding: 1.5rem 1.25rem; }
+      .auth-modal h2 { font-size: 1.5rem; }
+      .newsletter-form .btn { width: 100%; }
+    }
+
+    /* Very small mobile */
+    @media (max-width: 380px) {
+      .mobile-book-btn span { display: none; }
+      .mobile-book-btn { padding: 0.5rem 0.6rem; }
+      .logo-text .brand-name { font-size: 1.1rem; }
+      .main-header .container { padding: 0 10px; }
+    }
+
+    /* Desktop: 1024px and above */
+    @media (min-width: 1024px) {
+      .desktop-nav { display: block !important; }
+      .header-actions { display: flex !important; }
+      .mobile-header-actions { display: none !important; }
+
+      .footer-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;
+        gap: 2rem;
+      }
+      .footer-brand { grid-column: span 1; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .footer-cta-btns { gap: 1rem; }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* Desktop wide */
+    @media (min-width: 1440px) {
+      .container { padding: 0 40px; }
+      .desktop-nav .nav-link { font-size: 0.85rem; padding: 0 0.9rem; }
+      .header-actions { gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /*Facility-rule page goes............*/
+        .mb-facility-rules-main {
+      --mb-fr-charcoal: #101511;
+      --mb-fr-deep: #080B09;
+      --mb-fr-lime: #B7F34A;
+      --mb-fr-forest: #285C35;
+      --mb-fr-white: #FFFFFF;
+      --mb-fr-light: #F5F7F2;
+      --mb-fr-border: #d9e0d9;
+      --mb-fr-muted: #6b7a6e;
+      --mb-fr-error: #c0392b;
+      --mb-fr-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.15);
+      --mb-fr-radius: 1.25rem;
+      --mb-fr-radius-btn: 3rem;
+      --mb-fr-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--mb-fr-white);
+      color: var(--mb-fr-charcoal);
+      font-family: var(--mb-fr-font);
+      line-height: 1.65;
+      overflow-x: clip;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .mb-facility-rules-main *,
+    .mb-facility-rules-main *::before,
+    .mb-facility-rules-main *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mb-facility-rules-container {
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 5vw, 4rem);
+    }
+
+    .mb-facility-rules-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: var(--mb-fr-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      background: transparent;
+      font-family: inherit;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .mb-facility-rules-btn:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 3px; }
+
+    .mb-facility-rules-btn--primary { background: var(--mb-fr-lime); color: var(--mb-fr-deep); border-color: var(--mb-fr-lime); }
+    .mb-facility-rules-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+    .mb-facility-rules-btn--outline { border-color: rgba(255,255,255,0.4); color: var(--mb-fr-white); }
+    .mb-facility-rules-btn--outline:hover { border-color: var(--mb-fr-lime); color: var(--mb-fr-lime); }
+    .mb-facility-rules-btn--ghost { border-color: var(--mb-fr-border); color: var(--mb-fr-charcoal); background: var(--mb-fr-white); }
+    .mb-facility-rules-btn--ghost:hover { border-color: var(--mb-fr-forest); }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .mb-facility-rules-hero {
+      position: relative;
+      background: var(--mb-fr-deep);
+      color: var(--mb-fr-white);
+      padding-block: clamp(3rem, 9vw, 6rem);
+      overflow: hidden;
+      overflow-x: clip;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .mb-facility-rules-hero__bg { position: absolute; inset: 0; z-index: 1; }
+
+    .mb-facility-rules-hero__bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+    }
+
+    .mb-facility-rules-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(8,11,9,0.95) 0%, rgba(8,11,9,0.82) 55%, rgba(8,11,9,0.6) 100%);
+      z-index: 2;
+    }
+
+    .mb-facility-rules-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(183,243,74,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183,243,74,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .mb-facility-rules-hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -100px;
+      width: 320px;
+      height: 320px;
+      border: 2px solid rgba(183,243,74,0.14);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .mb-facility-rules-hero__content {
+      position: relative;
+      z-index: 4;
+      max-width: 820px;
+      width: 100%;
+    }
+
+    .mb-facility-rules-breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-facility-rules-breadcrumb a { color: rgba(255,255,255,0.75); text-decoration: none; font-weight: 600; }
+    .mb-facility-rules-breadcrumb a:hover { color: var(--mb-fr-lime); text-decoration: underline; }
+    .mb-facility-rules-breadcrumb a:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 2px; border-radius: 2px; }
+    .mb-facility-rules-breadcrumb__sep { color: rgba(255,255,255,0.4); }
+
+    .mb-facility-rules-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183,243,74,0.13);
+      border-left: 4px solid var(--mb-fr-lime);
+      padding: 0.45rem 1.1rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-fr-lime);
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .mb-facility-rules-hero__title {
+      font-size: clamp(1.9rem, 6.8vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      word-break: break-word;
+    }
+
+    .mb-facility-rules-hero__title span { color: var(--mb-fr-lime); }
+
+    .mb-facility-rules-hero__desc {
+      font-size: clamp(0.92rem, 3.4vw, 1.1rem);
+      color: rgba(255,255,255,0.87);
+      max-width: 62ch;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-facility-rules-hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-facility-rules-hero__note {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(183,243,74,0.08);
+      border-left: 3px solid var(--mb-fr-lime);
+      border-radius: 0 0.75rem 0.75rem 0;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.8);
+      max-width: 60ch;
+      line-height: 1.5;
+    }
+
+    .mb-facility-rules-hero__note svg { width: 16px; height: 16px; fill: var(--mb-fr-lime); flex-shrink: 0; margin-top: 0.1rem; }
+
+    /* ============================================
+       IMPORTANT NOTICE (4 feature cards)
+       ============================================ */
+    .mb-facility-rules-notice-section {
+      padding-block: clamp(2rem, 5vw, 3.5rem);
+      background: var(--mb-fr-light);
+    }
+
+    .mb-facility-rules-notice__card {
+      background: var(--mb-fr-white);
+      border: 1px solid var(--mb-fr-border);
+      border-left: 5px solid var(--mb-fr-forest);
+      border-radius: var(--mb-fr-radius);
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      box-shadow: var(--mb-fr-shadow-sm);
+      margin-bottom: 1.75rem;
+    }
+
+    .mb-facility-rules-notice__heading {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+      font-weight: 800;
+      color: var(--mb-fr-charcoal);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .mb-facility-rules-notice__heading svg { width: 22px; height: 22px; fill: var(--mb-fr-forest); flex-shrink: 0; }
+
+    .mb-facility-rules-notice__card p {
+      font-size: 0.95rem;
+      color: #3a4a3e;
+      line-height: 1.7;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
+    }
+
+    .mb-facility-rules-feature {
+      background: var(--mb-fr-white);
+      border-radius: var(--mb-fr-radius);
+      padding: 1.35rem 1.15rem;
+      border: 1px solid var(--mb-fr-border);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .mb-facility-rules-feature:hover {
+      transform: translateY(-4px);
+      border-color: var(--mb-fr-forest);
+    }
+
+    .mb-facility-rules-feature__icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 0.7rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .mb-facility-rules-feature__icon svg { width: 20px; height: 20px; fill: var(--mb-fr-forest); }
+
+    .mb-facility-rules-feature__title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--mb-fr-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .mb-facility-rules-feature__desc {
+      font-size: 0.83rem;
+      color: #5a6a5e;
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       MAIN LAYOUT
+       ============================================ */
+    .mb-facility-rules-section {
+      padding-block: clamp(2.5rem, 6vw, 4.5rem);
+      background: var(--mb-fr-white);
+    }
+
+    .mb-facility-rules-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: clamp(1.5rem, 4vw, 4rem);
+      align-items: start;
+      width: 100%;
+    }
+
+    /* ============================================
+       TABLE OF CONTENTS
+       ============================================ */
+    .mb-facility-rules-toc {
+      position: sticky;
+      top: 1.5rem;
+      background: var(--mb-fr-white);
+      border: 1px solid var(--mb-fr-border);
+      border-radius: var(--mb-fr-radius);
+      box-shadow: var(--mb-fr-shadow-sm);
+      padding: 1.5rem 1.25rem;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .mb-facility-rules-toc__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mb-fr-forest);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--mb-fr-border);
+    }
+
+    .mb-facility-rules-toc__toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--mb-fr-border);
+      border-radius: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .mb-facility-rules-toc__toggle:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 2px; }
+
+    .mb-facility-rules-toc__toggle::before,
+    .mb-facility-rules-toc__toggle::after {
+      content: '';
+      position: absolute;
+      background: var(--mb-fr-forest);
+      border-radius: 2px;
+      transition: transform 0.25s ease;
+    }
+
+    .mb-facility-rules-toc__toggle::before { width: 12px; height: 2px; }
+    .mb-facility-rules-toc__toggle::after { width: 2px; height: 12px; }
+    .mb-facility-rules-toc__toggle[aria-expanded="true"]::after { transform: rotate(90deg) scaleY(0); }
+
+    .mb-facility-rules-toc__list { list-style: none; display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .mb-facility-rules-toc__link {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 0.6rem;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: #4a5a4e;
+      text-decoration: none;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .mb-facility-rules-toc__link:hover { background: var(--mb-fr-light); color: var(--mb-fr-charcoal); }
+    .mb-facility-rules-toc__link:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: -2px; }
+
+    .mb-facility-rules-toc__link.mb-facility-rules-toc__link--active {
+      background: rgba(40,92,53,0.07);
+      color: var(--mb-fr-forest);
+      border-left-color: var(--mb-fr-forest);
+      font-weight: 700;
+    }
+
+    .mb-facility-rules-toc__num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--mb-fr-forest);
+      background: var(--mb-fr-light);
+      border-radius: 0.35rem;
+      padding: 0.1rem 0.4rem;
+      flex-shrink: 0;
+      min-width: 1.5rem;
+      text-align: center;
+    }
+
+    .mb-facility-rules-toc__link--active .mb-facility-rules-toc__num { background: var(--mb-fr-forest); color: var(--mb-fr-white); }
+
+    .mb-facility-rules-toc__actions {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--mb-fr-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .mb-facility-rules-toc__actions .mb-facility-rules-btn { width: 100%; font-size: 0.72rem; padding: 0.6rem 1rem; }
+
+    /* ============================================
+       LEGAL CONTENT
+       ============================================ */
+    .mb-facility-rules-content { min-width: 0; }
+
+    .mb-facility-rules-article {
+      scroll-margin-top: 1.5rem;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--mb-fr-border);
+    }
+
+    .mb-facility-rules-article:last-of-type { border-bottom: none; margin-bottom: 0; }
+
+    .mb-facility-rules-article__header { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 1rem; }
+
+    .mb-facility-rules-article__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 0.65rem;
+      background: var(--mb-fr-forest);
+      color: var(--mb-fr-white);
+      font-weight: 800;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .mb-facility-rules-article__title {
+      font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--mb-fr-charcoal);
+    }
+
+    .mb-facility-rules-article p {
+      font-size: 0.95rem;
+      color: #3a4a3e;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-article p:last-child { margin-bottom: 0; }
+
+    .mb-facility-rules-sub {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--mb-fr-charcoal);
+      margin: 1.5rem 0 0.6rem;
+      letter-spacing: 0.01em;
+    }
+
+    .mb-facility-rules-article ul {
+      margin: 0 0 1rem 0;
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-article ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 0.94rem;
+      color: #3a4a3e;
+      line-height: 1.65;
+    }
+
+    .mb-facility-rules-article ul li::before {
+      content: '';
+      position: absolute;
+      left: 0.2rem;
+      top: 0.62rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mb-fr-forest);
+    }
+
+    .mb-facility-rules-article a { color: var(--mb-fr-forest); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .mb-facility-rules-article a:hover { color: var(--mb-fr-deep); }
+    .mb-facility-rules-article a:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 2px; border-radius: 2px; }
+
+    .mb-facility-rules-placeholder {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      background: #fff8e1;
+      border: 1px solid #f0d97a;
+      border-left: 4px solid #e0b83a;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      color: #6b5a1f;
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-placeholder svg { width: 18px; height: 18px; fill: #b8962a; flex-shrink: 0; margin-top: 0.15rem; }
+    .mb-facility-rules-placeholder strong { font-weight: 800; }
+
+    .mb-facility-rules-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      background: var(--mb-fr-light);
+      border-left: 4px solid var(--mb-fr-forest);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.87rem;
+      color: #3a4a3e;
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-note svg { width: 18px; height: 18px; fill: var(--mb-fr-forest); flex-shrink: 0; margin-top: 0.15rem; }
+
+    /* ============================================
+       CONDUCT CARDS
+       ============================================ */
+    .mb-facility-rules-conduct {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-conduct-card {
+      background: var(--mb-fr-light);
+      border-radius: 1rem;
+      padding: 1.2rem;
+      border: 1px solid var(--mb-fr-border);
+      border-top: 3px solid var(--mb-fr-forest);
+    }
+
+    .mb-facility-rules-conduct-card__title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--mb-fr-forest);
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-facility-rules-conduct-card ul {
+      margin: 0;
+      gap: 0.35rem;
+    }
+
+    .mb-facility-rules-conduct-card ul li { font-size: 0.85rem; }
+
+    /* ============================================
+       PROHIBITED CONDUCT PANEL
+       ============================================ */
+    .mb-facility-rules-prohibited {
+      background: #fdecea;
+      border: 1px solid #f5c6c0;
+      border-left: 5px solid var(--mb-fr-error);
+      border-radius: var(--mb-fr-radius);
+      padding: clamp(1.35rem, 4vw, 2rem);
+      margin: 1.25rem 0;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-prohibited__heading {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #a93226;
+      margin-bottom: 1rem;
+    }
+
+    .mb-facility-rules-prohibited__heading svg { width: 20px; height: 20px; fill: var(--mb-fr-error); flex-shrink: 0; }
+
+    .mb-facility-rules-prohibited ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 0;
+    }
+
+    .mb-facility-rules-prohibited ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 0.9rem;
+      color: #7b2d26;
+      line-height: 1.55;
+    }
+
+    .mb-facility-rules-prohibited ul li::before {
+      content: '✕';
+      position: absolute;
+      left: 0.15rem;
+      top: 0.05rem;
+      color: var(--mb-fr-error);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ============================================
+       CTA CARD (inline in coaching/tournament/events)
+       ============================================ */
+    .mb-facility-rules-cta-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: var(--mb-fr-light);
+      border-radius: 1rem;
+      padding: 1.15rem 1.35rem;
+      border: 1px solid var(--mb-fr-border);
+      margin-top: 1.25rem;
+      max-width: 72ch;
+    }
+
+    .mb-facility-rules-cta-card__text {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--mb-fr-charcoal);
+      margin: 0;
+    }
+
+    /* ============================================
+       FAQ ACCORDION
+       ============================================ */
+    .mb-facility-rules-faq { margin-top: 1.25rem; max-width: 72ch; }
+
+    .mb-facility-rules-faq__item {
+      border: 1px solid var(--mb-fr-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      background: var(--mb-fr-white);
+      margin-bottom: 0.6rem;
+      transition: border-color 0.2s;
+    }
+
+    .mb-facility-rules-faq__item[data-open="true"] { border-color: var(--mb-fr-forest); }
+
+    .mb-facility-rules-faq__question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1rem 1.15rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      color: var(--mb-fr-charcoal);
+      font-family: inherit;
+      line-height: 1.45;
+      transition: background 0.2s;
+    }
+
+    .mb-facility-rules-faq__question:hover { background: var(--mb-fr-light); }
+    .mb-facility-rules-faq__question:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: -3px; border-radius: 1rem; }
+
+    .mb-facility-rules-faq__icon { flex-shrink: 0; width: 22px; height: 22px; position: relative; display: flex; align-items: center; justify-content: center; margin-top: 0.1rem; }
+
+    .mb-facility-rules-faq__icon::before,
+    .mb-facility-rules-faq__icon::after {
+      content: '';
+      position: absolute;
+      background: var(--mb-fr-forest);
+      border-radius: 2px;
+      transition: transform 0.25s ease, background 0.2s;
+    }
+
+    .mb-facility-rules-faq__icon::before { width: 13px; height: 2px; }
+    .mb-facility-rules-faq__icon::after { width: 2px; height: 13px; }
+    .mb-facility-rules-faq__item[data-open="true"] .mb-facility-rules-faq__icon::after { transform: rotate(90deg) scaleY(0); }
+    .mb-facility-rules-faq__item[data-open="true"] .mb-facility-rules-faq__icon::before { background: var(--mb-fr-lime); }
+
+    .mb-facility-rules-faq__answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 1.15rem; }
+    .mb-facility-rules-faq__item[data-open="true"] .mb-facility-rules-faq__answer { max-height: 400px; padding: 0 1.15rem 1.15rem; }
+    .mb-facility-rules-faq__answer p { font-size: 0.88rem; color: #4a5a4e; line-height: 1.65; }
+
+    .mb-facility-rules-backtop-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-fr-forest);
+      text-decoration: none;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0.25rem 0;
+    }
+
+    .mb-facility-rules-backtop-inline:hover { color: var(--mb-fr-deep); text-decoration: underline; }
+    .mb-facility-rules-backtop-inline:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 2px; border-radius: 2px; }
+    .mb-facility-rules-backtop-inline svg { width: 13px; height: 13px; fill: currentColor; }
+
+    /* ============================================
+       FINAL CTA
+       ============================================ */
+    .mb-facility-rules-final-cta {
+      position: relative;
+      background: var(--mb-fr-charcoal);
+      color: var(--mb-fr-white);
+      border-radius: var(--mb-fr-radius);
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+      margin-block: clamp(2.5rem, 6vw, 4rem);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .mb-facility-rules-final-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(183,243,74,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183,243,74,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .mb-facility-rules-final-cta::after {
+      content: '';
+      position: absolute;
+      top: -70px;
+      right: -70px;
+      width: 220px;
+      height: 220px;
+      border: 2px solid rgba(183,243,74,0.15);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .mb-facility-rules-final-cta h2 {
+      position: relative;
+      font-size: clamp(1.35rem, 3.5vw, 2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .mb-facility-rules-final-cta p {
+      position: relative;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.65;
+      max-width: 60ch;
+      margin: 0 auto 1.75rem;
+    }
+
+    .mb-facility-rules-final-cta__actions {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* ============================================
+       RELATED POLICY LINKS
+       ============================================ */
+    .mb-facility-rules-related {
+      padding-block: clamp(1.75rem, 5vw, 3rem);
+      background: var(--mb-fr-light);
+      text-align: center;
+    }
+
+    .mb-facility-rules-related__title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--mb-fr-muted);
+      margin-bottom: 1.1rem;
+    }
+
+    .mb-facility-rules-related__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: center;
+    }
+
+    .mb-facility-rules-related__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.5rem 1rem;
+      border-radius: 3rem;
+      border: 1px solid var(--mb-fr-border);
+      background: var(--mb-fr-white);
+      color: var(--mb-fr-charcoal);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+
+    .mb-facility-rules-related__links a:hover { border-color: var(--mb-fr-forest); background: var(--mb-fr-white); color: var(--mb-fr-forest); }
+    .mb-facility-rules-related__links a:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 2px; }
+
+    /* ============================================
+       BACK TO TOP
+       ============================================ */
+    .mb-facility-rules-backtop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 2.9rem;
+      height: 2.9rem;
+      border-radius: 50%;
+      background: var(--mb-fr-forest);
+      color: var(--mb-fr-white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px -6px rgba(0,0,0,0.35);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity 0.25s, visibility 0.25s, transform 0.25s, background 0.2s;
+      z-index: 500;
+    }
+
+    .mb-facility-rules-backtop.mb-facility-rules-backtop--visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .mb-facility-rules-backtop:hover { background: var(--mb-fr-deep); }
+    .mb-facility-rules-backtop:focus-visible { outline: 3px solid var(--mb-fr-lime); outline-offset: 3px; }
+    .mb-facility-rules-backtop svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .mb-facility-rules-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+      .mb-facility-rules-toc { position: static; max-height: none; padding: 1rem 1.1rem; }
+      .mb-facility-rules-toc__toggle { display: flex; }
+      .mb-facility-rules-toc__list,
+      .mb-facility-rules-toc__actions { display: none; }
+      .mb-facility-rules-toc.mb-facility-rules-toc--open .mb-facility-rules-toc__list,
+      .mb-facility-rules-toc.mb-facility-rules-toc--open .mb-facility-rules-toc__actions { display: flex; }
+      .mb-facility-rules-features { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .mb-facility-rules-hero::after { display: none; }
+      .mb-facility-rules-hero { overflow-x: clip; }
+      .mb-facility-rules-hero__content { width: 100%; }
+      .mb-facility-rules-final-cta::after { display: none; }
+      .mb-facility-rules-conduct { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .mb-facility-rules-hero__title { font-size: clamp(1.6rem, 8vw, 2.4rem); }
+      .mb-facility-rules-hero__actions .mb-facility-rules-btn { width: 100%; }
+      .mb-facility-rules-article__header { gap: 0.7rem; }
+      .mb-facility-rules-article__num { width: 2rem; height: 2rem; font-size: 0.78rem; }
+      .mb-facility-rules-features { grid-template-columns: 1fr; }
+      .mb-facility-rules-final-cta__actions .mb-facility-rules-btn { width: 100%; }
+      .mb-facility-rules-cta-card { flex-direction: column; align-items: flex-start; }
+      .mb-facility-rules-cta-card .mb-facility-rules-btn { width: 100%; }
+      .mb-facility-rules-backtop { bottom: 1rem; right: 1rem; width: 2.6rem; height: 2.6rem; }
+      .mb-facility-rules-faq__question { font-size: 0.88rem; padding: 0.95rem 1rem; }
+      .mb-facility-rules-faq__answer { padding: 0 1rem; }
+      .mb-facility-rules-faq__item[data-open="true"] .mb-facility-rules-faq__answer { padding: 0 1rem 1rem; }
+    }
+
+    @media (max-width: 400px) {
+      .mb-facility-rules-hero__title { font-size: clamp(1.5rem, 8.5vw, 2rem); }
+      .mb-facility-rules-hero__desc { font-size: 0.88rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mb-facility-rules-main *,
+      .mb-facility-rules-main *::before,
+      .mb-facility-rules-main *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ============================================
+       PRINT STYLES
+       ============================================ */
+    @media print {
+      .mb-facility-rules-hero { background: #fff !important; color: #000 !important; padding-block: 0.5rem 1rem !important; min-height: auto !important; }
+      .mb-facility-rules-hero__bg,
+      .mb-facility-rules-hero__overlay,
+      .mb-facility-rules-hero::before,
+      .mb-facility-rules-hero::after { display: none !important; }
+      .mb-facility-rules-hero__badge,
+      .mb-facility-rules-hero__actions,
+      .mb-facility-rules-hero__note,
+      .mb-facility-rules-breadcrumb { display: none !important; }
+      .mb-facility-rules-hero__title { color: #000 !important; font-size: 22pt !important; }
+      .mb-facility-rules-hero__title span { color: #000 !important; }
+      .mb-facility-rules-hero__desc { color: #222 !important; font-size: 10pt !important; }
+      .mb-facility-rules-toc,
+      .mb-facility-rules-backtop,
+      .mb-facility-rules-backtop-inline,
+      .mb-facility-rules-notice-section,
+      .mb-facility-rules-final-cta,
+      .mb-facility-rules-related,
+      .mb-facility-rules-toc__toggle { display: none !important; }
+      .mb-facility-rules-layout { display: block !important; }
+      .mb-facility-rules-section { padding-block: 0 !important; }
+      .mb-facility-rules-article { break-inside: avoid-page; page-break-inside: avoid; border-bottom: 1px solid #ccc !important; }
+      .mb-facility-rules-article__num { background: #eee !important; color: #000 !important; border: 1px solid #999 !important; }
+      .mb-facility-rules-article p,
+      .mb-facility-rules-article li,
+      .mb-facility-rules-sub { color: #000 !important; font-size: 10pt !important; }
+      .mb-facility-rules-article a { color: #000 !important; text-decoration: none !important; }
+      .mb-facility-rules-placeholder,
+      .mb-facility-rules-note,
+      .mb-facility-rules-conduct-card { background: #f4f4f4 !important; border-color: #999 !important; color: #222 !important; }
+      .mb-facility-rules-prohibited { background: #f4f4f4 !important; border-color: #999 !important; }
+      .mb-facility-rules-main::before {
+        content: 'MATCH-BOX — Facility Rules';
+        display: block;
+        font-weight: 800;
+        font-size: 12pt;
+        margin-bottom: 0.5rem;
+        color: #000;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR — at top of page, scrolls with the page -->
+  <div class="announce-bar" id="announceBar">
+    <div class="container">
+      <span>READY FOR YOUR NEXT GAME? BOOK YOUR MATCH-BOX SESSION TODAY.</span>
+      <a href="pages/book-to-play.html">BOOK NOW →</a>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER — starts in normal flow, becomes fixed after scrolling past the announcement bar -->
+  <header class="main-header" id="mainHeader">
+    <div class="container">
+      <a href="index.html" class="logo-area" aria-label="Match-Box home">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <ul>
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item">
+            <a href="book-to-play.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Play <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">PLAY AT MATCH-BOX</div>
+              <a href="book-to-play.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="dropdown-text"><h4>Book a Pitch</h4><p>Reserve a one-hour football session with your friends.</p></div>
+              </a>
+              <a href="about.html#concept" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="dropdown-text"><h4>How It Works</h4><p>Discover how 4-a-side football works at Match-Box.</p></div>
+              </a>
+              <a href="price.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-tag"></i></div>
+                <div class="dropdown-text"><h4>Pricing</h4><p>Explore peak and non-peak playing rates.</p></div>
+              </a>
+              <a href="about.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-building"></i></div>
+                <div class="dropdown-text"><h4>Facility Information</h4><p>Explore the football experience and facility information.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="coaching.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Coaching <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">COACHING PROGRAMS</div>
+              <a href="coaching.html#elite" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-star"></i></div>
+                <div class="dropdown-text"><h4>Elite Coaching</h4><p>Advanced sessions for competitive players.</p></div>
+              </a>
+              <a href="coaching.html#morning" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-sun"></i></div>
+                <div class="dropdown-text"><h4>Morning Coaching</h4><p>Start your day with focused training.</p></div>
+              </a>
+              <a href="coaching.html#afternoon" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="dropdown-text"><h4>Afternoon Coaching</h4><p>Develop skills after school or work.</p></div>
+              </a>
+              <a href="coaching-registration.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="dropdown-text"><h4>Player Registration</h4><p>Explore sessions and register based on capacity.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="tournaments.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Tournaments <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">TOURNAMENTS</div>
+              <a href="tournaments.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-trophy"></i></div>
+                <div class="dropdown-text"><h4>Upcoming Tournaments</h4><p>See what's coming up on the pitch.</p></div>
+              </a>
+              <a href="tournament-details.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="dropdown-text"><h4>Tournament Details</h4><p>Rules, format, and schedules.</p></div>
+              </a>
+              <a href="tournament-register.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-users"></i></div>
+                <div class="dropdown-text"><h4>Register Your Team</h4><p>Sign up your squad for the next event.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="events.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Events <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">EVENTS</div>
+              <a href="events.html#birthday" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-birthday-cake"></i></div>
+                <div class="dropdown-text"><h4>Birthday Celebrations</h4><p>Host a memorable football birthday.</p></div>
+              </a>
+              <a href="events.html#private" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                <div class="dropdown-text"><h4>Private Football Games</h4><p>Book the pitch for your own group.</p></div>
+              </a>
+              <a href="events.html#school" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-school"></i></div>
+                <div class="dropdown-text"><h4>School Activities</h4><p>Organized football sessions for schools.</p></div>
+              </a>
+              <a href="events.html#corporate" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="dropdown-text"><h4>Corporate Team Building</h4><p>Bring your team together on the pitch.</p></div>
+              </a>
+              <a href="event-enquiry.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-envelope"></i></div>
+                <div class="dropdown-text"><h4>Submit Event Enquiry</h4><p>Tell us about your event plans.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="auth-btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+        <button class="auth-btn" id="registerBtn" aria-haspopup="dialog">Register</button>
+        <div class="account-menu-wrapper" id="accountMenuWrapper" style="display: none;">
+          <button class="account-trigger" id="accountTrigger" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar-initials" id="avatarInitials">JD</span>
+            <span class="account-name" id="accountName">John</span>
+            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <div class="account-dropdown" id="accountDropdown" role="menu">
+            <a href="customer/dashboard.html" role="menuitem"><i class="fas fa-th-large"></i> My Account</a>
+            <a href="customer/bookings.html" role="menuitem"><i class="fas fa-calendar-alt"></i> My Bookings</a>
+            <a href="customer/booking-history.html" role="menuitem"><i class="fas fa-history"></i> Booking History</a>
+            <a href="customer/coaching-registrations.html" role="menuitem"><i class="fas fa-chalkboard-teacher"></i> Coaching Registrations</a>
+            <a href="customer/tournament-registrations.html" role="menuitem"><i class="fas fa-trophy"></i> Tournament Registrations</a>
+            <a href="customer/event-enquiries.html" role="menuitem"><i class="fas fa-envelope-open-text"></i> Event Enquiries</a>
+            <div class="divider"></div>
+            <a href="customer/settings.html" role="menuitem"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="#" id="logoutBtn" role="menuitem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <a href="book-to-play.html" class="btn btn-lime">BOOK NOW</a>
+      </div>
+
+      <div class="mobile-header-actions">
+        <a href="book-to-play.html" class="mobile-book-btn"><i class="fas fa-calendar-check"></i> <span>BOOK NOW</span></a>
+        <button class="account-icon-btn" id="mobileAccountBtn" aria-label="My account"><i class="fas fa-user-circle"></i></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Placeholder that reserves space when the header becomes fixed -->
+  <div class="header-placeholder" id="headerPlaceholder" aria-hidden="true"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    </div>
+
+    <ul class="drawer-nav">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="about.html" class="drawer-link">About</a></li>
+      <li>
+        <button class="drawer-link" data-sub="playSub" aria-expanded="false">Play Football <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="playSub">
+          <a href="book-to-play.html">Book a Pitch</a>
+          <a href="about.html#concept">How It Works</a>
+          <a href="price.html">Pricing</a>
+          <a href="about.html">Facility Information</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="coachingSub" aria-expanded="false">Coaching <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="coachingSub">
+          <a href="coaching.html#elite">Elite Coaching</a>
+          <a href="coaching.html#morning">Morning Coaching</a>
+          <a href="coaching.html#afternoon">Afternoon Coaching</a>
+          <a href="coaching-registration.html">Player Registration</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="tournamentsSub" aria-expanded="false">Tournaments <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="tournamentsSub">
+          <a href="tournaments.html">Upcoming Tournaments</a>
+          <a href="tournament-details.html">Tournament Details</a>
+          <a href="tournament-register.html">Register Your Team</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="eventsSub" aria-expanded="false">Events <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="eventsSub">
+          <a href="events.html#birthday">Birthday Celebrations</a>
+          <a href="events.html#private">Private Football Games</a>
+          <a href="events.html#school">School Activities</a>
+          <a href="events.html#corporate">Corporate Team Building</a>
+          <a href="event-enquiry.html">Submit Event Enquiry</a>
+        </div>
+      </li>
+      <li><a href="contact.html" class="drawer-link">Contact</a></li>
+    </ul>
+
+    <div class="drawer-auth" id="drawerAuth">
+      <button class="btn btn-outline-lime" id="drawerLoginBtn">Login</button>
+      <button class="btn btn-lime" id="drawerRegisterBtn">Create Account</button>
+    </div>
+
+    <div class="drawer-auth" id="drawerAccount" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span class="avatar-initials" id="drawerAvatar">JD</span>
+        <span style="color: white; font-weight: 600; font-size: 0.9rem;" id="drawerName">John</span>
+      </div>
+      <a href="customer/dashboard.html" class="btn btn-outline-lime">My Account</a>
+      <a href="customer/bookings.html" class="btn btn-outline-lime">My Bookings</a>
+      <button class="btn btn-outline-lime" id="drawerLogoutBtn">Logout</button>
+    </div>
+
+    <a href="book-to-play.html" class="btn btn-lime drawer-cta">BOOK YOUR GAME</a>
+  </aside>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="authModalClose" aria-label="Close modal"><i class="fas fa-times"></i></button>
+
+      <div id="loginPanel">
+        <h2 id="authModalTitle">WELCOME BACK TO MATCH-BOX</h2>
+        <p class="subtext">Sign in to access your Match-Box experience.</p>
+        <div class="message-area" id="loginMessage"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="error-msg" id="loginEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" id="toggleLoginPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="loginPasswordError">Password is required.</div>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="link-text" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="loginSubmitBtn">LOGIN</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToRegisterBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">CREATE AN ACCOUNT</button>
+          </div>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" class="link-text" id="switchToRegisterLink">Create one</a></p>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">Demo interface. No real authentication is performed.</p>
+      </div>
+
+      <div id="registerPanel" style="display: none;">
+        <h2 id="registerTitle">JOIN THE MATCH-BOX COMMUNITY</h2>
+        <p class="subtext">Create your account and make your next football experience easier.</p>
+        <div class="message-area" id="registerMessage"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="regFullName">Full name</label>
+            <div class="input-wrapper"><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required></div>
+            <div class="error-msg" id="regFullNameError">Full name is required.</div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrapper"><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="regEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="regMobile">Mobile number</label>
+            <div class="input-wrapper"><input type="tel" id="regMobile" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" required></div>
+            <div class="error-msg" id="regMobileError">Please enter a valid mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar" id="strengthBar1"></div>
+              <div class="strength-bar" id="strengthBar2"></div>
+              <div class="strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="strength-text" id="strengthText"></div>
+            <div class="error-msg" id="regPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="regConfirmPassword">Confirm password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="regConfirmPasswordError">Passwords do not match.</div>
+          </div>
+          <div class="checkbox-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <label><input type="checkbox" id="termsCheck" required> I accept the <a href="terms.html" class="link-text">Terms & Conditions</a></label>
+            <label><input type="checkbox" id="privacyCheck" required> I accept the <a href="privacy.html" class="link-text">Privacy Policy</a></label>
+            <div class="error-msg" id="termsError">You must accept the terms and privacy policy.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="registerSubmitBtn">CREATE ACCOUNT</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToLoginBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" class="link-text" id="switchToLoginLink">Sign in</a></p>
+      </div>
+
+      <div id="forgotPanel" style="display: none;">
+        <h2>RESET YOUR PASSWORD</h2>
+        <p class="subtext">Enter your registered email address and we'll send reset instructions if the account exists.</p>
+        <div class="message-area" id="forgotMessage"></div>
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label for="forgotEmail">Registered email address</label>
+            <div class="input-wrapper"><input type="email" id="forgotEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="forgotEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="forgotSubmitBtn">SEND RESET LINK</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromForgot" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">For security, we do not reveal whether an email is registered.</p>
+      </div>
+
+      <div id="resetPanel" style="display: none;">
+        <h2>CREATE NEW PASSWORD</h2>
+        <p class="subtext">Enter your new password below.</p>
+        <div class="message-area" id="resetMessage"></div>
+        <form id="resetForm" novalidate>
+          <div class="form-group">
+            <label for="resetPassword">New password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetPassword" name="newPassword" placeholder="New password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="resetStrength">
+              <div class="strength-bar" id="resetBar1"></div>
+              <div class="strength-bar" id="resetBar2"></div>
+              <div class="strength-bar" id="resetBar3"></div>
+            </div>
+            <div class="strength-text" id="resetStrengthText"></div>
+            <div class="error-msg" id="resetPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="resetConfirmPassword">Confirm new password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetConfirmPassword" name="confirmPassword" placeholder="Confirm new password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="resetConfirmError">Passwords do not match.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="resetSubmitBtn">RESET PASSWORD</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromReset" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main class="mb-facility-rules-main" id="mb-facility-rules-main">
+
+    <!-- ===== HERO ===== -->
+    <section class="mb-facility-rules-hero" id="mb-facility-rules-top" aria-labelledby="mb-facility-rules-hero-title">
+      <div class="mb-facility-rules-hero__bg">
+        <img 
+          src="https://images.unsplash.com/photo-1459865264687-595d652de67e?q=80&w=2070&auto=format&fit=crop" 
+          alt="Football pitch with markings at MATCH-BOX facility" 
+          fetchpriority="high"
+        >
+      </div>
+      <div class="mb-facility-rules-hero__overlay"></div>
+      <div class="mb-facility-rules-container">
+        <div class="mb-facility-rules-hero__content">
+          <nav class="mb-facility-rules-breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="mb-facility-rules-breadcrumb__sep" aria-hidden="true">/</span>
+            <span aria-current="page">Facility Rules</span>
+          </nav>
+          <div class="mb-facility-rules-hero__badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            MATCH-BOX FACILITY GUIDELINES
+          </div>
+          <h1 id="mb-facility-rules-hero-title" class="mb-facility-rules-hero__title">
+            PLAY FAIR. PLAY SAFE.<br><span>RESPECT THE GAME.</span>
+          </h1>
+          <p class="mb-facility-rules-hero__desc">
+            A great football experience starts with respect, teamwork and responsible play. Please read our facility rules before entering the pitch and enjoying your game at MATCH-BOX.
+          </p>
+          <div class="mb-facility-rules-hero__actions">
+            <a href="book-to-play.html" class="mb-facility-rules-btn mb-facility-rules-btn--primary">BOOK YOUR FOOTBALL SLOT</a>
+            <a href="#mb-facility-rules-content" class="mb-facility-rules-btn mb-facility-rules-btn--outline">READ THE RULES</a>
+          </div>
+          <div class="mb-facility-rules-hero__note">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <span>Please follow the applicable facility instructions during your visit.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== IMPORTANT NOTICE (4 feature cards) ===== -->
+    <section class="mb-facility-rules-notice-section" aria-labelledby="mb-facility-rules-notice-title">
+      <div class="mb-facility-rules-container">
+        <div class="mb-facility-rules-notice__card">
+          <h2 class="mb-facility-rules-notice__heading" id="mb-facility-rules-notice-title">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v4z"/></svg>
+            A FEW RULES. A BETTER GAME.
+          </h2>
+          <p>These guidelines help maintain a respectful, organised and enjoyable football environment for everyone using MATCH-BOX.</p>
+        </div>
+        <div class="mb-facility-rules-features">
+
+          <div class="mb-facility-rules-feature">
+            <div class="mb-facility-rules-feature__icon">
+              <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <h3 class="mb-facility-rules-feature__title">Respect Everyone</h3>
+            <p class="mb-facility-rules-feature__desc">Treat players, staff and visitors respectfully.</p>
+          </div>
+
+          <div class="mb-facility-rules-feature">
+            <div class="mb-facility-rules-feature__icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <h3 class="mb-facility-rules-feature__title">Play Fair</h3>
+            <p class="mb-facility-rules-feature__desc">Follow fair-play principles and avoid dangerous conduct.</p>
+          </div>
+
+          <div class="mb-facility-rules-feature">
+            <div class="mb-facility-rules-feature__icon">
+              <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            </div>
+            <h3 class="mb-facility-rules-feature__title">Stay Responsible</h3>
+            <p class="mb-facility-rules-feature__desc">Take care of yourself and others.</p>
+          </div>
+
+          <div class="mb-facility-rules-feature">
+            <div class="mb-facility-rules-feature__icon">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </div>
+            <h3 class="mb-facility-rules-feature__title">Protect the Facility</h3>
+            <p class="mb-facility-rules-feature__desc">Use the football facility and its equipment responsibly.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <section class="mb-facility-rules-section" aria-label="Facility rules">
+      <div class="mb-facility-rules-container">
+        <div class="mb-facility-rules-layout">
+
+          <!-- ===== TABLE OF CONTENTS ===== -->
+          <nav class="mb-facility-rules-toc" id="mb-facility-rules-toc" aria-label="Table of contents">
+            <div class="mb-facility-rules-toc__title">
+              <span>Contents</span>
+              <button type="button" class="mb-facility-rules-toc__toggle" id="mb-facility-rules-toc-toggle" aria-expanded="false" aria-controls="mb-facility-rules-toc-list" aria-label="Toggle table of contents"></button>
+            </div>
+            <ul class="mb-facility-rules-toc__list" id="mb-facility-rules-toc-list">
+              <li><a href="#mb-facility-rules-s1" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">01</span> General Facility Rules</a></li>
+              <li><a href="#mb-facility-rules-s2" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">02</span> Booking &amp; Pitch Access</a></li>
+              <li><a href="#mb-facility-rules-s3" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">03</span> Player Conduct &amp; Fair Play</a></li>
+              <li><a href="#mb-facility-rules-s4" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">04</span> Football Safety Guidelines</a></li>
+              <li><a href="#mb-facility-rules-s5" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">05</span> Football Equipment</a></li>
+              <li><a href="#mb-facility-rules-s6" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">06</span> Pitch &amp; Equipment Care</a></li>
+              <li><a href="#mb-facility-rules-s7" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">07</span> Cleanliness &amp; Belongings</a></li>
+              <li><a href="#mb-facility-rules-s8" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">08</span> Respect for Staff &amp; Visitors</a></li>
+              <li><a href="#mb-facility-rules-s9" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">09</span> Children &amp; Young Players</a></li>
+              <li><a href="#mb-facility-rules-s10" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">10</span> Coaching Session Rules</a></li>
+              <li><a href="#mb-facility-rules-s11" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">11</span> Tournament Rules</a></li>
+              <li><a href="#mb-facility-rules-s12" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">12</span> Events &amp; Group Bookings</a></li>
+              <li><a href="#mb-facility-rules-s13" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">13</span> Prohibited Conduct</a></li>
+              <li><a href="#mb-facility-rules-s14" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">14</span> Rule Violations</a></li>
+              <li><a href="#mb-facility-rules-s15" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">15</span> Customer Responsibilities</a></li>
+              <li><a href="#mb-facility-rules-s16" class="mb-facility-rules-toc__link"><span class="mb-facility-rules-toc__num">16</span> Contact Information</a></li>
+            </ul>
+            <div class="mb-facility-rules-toc__actions">
+              <button type="button" class="mb-facility-rules-btn mb-facility-rules-btn--ghost" id="mb-facility-rules-print">PRINT RULES</button>
+              <a href="#mb-facility-rules-top" class="mb-facility-rules-btn mb-facility-rules-btn--ghost">BACK TO TOP</a>
+            </div>
+          </nav>
+
+          <!-- ===== LEGAL CONTENT ===== -->
+          <div class="mb-facility-rules-content" id="mb-facility-rules-content">
+
+            <!-- 1 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s1">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">01</span>
+                <h2 class="mb-facility-rules-article__title">General Facility Rules</h2>
+              </div>
+              <p>These are the basic expectations for everyone using the MATCH-BOX football facility:</p>
+              <ul>
+                <li>Follow the instructions provided by authorised MATCH-BOX staff.</li>
+                <li>Respect other players, visitors and facility personnel.</li>
+                <li>Use the football facility only for its intended football-related activities.</li>
+                <li>Follow the applicable booking, coaching, tournament or event conditions.</li>
+                <li>Do not interfere with another group's confirmed booking.</li>
+                <li>Keep the playing environment respectful and organised.</li>
+                <li>Report any safety concern or damage to facility staff.</li>
+              </ul>
+            </article>
+
+            <!-- 2 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s2">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">02</span>
+                <h2 class="mb-facility-rules-article__title">Booking and Pitch Access Rules</h2>
+              </div>
+              <p>Confirmed booking details:</p>
+              <ul>
+                <li>Operating hours: 6:00 AM to 12:00 midnight.</li>
+                <li>Each booking slot: one hour.</li>
+                <li>Non-peak price: ₹350 per hour.</li>
+                <li>Peak price: ₹500 per hour.</li>
+                <li>Peak periods are configured by the administrator.</li>
+              </ul>
+              <ul>
+                <li>Customers should book through the official booking process.</li>
+                <li>Visitors should check their booking date and time carefully.</li>
+                <li>Customers should use only their confirmed booking period.</li>
+                <li>Customers should respect the end of their booked slot.</li>
+                <li>Customers should not occupy the pitch during another group's booking.</li>
+                <li>Requests to extend a booking depend on actual availability and approval.</li>
+                <li>Booking changes and cancellations are subject to the applicable policy.</li>
+                <li>Only confirmed bookings should be treated as reserved pitch time.</li>
+              </ul>
+              <div class="mb-facility-rules-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Early-entry permissions, grace periods, overtime charges and extra booking fees have not been assumed on this page. These require business approval before being presented as binding rules.</span>
+              </div>
+              <div class="mb-facility-rules-cta-card">
+                <p class="mb-facility-rules-cta-card__text">Ready to book your slot?</p>
+                <a href="book-to-play.html" class="mb-facility-rules-btn mb-facility-rules-btn--primary">BOOK TO PLAY</a>
+              </div>
+            </article>
+
+            <!-- 3 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s3">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">03</span>
+                <h2 class="mb-facility-rules-article__title">Player Conduct and Fair Play</h2>
+              </div>
+              <p>Football is at its best when it is played with respect. All players are expected to:</p>
+              <div class="mb-facility-rules-conduct">
+
+                <div class="mb-facility-rules-conduct-card">
+                  <div class="mb-facility-rules-conduct-card__title">Respect Other Players</div>
+                  <ul>
+                    <li>Treat teammates and opponents respectfully.</li>
+                    <li>Avoid abusive language and personal insults.</li>
+                    <li>Respect different experience and skill levels.</li>
+                  </ul>
+                </div>
+
+                <div class="mb-facility-rules-conduct-card">
+                  <div class="mb-facility-rules-conduct-card__title">Play Fair</div>
+                  <ul>
+                    <li>Compete honestly.</li>
+                    <li>Respect fair-play principles.</li>
+                    <li>Avoid intentional dangerous challenges.</li>
+                    <li>Do not deliberately disrupt another game.</li>
+                  </ul>
+                </div>
+
+                <div class="mb-facility-rules-conduct-card">
+                  <div class="mb-facility-rules-conduct-card__title">Maintain Team Spirit</div>
+                  <ul>
+                    <li>Encourage teammates.</li>
+                    <li>Avoid unnecessary arguments.</li>
+                    <li>Accept disagreements respectfully.</li>
+                    <li>Keep the game enjoyable for everyone.</li>
+                  </ul>
+                </div>
+
+                <div class="mb-facility-rules-conduct-card">
+                  <div class="mb-facility-rules-conduct-card__title">Respect Staff</div>
+                  <ul>
+                    <li>Follow reasonable instructions from authorised staff.</li>
+                    <li>Raise concerns politely.</li>
+                    <li>Do not threaten, intimidate or harass anyone.</li>
+                  </ul>
+                </div>
+
+              </div>
+            </article>
+
+            <!-- 4 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s4">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">04</span>
+                <h2 class="mb-facility-rules-article__title">Football Safety Guidelines</h2>
+              </div>
+              <p>Football involves physical activity, and players should participate responsibly. General guidance includes:</p>
+              <ul>
+                <li>Players should assess whether they are fit to participate.</li>
+                <li>Players should warm up appropriately before playing.</li>
+                <li>Avoid reckless tackles and dangerous physical contact.</li>
+                <li>Stop playing if an injury or safety concern occurs.</li>
+                <li>Inform MATCH-BOX staff about hazards or unsafe conditions.</li>
+                <li>Do not continue playing when doing so could put yourself or others at risk.</li>
+                <li>Follow any safety instructions provided by facility staff.</li>
+              </ul>
+              <div class="mb-facility-rules-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span><strong>Safety message:</strong> Great football is competitive, but it should never come at the expense of another player's safety.</span>
+              </div>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> MATCH-BOX does not claim to provide medical services, medical staff, first-aid equipment, insurance or emergency facilities unless these have been confirmed by the business owner.</span>
+              </div>
+            </article>
+
+            <!-- 5 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s5">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">05</span>
+                <h2 class="mb-facility-rules-article__title">Appropriate Football Equipment</h2>
+              </div>
+              <p>Players should use suitable clothing and football equipment appropriate for the playing environment:</p>
+              <ul>
+                <li>Wear comfortable sports clothing.</li>
+                <li>Use suitable football footwear for the actual playing surface.</li>
+                <li>Ensure footwear is in suitable condition.</li>
+                <li>Avoid accessories that could create unnecessary injury risks.</li>
+                <li>Follow any footwear or equipment instructions officially communicated by MATCH-BOX.</li>
+              </ul>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> A particular turf type, footwear model, boot type or mandatory equipment is not specified here. Changing rooms, lockers, showers and equipment-rental services have not been assumed.</span>
+              </div>
+            </article>
+
+            <!-- 6 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s6">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">06</span>
+                <h2 class="mb-facility-rules-article__title">Pitch and Equipment Care</h2>
+              </div>
+              <p>Protecting the football facility helps keep the playing environment safe and ready for everyone:</p>
+              <ul>
+                <li>Use the pitch and any provided equipment responsibly.</li>
+                <li>Do not intentionally damage goals, nets, markings or other facility property.</li>
+                <li>Do not misuse football equipment.</li>
+                <li>Do not move or alter facility equipment without permission.</li>
+                <li>Report visible damage or safety concerns to staff.</li>
+                <li>Avoid actions that may damage the playing surface.</li>
+              </ul>
+              <div class="mb-facility-rules-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span><strong>Respect the pitch. Protect the game.</strong> Any equipment or amenities not confirmed by MATCH-BOX have not been assumed on this page.</span>
+              </div>
+            </article>
+
+            <!-- 7 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s7">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">07</span>
+                <h2 class="mb-facility-rules-article__title">Cleanliness and Personal Belongings</h2>
+              </div>
+              <ul>
+                <li>Dispose of waste responsibly using the designated arrangements available at the facility.</li>
+                <li>Do not intentionally litter the playing area.</li>
+                <li>Keep personal belongings organised.</li>
+                <li>Do not leave belongings in areas where they may obstruct activity.</li>
+                <li>Take personal belongings when leaving.</li>
+                <li>Inform staff if you find an unattended item.</li>
+              </ul>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Lockers, storage facilities, changing areas and specific waste-management arrangements have not been assumed. For lost property, please contact MATCH-BOX through the official <a href="contact.html">contact page</a>.</span>
+              </div>
+            </article>
+
+            <!-- 8 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s8">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">08</span>
+                <h2 class="mb-facility-rules-article__title">Respect for Staff and Other Visitors</h2>
+              </div>
+              <p>Every player and visitor is expected to contribute to a welcoming football environment:</p>
+              <ul>
+                <li>Respect MATCH-BOX staff and their reasonable instructions.</li>
+                <li>Respect other players' booked time.</li>
+                <li>Avoid harassment, discrimination, threats or intimidation.</li>
+                <li>Do not intentionally disturb another group's game.</li>
+                <li>Resolve disagreements calmly.</li>
+                <li>Report serious conduct or safety concerns to facility management.</li>
+              </ul>
+            </article>
+
+            <!-- 9 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s9">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">09</span>
+                <h2 class="mb-facility-rules-article__title">Children and Young Players</h2>
+              </div>
+              <p>Children and young players should participate in an appropriate and responsible environment:</p>
+              <ul>
+                <li>Registration requirements for coaching must be followed.</li>
+                <li>Parent or guardian information is required for coaching registrations involving players under 18.</li>
+                <li>Parents and guardians should review the applicable registration and participation information.</li>
+                <li>Young players should follow instructions from authorised staff.</li>
+                <li>All participants should treat young players respectfully.</li>
+                <li>Any applicable supervision and consent requirements should be communicated clearly before participation.</li>
+              </ul>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> A minimum age, supervision ratio, mandatory parent attendance rule or child-protection procedure has not been assumed and must be formally approved by MATCH-BOX.</span>
+              </div>
+            </article>
+
+            <!-- 10 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s10">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">10</span>
+                <h2 class="mb-facility-rules-article__title">Football Coaching Session Rules</h2>
+              </div>
+              <p>Confirmed coaching session information:</p>
+              <ul>
+                <li><strong>Morning Session:</strong> 5:00 AM – 6:30 AM, 90 minutes, planned capacity 10 players (8 outfield players and 2 goalkeepers).</li>
+                <li><strong>Afternoon Session:</strong> 3:00 PM – 4:30 PM, 90 minutes, capacity configurable by the administrator.</li>
+              </ul>
+              <p>General coaching guidelines:</p>
+              <ul>
+                <li>Players should attend their registered session.</li>
+                <li>Follow the instructions provided during coaching.</li>
+                <li>Respect coaches, staff and other participants.</li>
+                <li>Participate responsibly in drills and activities.</li>
+                <li>Avoid disrupting the session.</li>
+                <li>Follow the applicable registration and cancellation conditions.</li>
+              </ul>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Coaching fees, coach qualifications, training equipment and session-specific rules have not been assumed and must be published by the business owner before being presented as binding rules.</span>
+              </div>
+              <div class="mb-facility-rules-cta-card">
+                <p class="mb-facility-rules-cta-card__text">Interested in developing your game?</p>
+                <a href="coaching.html" class="mb-facility-rules-btn mb-facility-rules-btn--primary">EXPLORE FOOTBALL COACHING</a>
+              </div>
+            </article>
+
+            <!-- 11 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s11">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">11</span>
+                <h2 class="mb-facility-rules-article__title">Tournament Rules</h2>
+              </div>
+              <p>General expectations for tournament participants:</p>
+              <ul>
+                <li>Teams must follow the published tournament rules.</li>
+                <li>Team registrations must provide accurate information.</li>
+                <li>Captains or designated team representatives should communicate responsibly.</li>
+                <li>Players should respect opponents, staff and tournament officials.</li>
+                <li>Teams must follow their confirmed match schedules and instructions.</li>
+                <li>Unsporting or dangerous conduct may be reviewed by MATCH-BOX management.</li>
+                <li>Any tournament-specific conditions should be reviewed before registration.</li>
+              </ul>
+              <div class="mb-facility-rules-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>MATCH-BOX uses a 4-a-side football format. The total team squad size and substitute rules may vary according to the individual tournament's published conditions.</span>
+              </div>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Match duration, points system, substitution limits, team squad limits, disciplinary penalties, tournament fees, prizes and referee arrangements have not been assumed.</span>
+              </div>
+              <div class="mb-facility-rules-cta-card">
+                <p class="mb-facility-rules-cta-card__text">Looking to compete?</p>
+                <a href="tournaments.html" class="mb-facility-rules-btn mb-facility-rules-btn--primary">EXPLORE TOURNAMENTS</a>
+              </div>
+            </article>
+
+            <!-- 12 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s12">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">12</span>
+                <h2 class="mb-facility-rules-article__title">Events and Group Bookings</h2>
+              </div>
+              <p>Available football event enquiry categories:</p>
+              <ul>
+                <li>Birthday Football Parties.</li>
+                <li>Private Football Games.</li>
+                <li>School &amp; Student Football Events.</li>
+                <li>Corporate Football Events.</li>
+                <li>Group Football Experiences.</li>
+              </ul>
+              <ul>
+                <li>Event enquiries are subject to review.</li>
+                <li>Submitting an enquiry does not automatically confirm an event.</li>
+                <li>Only approved and confirmed events should block the relevant booking calendar slots.</li>
+                <li>Participants should follow the applicable event instructions.</li>
+                <li>Event organisers should communicate relevant group requirements accurately.</li>
+                <li>Event-specific arrangements and conditions should be confirmed with MATCH-BOX.</li>
+              </ul>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Party packages, food services, decorations, catering, event equipment and additional facilities have not been assumed.</span>
+              </div>
+              <div class="mb-facility-rules-cta-card">
+                <p class="mb-facility-rules-cta-card__text">Planning a football event?</p>
+                <a href="events.html" class="mb-facility-rules-btn mb-facility-rules-btn--primary">EXPLORE FOOTBALL EVENTS</a>
+              </div>
+            </article>
+
+            <!-- 13 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s13">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">13</span>
+                <h2 class="mb-facility-rules-article__title">Prohibited Conduct</h2>
+              </div>
+              <p>The following conduct may be prohibited under MATCH-BOX facility rules:</p>
+              <div class="mb-facility-rules-prohibited">
+                <div class="mb-facility-rules-prohibited__heading">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v4z"/></svg>
+                  What is not acceptable at MATCH-BOX
+                </div>
+                <ul>
+                  <li>Fighting or threatening behaviour.</li>
+                  <li>Harassment or discriminatory conduct.</li>
+                  <li>Intentional dangerous play.</li>
+                  <li>Deliberate damage to facility property.</li>
+                  <li>Abusive or intimidating behaviour.</li>
+                  <li>Disrupting another group's confirmed booking.</li>
+                  <li>Ignoring reasonable safety instructions.</li>
+                  <li>Misusing the facility or its equipment.</li>
+                  <li>Any unlawful activity.</li>
+                </ul>
+              </div>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Specific penalties or a particular enforcement procedure have not been assumed and require approval by the business owner.</span>
+              </div>
+            </article>
+
+            <!-- 14 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s14">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">14</span>
+                <h2 class="mb-facility-rules-article__title">Rule Violations and Facility Management</h2>
+              </div>
+              <p>MATCH-BOX management may review reported behaviour or rule violations. Possible responses, subject to the approved facility policy and applicable law, may include:</p>
+              <ul>
+                <li>A verbal reminder.</li>
+                <li>A request to stop unsafe or disruptive behaviour.</li>
+                <li>Review of a reported incident.</li>
+                <li>Further action in accordance with the applicable booking terms and approved facility policy.</li>
+              </ul>
+              <p>Serious safety concerns may require immediate intervention.</p>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Fixed monetary penalties, automatic lifetime bans, suspension periods, automatic forfeiture of bookings, and compensation or refund deductions have not been assumed.</span>
+              </div>
+            </article>
+
+            <!-- 15 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s15">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">15</span>
+                <h2 class="mb-facility-rules-article__title">Customer Responsibilities</h2>
+              </div>
+              <p>Customers and participants should:</p>
+              <ul>
+                <li>Read and follow the applicable facility rules.</li>
+                <li>Provide accurate booking and registration details.</li>
+                <li>Respect their confirmed booking time.</li>
+                <li>Treat players, visitors and staff respectfully.</li>
+                <li>Participate responsibly.</li>
+                <li>Protect facility property.</li>
+                <li>Follow relevant safety instructions.</li>
+                <li>Report hazards, damage or serious concerns.</li>
+                <li>Review applicable booking, cancellation and privacy policies.</li>
+              </ul>
+              <div class="mb-facility-rules-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>These rules should be read together with the website's <a href="terms.html">Terms &amp; Conditions</a>, <a href="privacy.html">Privacy Policy</a>, <a href="refund-policy.html">Refund &amp; Cancellation Policy</a> and <a href="disclaimer.html">Disclaimer</a>.</span>
+              </div>
+            </article>
+
+            <!-- 16 -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-s16">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num">16</span>
+                <h2 class="mb-facility-rules-article__title">Questions and Contact Information</h2>
+              </div>
+              <p>
+                If you have questions about these facility rules or would like to raise a concern, please contact MATCH-BOX through the official contact page.
+              </p>
+              <div class="mb-facility-rules-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span><strong>Business confirmation pending.</strong> Official business email, phone number, and physical address must be supplied and approved by the business before publication. Contact details have not been invented on this page.</span>
+              </div>
+              <p>
+                Please use the official <a href="contact.html">contact page</a> for all facility-related questions.
+              </p>
+            </article>
+
+            <!-- FAQ -->
+            <article class="mb-facility-rules-article" id="mb-facility-rules-faq">
+              <div class="mb-facility-rules-article__header">
+                <span class="mb-facility-rules-article__num" aria-hidden="true">?</span>
+                <h2 class="mb-facility-rules-article__title">Frequently Asked Questions</h2>
+              </div>
+              <div class="mb-facility-rules-faq">
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a1" id="mb-facility-rules-faq-q1">
+                    Do I need to follow MATCH-BOX facility rules?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a1" role="region" aria-labelledby="mb-facility-rules-faq-q1">
+                    <p>Yes. All visitors and participants are expected to follow the applicable facility guidelines and reasonable instructions from authorised staff.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a2" id="mb-facility-rules-faq-q2">
+                    What time can I book the football facility?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a2" role="region" aria-labelledby="mb-facility-rules-faq-q2">
+                    <p>The operating hours are 6:00 AM to 12:00 midnight, subject to actual availability.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a3" id="mb-facility-rules-faq-q3">
+                    How long is a booking slot?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a3" role="region" aria-labelledby="mb-facility-rules-faq-q3">
+                    <p>Each standard booking slot is one hour.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a4" id="mb-facility-rules-faq-q4">
+                    Can I continue playing after my booking ends?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a4" role="region" aria-labelledby="mb-facility-rules-faq-q4">
+                    <p>Any extension depends on availability and approval. Do not assume that additional time is automatically available.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a5" id="mb-facility-rules-faq-q5">
+                    What should I do if I notice a safety issue?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a5" role="region" aria-labelledby="mb-facility-rules-faq-q5">
+                    <p>Stop the activity if necessary and inform MATCH-BOX staff through the available official communication channel.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a6" id="mb-facility-rules-faq-q6">
+                    Are the same rules applicable during tournaments?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a6" role="region" aria-labelledby="mb-facility-rules-faq-q6">
+                    <p>General facility guidelines apply, along with the specific rules published for the relevant tournament.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a7" id="mb-facility-rules-faq-q7">
+                    Do event enquiries automatically reserve the pitch?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a7" role="region" aria-labelledby="mb-facility-rules-faq-q7">
+                    <p>No. Event enquiries require review and approval before an event is confirmed.</p>
+                  </div>
+                </div>
+
+                <div class="mb-facility-rules-faq__item" data-open="false">
+                  <button type="button" class="mb-facility-rules-faq__question" aria-expanded="false" aria-controls="mb-facility-rules-faq-a8" id="mb-facility-rules-faq-q8">
+                    Where can I ask questions about the facility rules?
+                    <span class="mb-facility-rules-faq__icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="mb-facility-rules-faq__answer" id="mb-facility-rules-faq-a8" role="region" aria-labelledby="mb-facility-rules-faq-q8">
+                    <p>Visit the <a href="contact.html">Contact page</a> to submit your enquiry.</p>
+                  </div>
+                </div>
+
+              </div>
+            </article>
+
+            <button type="button" class="mb-facility-rules-backtop-inline" data-backtop>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>
+              Back to top
+            </button>
+
+          </div>
+        </div>
+
+        <!-- ===== FINAL CTA ===== -->
+        <div class="mb-facility-rules-final-cta" id="mb-facility-rules-final-cta">
+          <h2>READY TO PLAY THE MATCH-BOX WAY?</h2>
+          <p>
+            Bring your team, enjoy the game, respect the pitch and make every football session count.
+          </p>
+          <div class="mb-facility-rules-final-cta__actions">
+            <a href="book-to-play.html" class="mb-facility-rules-btn mb-facility-rules-btn--primary">BOOK TO PLAY</a>
+            <a href="contact.html" class="mb-facility-rules-btn mb-facility-rules-btn--outline">CONTACT US</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== RELATED POLICY LINKS ===== -->
+    <section class="mb-facility-rules-related" aria-label="Related policies">
+      <div class="mb-facility-rules-container">
+        <p class="mb-facility-rules-related__title">RELATED POLICIES</p>
+        <div class="mb-facility-rules-related__links">
+          <a href="terms.html">Terms &amp; Conditions</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="refund-policy.html">Refund &amp; Cancellation</a>
+          <a href="disclaimer.html">Disclaimer</a>
+          <a href="faq.html">FAQs</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating back-to-top -->
+  <button type="button" class="mb-facility-rules-backtop" id="mb-facility-rules-backtop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>
+  </button>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-cta">
+      <div class="container">
+        <h2>YOUR NEXT GAME IS WAITING.</h2>
+        <p>Bring your friends, make a team, and experience the excitement of 4-a-side football.</p>
+        <div class="footer-cta-btns">
+          <a href="book-to-play.html" class="btn btn-lime">BOOK YOUR GAME</a>
+          <a href="about.html" class="btn btn-dark-outline" style="background: transparent; border-color: var(--white); color: var(--white);">EXPLORE MATCH-BOX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo-area">
+              <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+              <div class="logo-text">
+                <span class="brand-name">MATCH-BOX</span>
+                <span class="tagline">Small Field. Big Fun!</span>
+              </div>
+            </a>
+            <p>Match-Box brings people together through the excitement of small-sided football. Enjoy the game, develop your skills, and create memorable moments.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Match-Box</a></li>
+              <li><a href="book-to-play.html">Book to Play</a></li>
+              <li><a href="coaching.html">Coaching</a></li>
+              <li><a href="tournaments.html">Tournaments</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Play & Participate</h4>
+            <ul>
+              <li><a href="book-to-play.html">Book a Pitch</a></li>
+              <li><a href="coaching-registration.html">Coaching Registration</a></li>
+              <li><a href="tournaments.html">Upcoming Tournaments</a></li>
+              <li><a href="tournament-register.html">Register Your Team</a></li>
+              <li><a href="events.html#birthday">Birthday Events</a></li>
+              <li><a href="events.html#private">Private Events</a></li>
+              <li><a href="contact.html">Ask a Question</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><a href="customer/dashboard.html">My Account</a></li>
+              <li><a href="customer/bookings.html">My Bookings</a></li>
+              <li><a href="customer/booking-history.html">Booking History</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="contact.html">Contact Support</a></li>
+              <li><a href="booking-information.html">Booking Information</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Legal Information</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="refund-policy.html">Cancellation & Refund Policy</a></li>
+              <li><a href="facility-rules.html">Facility Rules & Safety Guidelines</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h4 style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lime-green); margin-bottom: 1.25rem;">Contact</h4>
+            <ul class="footer-contact-info">
+              <li><i class="fas fa-envelope"></i> <span>hello@match-box.example</span></li>
+              <li><i class="fas fa-phone-alt"></i> <span>+91 00000 00000</span></li>
+              <li><i class="fas fa-map-marker-alt"></i> <span>Match-Box Facility, Address Placeholder</span></li>
+              <li><i class="fas fa-clock"></i> <span>Operating hours: 6:00 AM – 12:00 midnight</span></li>
+            </ul>
+          </div>
+          <div class="newsletter">
+            <h4>STAY IN THE GAME.</h4>
+            <p>Get updates about upcoming tournaments, coaching, and Match-Box events.</p>
+            <form class="newsletter-form" id="newsletterForm" novalidate>
+              <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+              <button type="submit" class="btn btn-lime" id="newsletterSubmit">SUBSCRIBE</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg"></div>
+            <p style="font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem;">Demo only. Subscriptions are not stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; <span id="copyrightYear"></span> MATCH-BOX. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const header = document.getElementById('mainHeader');
+      const announceBar = document.getElementById('announceBar');
+      const headerPlaceholder = document.getElementById('headerPlaceholder');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const drawerClose = document.getElementById('drawerClose');
+      const authModalOverlay = document.getElementById('authModalOverlay');
+      const authModalClose = document.getElementById('authModalClose');
+
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const forgotPanel = document.getElementById('forgotPanel');
+      const resetPanel = document.getElementById('resetPanel');
+
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+      const drawerRegisterBtn = document.getElementById('drawerRegisterBtn');
+      const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+      const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+      const switchToLoginBtn = document.getElementById('switchToLoginBtn');
+      const switchToLoginLink = document.getElementById('switchToLoginLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+      const backToLoginFromReset = document.getElementById('backToLoginFromReset');
+
+      const accountMenuWrapper = document.getElementById('accountMenuWrapper');
+      const accountTrigger = document.getElementById('accountTrigger');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const drawerLogoutBtn = document.getElementById('drawerLogoutBtn');
+      const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const resetForm = document.getElementById('resetForm');
+      const newsletterForm = document.getElementById('newsletterForm');
+
+      let isLoggedIn = false;
+
+      /* =========================================================
+         STICKY HEADER LOGIC
+         - At page top: header sits naturally below announce bar
+         - After scrolling past announce bar: header pins to viewport top
+         - Scroll back up: header returns to natural position
+         ========================================================= */
+      const announceHeight = announceBar.offsetHeight;
+      let headerIsFixed = false;
+
+      function updateHeaderState() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > announceHeight) {
+          if (!headerIsFixed) {
+            headerIsFixed = true;
+            header.classList.add('is-fixed');
+            headerPlaceholder.classList.add('active');
+          }
+        } else {
+          if (headerIsFixed) {
+            headerIsFixed = false;
+            header.classList.remove('is-fixed');
+            headerPlaceholder.classList.remove('active');
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+      window.addEventListener('resize', function() {
+        // Recompute announce height on resize
+        // (unlikely to change, but safe)
+        updateHeaderState();
+      });
+      updateHeaderState();
+
+      /* Drawer */
+      function openDrawer() {
+        mobileDrawer.classList.add('open');
+        drawerOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeDrawer() {
+        mobileDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileDrawer.classList.contains('open')) closeDrawer();
+          if (authModalOverlay.classList.contains('active')) closeAuthModal();
+          if (accountMenuWrapper.classList.contains('open')) {
+            accountMenuWrapper.classList.remove('open');
+            accountTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      document.querySelectorAll('.drawer-link[data-sub]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const subId = this.getAttribute('data-sub');
+          const sub = document.getElementById(subId);
+          const isOpen = sub.classList.contains('open');
+          document.querySelectorAll('.drawer-sub').forEach(function(s) { s.classList.remove('open'); });
+          document.querySelectorAll('.drawer-link[data-sub]').forEach(function(b) { b.setAttribute('aria-expanded', 'false'); });
+          if (!isOpen) {
+            sub.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { closeDrawer(); });
+      });
+
+      /* Auth modal */
+      function openAuthModal(panel) {
+        authModalOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        showPanel(panel || 'login');
+      }
+
+      function closeAuthModal() {
+        authModalOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        clearMessages();
+        resetForms();
+      }
+
+      function showPanel(panelName) {
+        loginPanel.style.display = 'none';
+        registerPanel.style.display = 'none';
+        forgotPanel.style.display = 'none';
+        resetPanel.style.display = 'none';
+
+        if (panelName === 'login') loginPanel.style.display = 'block';
+        else if (panelName === 'register') registerPanel.style.display = 'block';
+        else if (panelName === 'forgot') forgotPanel.style.display = 'block';
+        else if (panelName === 'reset') resetPanel.style.display = 'block';
+      }
+
+      function clearMessages() {
+        document.querySelectorAll('.message-area').forEach(function(el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        });
+      }
+
+      function resetForms() {
+        loginForm.reset();
+        registerForm.reset();
+        forgotForm.reset();
+        resetForm.reset();
+        document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('visible'); });
+        document.querySelectorAll('.strength-bar').forEach(function(bar) { bar.className = 'strength-bar'; });
+        document.querySelectorAll('.strength-text').forEach(function(el) { el.textContent = ''; });
+      }
+
+      loginBtn.addEventListener('click', function() { openAuthModal('login'); });
+      registerBtn.addEventListener('click', function() { openAuthModal('register'); });
+      drawerLoginBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('login'); });
+      drawerRegisterBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('register'); });
+      mobileAccountBtn.addEventListener('click', function() {
+        if (isLoggedIn) openDrawer();
+        else openAuthModal('login');
+      });
+
+      switchToRegisterBtn.addEventListener('click', function() { showPanel('register'); });
+      switchToRegisterLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('register'); });
+      switchToLoginBtn.addEventListener('click', function() { showPanel('login'); });
+      switchToLoginLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('login'); });
+      forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('forgot'); });
+      backToLoginFromForgot.addEventListener('click', function() { showPanel('login'); });
+      backToLoginFromReset.addEventListener('click', function() { showPanel('login'); });
+
+      authModalClose.addEventListener('click', closeAuthModal);
+      authModalOverlay.addEventListener('click', function(e) {
+        if (e.target === authModalOverlay) closeAuthModal();
+      });
+
+      /* Password toggles */
+      function setupPasswordToggle(toggleBtnId, inputId) {
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+
+      setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+      setupPasswordToggle('toggleRegPassword', 'regPassword');
+      setupPasswordToggle('toggleRegConfirmPassword', 'regConfirmPassword');
+      setupPasswordToggle('toggleResetPassword', 'resetPassword');
+      setupPasswordToggle('toggleResetConfirmPassword', 'resetConfirmPassword');
+
+      /* Password strength */
+      function evaluatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        return Math.min(score, 3);
+      }
+
+      function updateStrengthBars(password, barIds, textId) {
+        const score = evaluatePasswordStrength(password);
+        const bars = barIds.map(function(id) { return document.getElementById(id); });
+        const textEl = document.getElementById(textId);
+
+        bars.forEach(function(bar, i) {
+          bar.className = 'strength-bar';
+          if (score > i) {
+            if (score === 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('medium');
+            else bar.classList.add('strong');
+          }
+        });
+
+        if (textEl) {
+          if (password.length === 0) textEl.textContent = '';
+          else if (score === 1) textEl.textContent = 'Weak password';
+          else if (score === 2) textEl.textContent = 'Medium strength';
+          else textEl.textContent = 'Strong password';
+        }
+      }
+
+      document.getElementById('regPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['strengthBar1', 'strengthBar2', 'strengthBar3'], 'strengthText');
+      });
+
+      document.getElementById('resetPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['resetBar1', 'resetBar2', 'resetBar3'], 'resetStrengthText');
+      });
+
+      /* Validation helpers */
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function isValidMobile(mobile) {
+        return /^[\+]?[\d\s\-]{10,15}$/.test(mobile);
+      }
+
+      function showError(errorId, show) {
+        const el = document.getElementById(errorId);
+        if (el) el.classList.toggle('visible', show);
+      }
+
+      function showMessage(containerId, text, type) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.className = 'message-area ' + type;
+        el.textContent = text;
+      }
+
+      function clearMessage(containerId) {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        }
+      }
+
+      /* Login */
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('loginMessage');
+        let valid = true;
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        showError('loginEmailError', false);
+        showError('loginPasswordError', false);
+
+        if (!email || !isValidEmail(email)) { showError('loginEmailError', true); valid = false; }
+        if (!password) { showError('loginPasswordError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('loginSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Signing in...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('loginMessage', 'This is a demo interface. Real authentication is handled by the future PHP backend.', 'success');
+        }, 800);
+      });
+
+      /* Register */
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('registerMessage');
+        let valid = true;
+
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const terms = document.getElementById('termsCheck').checked;
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        ['regFullNameError', 'regEmailError', 'regMobileError', 'regPasswordError', 'regConfirmPasswordError', 'termsError'].forEach(function(id) {
+          showError(id, false);
+        });
+
+        if (!fullName || fullName.length < 2) { showError('regFullNameError', true); valid = false; }
+        if (!email || !isValidEmail(email)) { showError('regEmailError', true); valid = false; }
+        if (!mobile || !isValidMobile(mobile)) { showError('regMobileError', true); valid = false; }
+        if (!password || password.length < 8) { showError('regPasswordError', true); valid = false; }
+        if (password !== confirmPassword) { showError('regConfirmPasswordError', true); valid = false; }
+        if (!terms || !privacy) { showError('termsError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('registerSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating account...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('registerMessage', 'This is a demo interface. Registration will be handled by the PHP/MySQL backend.', 'success');
+        }, 1000);
+      });
+
+      /* Forgot */
+      forgotForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('forgotMessage');
+        const email = document.getElementById('forgotEmail').value.trim();
+        showError('forgotEmailError', false);
+        if (!email || !isValidEmail(email)) { showError('forgotEmailError', true); return; }
+
+        const btn = document.getElementById('forgotSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Sending...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('forgotMessage', 'If an account exists with this email, password reset instructions will be sent. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Reset */
+      resetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('resetMessage');
+        let valid = true;
+
+        const password = document.getElementById('resetPassword').value;
+        const confirm = document.getElementById('resetConfirmPassword').value;
+
+        showError('resetPasswordError', false);
+        showError('resetConfirmError', false);
+
+        if (!password || password.length < 8) { showError('resetPasswordError', true); valid = false; }
+        if (password !== confirm) { showError('resetConfirmError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('resetSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Resetting...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('resetMessage', 'Password reset would be processed by the backend. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Newsletter */
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msgEl = document.getElementById('newsletterMsg');
+        msgEl.className = 'newsletter-msg';
+        msgEl.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          msgEl.className = 'newsletter-msg error';
+          msgEl.textContent = 'Please enter a valid email address.';
+          return;
+        }
+
+        const btn = document.getElementById('newsletterSubmit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          msgEl.className = 'newsletter-msg success';
+          msgEl.textContent = 'Thanks! (Demo only – no subscription is stored.)';
+          document.getElementById('newsletterEmail').value = '';
+        }, 700);
+      });
+
+      /* Logout (demo) */
+      function simulateLogout() {
+        isLoggedIn = false;
+        document.querySelectorAll('.auth-btn').forEach(function(b) { b.style.display = ''; });
+        accountMenuWrapper.style.display = 'none';
+        accountMenuWrapper.classList.remove('open');
+        document.getElementById('drawerAuth').style.display = 'flex';
+        document.getElementById('drawerAccount').style.display = 'none';
+        document.getElementById('avatarInitials').textContent = 'JD';
+        document.getElementById('accountName').textContent = 'John';
+        document.getElementById('drawerAvatar').textContent = 'JD';
+        document.getElementById('drawerName').textContent = 'John';
+      }
+
+      accountTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = accountMenuWrapper.classList.toggle('open');
+        accountTrigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!accountMenuWrapper.contains(e.target)) {
+          accountMenuWrapper.classList.remove('open');
+          accountTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        simulateLogout();
+      });
+
+      drawerLogoutBtn.addEventListener('click', function() {
+        simulateLogout();
+        closeDrawer();
+      });
+
+      /* Back to top */
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      }, { passive: true });
+
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Copyright year */
+      document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+      /* Close drawer if resized to desktop */
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth >= 1024) closeDrawer();
+        }, 150);
+      });
+
+      /* Keyboard support for desktop dropdowns */
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        const link = item.querySelector('.nav-link');
+        const panel = item.querySelector('.dropdown-panel');
+        if (!link || !panel) return;
+
+        link.addEventListener('focus', function() {
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.transform = 'translateY(0)';
+          panel.style.pointerEvents = 'auto';
+        });
+
+        item.addEventListener('mouseleave', function() {
+          if (!item.contains(document.activeElement)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+
+        item.addEventListener('focusout', function(e) {
+          if (!item.contains(e.relatedTarget)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+      });
+
+    })();
+  </script>
+
+    <script>
+    (function() {
+      'use strict';
+
+      const main = document.querySelector('.mb-facility-rules-main');
+      if (!main) return;
+
+      /* ============================================
+         MOBILE TOC TOGGLE
+         ============================================ */
+      const toc = document.getElementById('mb-facility-rules-toc');
+      const tocToggle = document.getElementById('mb-facility-rules-toc-toggle');
+
+      tocToggle?.addEventListener('click', function() {
+        const isOpen = toc.classList.toggle('mb-facility-rules-toc--open');
+        tocToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      main.querySelectorAll('.mb-facility-rules-toc__link').forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 1024) {
+            toc.classList.remove('mb-facility-rules-toc--open');
+            tocToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+
+      /* ============================================
+         ACTIVE SECTION HIGHLIGHTING
+         ============================================ */
+      const tocLinks = main.querySelectorAll('.mb-facility-rules-toc__link');
+      const articles = main.querySelectorAll('.mb-facility-rules-article');
+      const linkMap = {};
+
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          linkMap[href.slice(1)] = link;
+        }
+      });
+
+      function setActiveSection(id) {
+        tocLinks.forEach(l => l.classList.remove('mb-facility-rules-toc__link--active'));
+        const active = linkMap[id];
+        if (active) active.classList.add('mb-facility-rules-toc__link--active');
+      }
+
+      if ('IntersectionObserver' in window && articles.length) {
+        const observer = new IntersectionObserver(entries => {
+          const visible = entries.filter(e => e.isIntersecting);
+          if (visible.length) {
+            visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+            setActiveSection(visible[0].target.id);
+          }
+        }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+
+        articles.forEach(article => observer.observe(article));
+      }
+
+      /* ============================================
+         FAQ ACCORDION
+         ============================================ */
+      const faqItems = main.querySelectorAll('.mb-facility-rules-faq__item');
+      faqItems.forEach(item => {
+        const btn = item.querySelector('.mb-facility-rules-faq__question');
+        btn.addEventListener('click', function() {
+          const isOpen = item.getAttribute('data-open') === 'true';
+          faqItems.forEach(o => {
+            if (o !== item) {
+              o.setAttribute('data-open', 'false');
+              o.querySelector('.mb-facility-rules-faq__question').setAttribute('aria-expanded', 'false');
+            }
+          });
+          item.setAttribute('data-open', String(!isOpen));
+          btn.setAttribute('aria-expanded', String(!isOpen));
+        });
+      });
+
+      /* ============================================
+         BACK TO TOP
+         ============================================ */
+      const backtop = document.getElementById('mb-facility-rules-backtop');
+
+      function toggleBacktop() {
+        if (window.scrollY > 600) {
+          backtop.classList.add('mb-facility-rules-backtop--visible');
+        } else {
+          backtop.classList.remove('mb-facility-rules-backtop--visible');
+        }
+      }
+
+      window.addEventListener('scroll', toggleBacktop, { passive: true });
+      toggleBacktop();
+
+      backtop?.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      main.querySelectorAll('[data-backtop]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      /* ============================================
+         PRINT
+         ============================================ */
+      function printRules() {
+        window.print();
+      }
+
+      document.getElementById('mb-facility-rules-print')?.addEventListener('click', printRules);
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="mb-tournament-details-page-title">Tournament Details | MATCH-BOX Football Tournament</title>
+  <meta id="mb-tournament-details-meta-desc" name="description" content="Explore football tournaments at MATCH-BOX. View tournament information, registration details, fixtures, rules, and results.">
+  <link id="mb-tournament-details-canonical" rel="canonical" href="https://match-box.example.com/tournament-details.html">
+  <meta id="mb-tournament-details-og-title" property="og:title" content="Tournament Details | MATCH-BOX Football Tournament">
+  <meta id="mb-tournament-details-og-desc" property="og:description" content="Explore football tournaments at MATCH-BOX. View tournament information, registration details, fixtures, rules, and results.">
+  <meta id="mb-tournament-details-og-img" property="og:image" content="">
+  <meta property="og:type" content="website">
+  <style>
+    /* ============================================
+       TOURNAMENT DETAILS PAGE – SCOPED STYLES
+       Prefix: mb-tournament-details-
+       ============================================ */
+
+    .mb-tournament-details-main {
+      --mb-td-charcoal: #101511;
+      --mb-td-deep: #080B09;
+      --mb-td-lime: #B7F34A;
+      --mb-td-forest: #285C35;
+      --mb-td-white: #FFFFFF;
+      --mb-td-light: #F5F7F2;
+      --mb-td-border: #d9e0d9;
+      --mb-td-muted: #6b7a6e;
+      --mb-td-error: #c0392b;
+      --mb-td-warn: #e0b83a;
+      --mb-td-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.15);
+      --mb-td-shadow-lg: 0 20px 40px -12px rgba(0,0,0,0.25);
+      --mb-td-radius: 1.25rem;
+      --mb-td-radius-btn: 3rem;
+      --mb-td-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--mb-td-white);
+      color: var(--mb-td-charcoal);
+      font-family: var(--mb-td-font);
+      line-height: 1.65;
+      overflow-x: clip;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .mb-tournament-details-main *,
+    .mb-tournament-details-main *::before,
+    .mb-tournament-details-main *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mb-tournament-details-container {
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 5vw, 4rem);
+    }
+
+    .mb-tournament-details-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+      padding: 0.8rem 1.7rem;
+      border-radius: var(--mb-td-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+      background: transparent;
+      font-family: inherit;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .mb-tournament-details-btn:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 3px; }
+    .mb-tournament-details-btn--primary { background: var(--mb-td-lime); color: var(--mb-td-deep); border-color: var(--mb-td-lime); }
+    .mb-tournament-details-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+    .mb-tournament-details-btn--outline { border-color: rgba(255,255,255,0.4); color: var(--mb-td-white); }
+    .mb-tournament-details-btn--outline:hover { border-color: var(--mb-td-lime); color: var(--mb-td-lime); }
+    .mb-tournament-details-btn--dark { background: var(--mb-td-charcoal); color: var(--mb-td-white); border-color: var(--mb-td-charcoal); }
+    .mb-tournament-details-btn--dark:hover { background: #1f2a21; border-color: #1f2a21; }
+    .mb-tournament-details-btn--ghost { border-color: var(--mb-td-border); color: var(--mb-td-charcoal); background: var(--mb-td-white); }
+    .mb-tournament-details-btn--ghost:hover { border-color: var(--mb-td-forest); }
+    .mb-tournament-details-btn--full { width: 100%; }
+    .mb-tournament-details-btn[disabled],
+    .mb-tournament-details-btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; pointer-events: none; transform: none; }
+
+    .mb-tournament-details-hidden { display: none !important; }
+
+    /* BREADCRUMB */
+    .mb-tournament-details-breadcrumb-bar {
+      background: var(--mb-td-white);
+      border-bottom: 1px solid var(--mb-td-border);
+      padding-block: 0.85rem;
+    }
+
+    .mb-tournament-details-breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--mb-td-muted);
+    }
+
+    .mb-tournament-details-breadcrumb a { color: var(--mb-td-forest); text-decoration: none; font-weight: 600; }
+    .mb-tournament-details-breadcrumb a:hover { text-decoration: underline; }
+    .mb-tournament-details-breadcrumb a:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 2px; border-radius: 2px; }
+    .mb-tournament-details-breadcrumb__sep { color: #b0b8b1; }
+
+    /* HERO */
+    .mb-tournament-details-hero {
+      position: relative;
+      background: var(--mb-td-deep);
+      color: var(--mb-td-white);
+      padding-block: clamp(2.5rem, 7vw, 5rem);
+      overflow: hidden;
+      overflow-x: clip;
+      width: 100%;
+      max-width: 100%;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .mb-tournament-details-hero__bg { position: absolute; inset: 0; z-index: 1; background: var(--mb-td-deep); }
+    .mb-tournament-details-hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+
+    .mb-tournament-details-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(8,11,9,0.95) 0%, rgba(8,11,9,0.84) 55%, rgba(8,11,9,0.62) 100%);
+      z-index: 2;
+    }
+
+    .mb-tournament-details-hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -100px;
+      width: 320px;
+      height: 320px;
+      border: 2px solid rgba(183,243,74,0.14);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .mb-tournament-details-hero__inner { position: relative; z-index: 4; max-width: 900px; width: 100%; }
+
+    .mb-tournament-details-hero__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183,243,74,0.13);
+      border-left: 4px solid var(--mb-td-lime);
+      padding: 0.45rem 1.1rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-td-lime);
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-tournament-details-hero__title {
+      font-size: clamp(1.9rem, 6.5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      word-break: break-word;
+    }
+
+    .mb-tournament-details-hero__desc {
+      font-size: clamp(0.92rem, 3.4vw, 1.1rem);
+      color: rgba(255,255,255,0.87);
+      max-width: 62ch;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-tournament-details-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.5rem;
+      margin-bottom: 1.75rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .mb-tournament-details-hero__meta-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .mb-tournament-details-hero__meta-item svg { width: 15px; height: 15px; fill: var(--mb-td-lime); flex-shrink: 0; }
+
+    .mb-tournament-details-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+
+    /* STATUS BADGE */
+    .mb-tournament-details-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 1rem;
+      border-radius: 3rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+      border: 1px solid transparent;
+    }
+
+    .mb-tournament-details-hero .mb-tournament-details-status--open { background: rgba(183,243,74,0.18); color: var(--mb-td-lime); border-color: rgba(183,243,74,0.4); }
+    .mb-tournament-details-hero .mb-tournament-details-status--soon { background: rgba(59,130,246,0.2); color: #9ac1ff; border-color: rgba(59,130,246,0.4); }
+    .mb-tournament-details-hero .mb-tournament-details-status--full { background: rgba(224,184,58,0.2); color: #f2d574; border-color: rgba(224,184,58,0.4); }
+    .mb-tournament-details-hero .mb-tournament-details-status--closed { background: rgba(180,190,185,0.15); color: #c4ccc6; border-color: rgba(180,190,185,0.3); }
+    .mb-tournament-details-hero .mb-tournament-details-status--completed { background: rgba(255,255,255,0.1); color: #d4dcd6; border-color: rgba(255,255,255,0.2); }
+    .mb-tournament-details-hero .mb-tournament-details-status--postponed { background: rgba(224,184,58,0.2); color: #f2d574; border-color: rgba(224,184,58,0.4); }
+    .mb-tournament-details-hero .mb-tournament-details-status--cancelled { background: rgba(192,57,43,0.2); color: #f5a49b; border-color: rgba(192,57,43,0.4); }
+
+    .mb-tournament-details-status--open { background: rgba(92,184,92,0.16); color: #2e6b2e; border-color: rgba(92,184,92,0.4); }
+    .mb-tournament-details-status--soon { background: rgba(59,130,246,0.14); color: #1e5bb8; border-color: rgba(59,130,246,0.35); }
+    .mb-tournament-details-status--full { background: rgba(224,184,58,0.18); color: #8a6a10; border-color: rgba(224,184,58,0.4); }
+    .mb-tournament-details-status--closed { background: rgba(127,140,141,0.14); color: #4a5a5b; border-color: rgba(127,140,141,0.35); }
+    .mb-tournament-details-status--completed { background: rgba(16,21,17,0.08); color: #2e3a30; border-color: rgba(16,21,17,0.2); }
+    .mb-tournament-details-status--postponed { background: rgba(224,184,58,0.18); color: #8a6a10; border-color: rgba(224,184,58,0.4); }
+    .mb-tournament-details-status--cancelled { background: rgba(192,57,43,0.1); color: #a93226; border-color: rgba(192,57,43,0.35); }
+
+    /* SECTIONS */
+    .mb-tournament-details-section { padding-block: clamp(2.5rem, 6vw, 4rem); background: var(--mb-td-white); }
+    .mb-tournament-details-section--light { background: var(--mb-td-light); }
+
+    .mb-tournament-details-section__heading {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.65rem;
+    }
+
+    .mb-tournament-details-section__desc {
+      font-size: 0.92rem;
+      color: #5a6a5e;
+      max-width: 65ch;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+
+    /* ABOUT */
+    .mb-tournament-details-about {
+      background: var(--mb-td-white);
+      border-radius: var(--mb-td-radius);
+      border: 1px solid var(--mb-td-border);
+      padding: clamp(1.5rem, 4vw, 2rem);
+      box-shadow: var(--mb-td-shadow-sm);
+    }
+
+    .mb-tournament-details-about p {
+      font-size: 0.95rem;
+      color: #3a4a3e;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      max-width: 75ch;
+    }
+
+    .mb-tournament-details-about p:last-child { margin-bottom: 0; }
+
+    /* DASHBOARD */
+    .mb-tournament-details-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.1rem;
+      margin-top: 2rem;
+    }
+
+    .mb-tournament-details-dash-card {
+      background: var(--mb-td-white);
+      border-radius: var(--mb-td-radius);
+      border: 1px solid var(--mb-td-border);
+      padding: 1.4rem 1.25rem;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .mb-tournament-details-dash-card:hover { transform: translateY(-3px); border-color: var(--mb-td-forest); }
+
+    .mb-tournament-details-dash-card__icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 0.7rem;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .mb-tournament-details-dash-card__icon svg { width: 20px; height: 20px; fill: var(--mb-td-forest); }
+    .mb-tournament-details-dash-card__label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-td-muted); margin-bottom: 0.3rem; }
+    .mb-tournament-details-dash-card__value { font-size: 1rem; font-weight: 800; color: var(--mb-td-charcoal); line-height: 1.4; word-break: break-word; }
+
+    /* FORMAT */
+    .mb-tournament-details-format-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .mb-tournament-details-rule-card {
+      background: var(--mb-td-white);
+      border-radius: var(--mb-td-radius);
+      border: 1px solid var(--mb-td-border);
+      border-top: 3px solid var(--mb-td-forest);
+      padding: 1.25rem 1.15rem;
+    }
+
+    .mb-tournament-details-rule-card__title { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mb-td-forest); margin-bottom: 0.5rem; }
+    .mb-tournament-details-rule-card__desc { font-size: 0.88rem; color: #3a4a3e; line-height: 1.6; }
+
+    .mb-tournament-details-format-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background: var(--mb-td-white);
+      border-left: 4px solid var(--mb-td-forest);
+      border-radius: 0.85rem;
+      padding: 1rem 1.15rem;
+      margin-block: 1.5rem;
+      font-size: 0.87rem;
+      color: #3a4a3e;
+      line-height: 1.65;
+      max-width: 780px;
+    }
+
+    .mb-tournament-details-format-note svg { width: 18px; height: 18px; fill: var(--mb-td-forest); flex-shrink: 0; margin-top: 0.1rem; }
+
+    /* SCHEDULE */
+    .mb-tournament-details-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+
+    .mb-tournament-details-filter {
+      padding: 0.55rem 1.1rem;
+      border-radius: 3rem;
+      border: 2px solid var(--mb-td-border);
+      background: var(--mb-td-white);
+      color: var(--mb-td-charcoal);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+
+    .mb-tournament-details-filter:hover { border-color: var(--mb-td-forest); }
+    .mb-tournament-details-filter:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 2px; }
+    .mb-tournament-details-filter--active { background: var(--mb-td-charcoal); color: var(--mb-td-white); border-color: var(--mb-td-charcoal); }
+
+    .mb-tournament-details-match-list { display: flex; flex-direction: column; gap: 0.7rem; max-width: 900px; }
+
+    .mb-tournament-details-match {
+      background: var(--mb-td-white);
+      border: 1px solid var(--mb-td-border);
+      border-radius: 1rem;
+      padding: 1rem 1.15rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .mb-tournament-details-match__num {
+      flex-shrink: 0;
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 0.6rem;
+      background: var(--mb-td-light);
+      color: var(--mb-td-forest);
+      font-weight: 800;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-tournament-details-match__body { min-width: 0; }
+    .mb-tournament-details-match__round { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-td-muted); margin-bottom: 0.2rem; }
+    .mb-tournament-details-match__teams { font-size: 0.92rem; font-weight: 700; color: var(--mb-td-charcoal); margin-bottom: 0.2rem; }
+    .mb-tournament-details-match__meta { font-size: 0.78rem; color: var(--mb-td-muted); }
+    .mb-tournament-details-match__score { font-size: 1rem; font-weight: 800; color: var(--mb-td-charcoal); text-align: right; white-space: nowrap; }
+
+    /* TEAMS */
+    .mb-tournament-details-teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+
+    .mb-tournament-details-team {
+      background: var(--mb-td-white);
+      border: 1px solid var(--mb-td-border);
+      border-radius: 1rem;
+      padding: 1.25rem 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .mb-tournament-details-team__logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.6rem;
+      background: var(--mb-td-forest);
+      color: var(--mb-td-white);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .mb-tournament-details-team__logo img { width: 100%; height: 100%; object-fit: cover; }
+    .mb-tournament-details-team__name { font-size: 0.92rem; font-weight: 800; color: var(--mb-td-charcoal); }
+
+    /* REGISTRATION */
+    .mb-tournament-details-registration {
+      background: var(--mb-td-white);
+      border: 1px solid var(--mb-td-border);
+      border-radius: var(--mb-td-radius);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      box-shadow: var(--mb-td-shadow-sm);
+      max-width: 860px;
+    }
+
+    .mb-tournament-details-registration__row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--mb-td-border);
+      font-size: 0.9rem;
+    }
+
+    .mb-tournament-details-registration__row:last-child { border-bottom: none; }
+    .mb-tournament-details-registration__row span:first-child { color: var(--mb-td-muted); }
+    .mb-tournament-details-registration__row span:last-child { font-weight: 700; color: var(--mb-td-charcoal); text-align: right; }
+
+    .mb-tournament-details-progress-bar {
+      height: 16px;
+      background: var(--mb-td-light);
+      border-radius: 3rem;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+      border: 1px solid var(--mb-td-border);
+    }
+
+    .mb-tournament-details-progress-bar__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--mb-td-forest), var(--mb-td-lime));
+      border-radius: 3rem;
+      transition: width 0.6s ease;
+    }
+
+    .mb-tournament-details-progress-stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--mb-td-muted);
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .mb-tournament-details-registration .mb-tournament-details-btn { margin-top: 1rem; }
+
+    /* RESULTS */
+    .mb-tournament-details-results-block { margin-bottom: 2rem; }
+    .mb-tournament-details-results-block:last-child { margin-bottom: 0; }
+    .mb-tournament-details-results-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 1rem; color: var(--mb-td-charcoal); text-transform: uppercase; letter-spacing: 0.02em; }
+
+    .mb-tournament-details-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--mb-td-border);
+      border-radius: 0.85rem;
+      background: var(--mb-td-white);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .mb-tournament-details-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 520px; }
+
+    .mb-tournament-details-table th,
+    .mb-tournament-details-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--mb-td-border); white-space: nowrap; }
+
+    .mb-tournament-details-table th {
+      background: var(--mb-td-light);
+      font-weight: 800;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-td-forest);
+    }
+
+    .mb-tournament-details-table tr:last-child td { border-bottom: none; }
+    .mb-tournament-details-table td:first-child { font-weight: 800; color: var(--mb-td-forest); }
+
+    /* UPDATES */
+    .mb-tournament-details-updates { display: flex; flex-direction: column; gap: 0.75rem; max-width: 780px; }
+
+    .mb-tournament-details-update {
+      background: var(--mb-td-white);
+      border: 1px solid var(--mb-td-border);
+      border-left: 4px solid var(--mb-td-forest);
+      border-radius: 0.85rem;
+      padding: 1rem 1.15rem;
+    }
+
+    .mb-tournament-details-update__meta {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mb-td-forest);
+      margin-bottom: 0.35rem;
+    }
+
+    .mb-tournament-details-update__title { font-size: 0.94rem; font-weight: 800; color: var(--mb-td-charcoal); margin-bottom: 0.3rem; }
+    .mb-tournament-details-update__desc { font-size: 0.87rem; color: #4a5a4e; line-height: 1.6; }
+
+    /* GALLERY */
+    .mb-tournament-details-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; }
+
+    .mb-tournament-details-gallery__item {
+      border-radius: 1rem;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 4 / 3;
+      background: #d9e0d9;
+      border: none;
+      padding: 0;
+    }
+
+    .mb-tournament-details-gallery__item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .mb-tournament-details-gallery__item:hover img { transform: scale(1.05); }
+    .mb-tournament-details-gallery__item:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 3px; }
+
+    .mb-tournament-details-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,9,0.94);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .mb-tournament-details-lightbox.active { display: flex; }
+
+    .mb-tournament-details-lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 1rem;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.8);
+      object-fit: contain;
+    }
+
+    .mb-tournament-details-lightbox__close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.5rem;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-tournament-details-lightbox__close:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 2px; }
+
+    /* FAQ */
+    .mb-tournament-details-faq { max-width: 860px; display: flex; flex-direction: column; gap: 0.55rem; }
+
+    .mb-tournament-details-faq__item {
+      border: 1px solid var(--mb-td-border);
+      border-radius: 0.95rem;
+      overflow: hidden;
+      background: var(--mb-td-white);
+      transition: border-color 0.2s;
+    }
+
+    .mb-tournament-details-faq__item[data-open="true"] { border-color: var(--mb-td-forest); }
+
+    .mb-tournament-details-faq__question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0.95rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      color: var(--mb-td-charcoal);
+      font-family: inherit;
+      line-height: 1.45;
+    }
+
+    .mb-tournament-details-faq__question:hover { background: var(--mb-td-light); }
+    .mb-tournament-details-faq__question:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: -3px; border-radius: 0.95rem; }
+
+    .mb-tournament-details-faq__icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.1rem;
+    }
+
+    .mb-tournament-details-faq__icon::before,
+    .mb-tournament-details-faq__icon::after {
+      content: '';
+      position: absolute;
+      background: var(--mb-td-forest);
+      border-radius: 2px;
+      transition: transform 0.25s ease, background 0.2s;
+    }
+
+    .mb-tournament-details-faq__icon::before { width: 13px; height: 2px; }
+    .mb-tournament-details-faq__icon::after { width: 2px; height: 13px; }
+    .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__icon::after { transform: rotate(90deg) scaleY(0); }
+    .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__icon::before { background: var(--mb-td-lime); }
+
+    .mb-tournament-details-faq__answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 1.1rem; }
+    .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__answer { max-height: 400px; padding: 0 1.1rem 1.1rem; }
+    .mb-tournament-details-faq__answer p { font-size: 0.86rem; color: #4a5a4e; line-height: 1.65; }
+
+    /* RELATED */
+    .mb-tournament-details-related { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.15rem; }
+
+    .mb-tournament-details-related-card {
+      background: var(--mb-td-white);
+      border-radius: var(--mb-td-radius);
+      overflow: hidden;
+      border: 1px solid var(--mb-td-border);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .mb-tournament-details-related-card:hover { transform: translateY(-4px); border-color: var(--mb-td-forest); box-shadow: var(--mb-td-shadow-sm); }
+    .mb-tournament-details-related-card:focus-visible { outline: 3px solid var(--mb-td-lime); outline-offset: 3px; }
+
+    .mb-tournament-details-related-card__img { aspect-ratio: 16 / 9; overflow: hidden; background: #d9e0d9; }
+    .mb-tournament-details-related-card__img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .mb-tournament-details-related-card__body { padding: 1.1rem 1.15rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+    .mb-tournament-details-related-card__title { font-size: 1rem; font-weight: 800; color: var(--mb-td-charcoal); margin-bottom: 0.4rem; }
+    .mb-tournament-details-related-card__meta { font-size: 0.8rem; color: var(--mb-td-muted); margin-bottom: 0.75rem; }
+    .mb-tournament-details-related-card__cta { margin-top: auto; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--mb-td-forest); }
+
+    /* FINAL CTA */
+    .mb-tournament-details-cta {
+      position: relative;
+      background: var(--mb-td-charcoal);
+      color: var(--mb-td-white);
+      border-radius: var(--mb-td-radius);
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+      margin-block: clamp(2rem, 5vw, 3.5rem);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .mb-tournament-details-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(183,243,74,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183,243,74,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .mb-tournament-details-cta > * { position: relative; z-index: 1; }
+
+    .mb-tournament-details-cta h2 {
+      font-size: clamp(1.4rem, 4vw, 2.3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .mb-tournament-details-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.8); line-height: 1.65; max-width: 60ch; margin: 0 auto 1.75rem; }
+    .mb-tournament-details-cta__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+
+    /* LOADING SKELETON */
+    .mb-tournament-details-skeleton { padding-block: clamp(2rem, 5vw, 4rem); }
+
+    .mb-tournament-details-skeleton__block {
+      background: linear-gradient(90deg, #eef1ee 25%, #f6f8f6 50%, #eef1ee 75%);
+      background-size: 200% 100%;
+      animation: mbTdShimmer 1.4s infinite linear;
+      border-radius: 0.75rem;
+    }
+
+    @keyframes mbTdShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* STATE PANELS */
+    .mb-tournament-details-state { padding-block: clamp(3rem, 8vw, 6rem); background: var(--mb-td-white); text-align: center; }
+
+    .mb-tournament-details-state__icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(40,92,53,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .mb-tournament-details-state__icon svg { width: 30px; height: 30px; fill: var(--mb-td-forest); }
+    .mb-tournament-details-state--error .mb-tournament-details-state__icon { background: #fdecea; }
+    .mb-tournament-details-state--error .mb-tournament-details-state__icon svg { fill: var(--mb-td-error); }
+
+    .mb-tournament-details-state h1 {
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.6rem;
+    }
+
+    .mb-tournament-details-state p {
+      font-size: 0.92rem;
+      color: #5a6a5e;
+      max-width: 55ch;
+      margin: 0 auto 1.75rem;
+      line-height: 1.65;
+    }
+
+    .mb-tournament-details-state p a { color: var(--mb-td-forest); font-weight: 600; text-decoration: underline; }
+    .mb-tournament-details-state__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .mb-tournament-details-gallery { grid-template-columns: repeat(2, 1fr); }
+      .mb-tournament-details-match { grid-template-columns: auto 1fr; }
+      .mb-tournament-details-match__score { grid-column: 2; text-align: left; }
+    }
+
+    @media (max-width: 768px) {
+      .mb-tournament-details-hero::after { display: none; }
+      .mb-tournament-details-hero { overflow-x: clip; }
+      .mb-tournament-details-gallery { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .mb-tournament-details-hero__actions .mb-tournament-details-btn { width: 100%; }
+      .mb-tournament-details-cta__actions .mb-tournament-details-btn { width: 100%; }
+      .mb-tournament-details-state__actions .mb-tournament-details-btn { width: 100%; }
+      .mb-tournament-details-faq__question { font-size: 0.88rem; padding: 0.9rem 1rem; }
+      .mb-tournament-details-faq__answer { padding: 0 1rem; }
+      .mb-tournament-details-faq__item[data-open="true"] .mb-tournament-details-faq__answer { padding: 0 1rem 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mb-tournament-details-main *,
+      .mb-tournament-details-main *::before,
+      .mb-tournament-details-main *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="mb-tournament-details-main" id="mb-tournament-details-main">
+
+    <!-- LOADING SKELETON -->
+    <div class="mb-tournament-details-skeleton" id="mb-tournament-details-skeleton" aria-hidden="true">
+      <div class="mb-tournament-details-container">
+        <div class="mb-tournament-details-skeleton__block" style="height: 22px; width: 40%; margin-bottom: 1rem;"></div>
+        <div class="mb-tournament-details-skeleton__block" style="height: 52px; width: 80%; margin-bottom: 1rem;"></div>
+        <div class="mb-tournament-details-skeleton__block" style="height: 22px; width: 60%; margin-bottom: 2rem;"></div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:1rem;">
+          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
+          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
+          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
+          <div class="mb-tournament-details-skeleton__block" style="height: 110px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVALID ID -->
+    <section class="mb-tournament-details-state mb-tournament-details-hidden" id="mb-tournament-details-invalid-id" aria-labelledby="mb-td-invalid-title">
+      <div class="mb-tournament-details-container">
+        <div class="mb-tournament-details-state__icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+        </div>
+        <h1 id="mb-td-invalid-title">TOURNAMENT REFERENCE REQUIRED</h1>
+        <p id="mb-td-invalid-desc">No tournament reference was provided. Please choose a tournament below or visit the <a href="tournaments.html">tournaments page</a>.</p>
+        <div class="mb-tournament-details-state__actions" id="mb-td-invalid-actions">
+          <a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW ALL TOURNAMENTS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOT FOUND -->
+    <section class="mb-tournament-details-state mb-tournament-details-hidden" id="mb-tournament-details-not-found" aria-labelledby="mb-td-not-found-title">
+      <div class="mb-tournament-details-container">
+        <div class="mb-tournament-details-state__icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
+        </div>
+        <h1 id="mb-td-not-found-title">TOURNAMENT NOT FOUND</h1>
+        <p>We couldn't find this tournament. It may have been removed, unpublished, or the link may be incorrect.</p>
+        <div class="mb-tournament-details-state__actions">
+          <a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW ALL TOURNAMENTS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- API ERROR -->
+    <section class="mb-tournament-details-state mb-tournament-details-state--error mb-tournament-details-hidden" id="mb-tournament-details-error" aria-labelledby="mb-td-error-title">
+      <div class="mb-tournament-details-container">
+        <div class="mb-tournament-details-state__icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        </div>
+        <h1 id="mb-td-error-title">UNABLE TO LOAD TOURNAMENT</h1>
+        <p>Unable to load tournament information right now. Please try again later.</p>
+        <div class="mb-tournament-details-state__actions">
+          <button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--primary" id="mb-tournament-details-retry">TRY AGAIN</button>
+          <a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--ghost">VIEW ALL TOURNAMENTS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTENT -->
+    <div id="mb-tournament-details-content" class="mb-tournament-details-hidden">
+
+      <div class="mb-tournament-details-breadcrumb-bar">
+        <div class="mb-tournament-details-container">
+          <nav class="mb-tournament-details-breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="mb-tournament-details-breadcrumb__sep" aria-hidden="true">/</span>
+            <a href="tournaments.html">Tournaments</a>
+            <span class="mb-tournament-details-breadcrumb__sep" aria-hidden="true">/</span>
+            <span aria-current="page" id="mb-tournament-details-crumb-current">Tournament Details</span>
+          </nav>
+        </div>
+      </div>
+
+      <section class="mb-tournament-details-hero" aria-labelledby="mb-tournament-details-hero-title">
+        <div class="mb-tournament-details-hero__bg">
+          <img id="mb-tournament-details-hero-img" src="" alt="">
+        </div>
+        <div class="mb-tournament-details-hero__overlay"></div>
+        <div class="mb-tournament-details-container">
+          <div class="mb-tournament-details-hero__inner">
+            <div class="mb-tournament-details-hero__label" id="mb-tournament-details-hero-label">MATCH-BOX FOOTBALL TOURNAMENT</div>
+            <span class="mb-tournament-details-status" id="mb-tournament-details-status" aria-live="polite"></span>
+            <h1 id="mb-tournament-details-hero-title" class="mb-tournament-details-hero__title">Tournament Name</h1>
+            <p id="mb-tournament-details-hero-desc" class="mb-tournament-details-hero__desc"></p>
+            <div class="mb-tournament-details-hero__meta" id="mb-tournament-details-hero-meta"></div>
+            <div class="mb-tournament-details-hero__actions" id="mb-tournament-details-hero-actions"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section" aria-labelledby="mb-tournament-details-about-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-about-title" class="mb-tournament-details-section__heading">ABOUT THE TOURNAMENT</h2>
+          <div class="mb-tournament-details-about" id="mb-tournament-details-about"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-dashboard-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-dashboard-title" class="mb-tournament-details-section__heading">TOURNAMENT DASHBOARD</h2>
+          <p class="mb-tournament-details-section__desc">Key information about this tournament. Only published details are shown.</p>
+          <div class="mb-tournament-details-dashboard" id="mb-tournament-details-dashboard"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section" aria-labelledby="mb-tournament-details-format-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-format-title" class="mb-tournament-details-section__heading">FORMAT &amp; TOURNAMENT RULES</h2>
+          <p class="mb-tournament-details-section__desc">Tournament-specific rules are published by the organiser. Only approved rules are shown here.</p>
+          <div class="mb-tournament-details-format-note">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <span><strong>4-a-side format clarification:</strong> MATCH-BOX uses a 4-a-side football format, meaning four players per team are on the pitch during a match. This does not automatically mean the total squad must contain exactly four players. Squad size, substitute limits, match duration, and other rules come from the specific tournament's approved configuration.</span>
+          </div>
+          <div id="mb-tournament-details-format-wrap"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-schedule-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-schedule-title" class="mb-tournament-details-section__heading">MATCH SCHEDULE</h2>
+          <div class="mb-tournament-details-filters" id="mb-tournament-details-schedule-filters" role="group" aria-label="Filter matches"></div>
+          <div id="mb-tournament-details-schedule-wrap"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section" aria-labelledby="mb-tournament-details-teams-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-teams-title" class="mb-tournament-details-section__heading">TEAMS COMPETING</h2>
+          <div id="mb-tournament-details-teams-wrap"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-reg-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-reg-title" class="mb-tournament-details-section__heading">BRING YOUR TEAM TO THE PITCH.</h2>
+          <div id="mb-tournament-details-registration-wrap"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-hidden" id="mb-tournament-details-results-section" aria-labelledby="mb-tournament-details-results-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-results-title" class="mb-tournament-details-section__heading">RESULTS &amp; STANDINGS</h2>
+          <div id="mb-tournament-details-results-wrap"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-section--light mb-tournament-details-hidden" id="mb-tournament-details-updates-section" aria-labelledby="mb-tournament-details-updates-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-updates-title" class="mb-tournament-details-section__heading">LATEST TOURNAMENT UPDATES</h2>
+          <div class="mb-tournament-details-updates" id="mb-tournament-details-updates"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-hidden" id="mb-tournament-details-gallery-section" aria-labelledby="mb-tournament-details-gallery-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-gallery-title" class="mb-tournament-details-section__heading">TOURNAMENT GALLERY</h2>
+          <p class="mb-tournament-details-section__desc">Illustrative football visuals. Actual MATCH-BOX tournament photographs will appear when available.</p>
+          <div class="mb-tournament-details-gallery" id="mb-tournament-details-gallery"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-section--light" aria-labelledby="mb-tournament-details-faq-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-faq-title" class="mb-tournament-details-section__heading">TOURNAMENT FAQ</h2>
+          <div class="mb-tournament-details-faq" id="mb-tournament-details-faq"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-section mb-tournament-details-hidden" id="mb-tournament-details-related-section" aria-labelledby="mb-tournament-details-related-title">
+        <div class="mb-tournament-details-container">
+          <h2 id="mb-tournament-details-related-title" class="mb-tournament-details-section__heading">EXPLORE MORE TOURNAMENTS</h2>
+          <div class="mb-tournament-details-related" id="mb-tournament-details-related"></div>
+        </div>
+      </section>
+
+      <section class="mb-tournament-details-container">
+        <div class="mb-tournament-details-cta">
+          <h2>READY TO TAKE ON THE CHALLENGE?</h2>
+          <p>Bring your team together and be part of the MATCH-BOX football experience.</p>
+          <div class="mb-tournament-details-cta__actions" id="mb-tournament-details-final-actions"></div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Lightbox -->
+  <div class="mb-tournament-details-lightbox" id="mb-tournament-details-lightbox" role="dialog" aria-modal="true" aria-label="Tournament image preview">
+    <button type="button" class="mb-tournament-details-lightbox__close" id="mb-tournament-details-lightbox-close" aria-label="Close image preview">&times;</button>
+    <img id="mb-tournament-details-lightbox-img" src="" alt="">
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const main = document.querySelector('.mb-tournament-details-main');
+      if (!main) return;
+
+      /* ============================================
+         DOM REFERENCES
+         ============================================ */
+      const skeleton = document.getElementById('mb-tournament-details-skeleton');
+      const invalidState = document.getElementById('mb-tournament-details-invalid-id');
+      const invalidActions = document.getElementById('mb-td-invalid-actions');
+      const notFoundState = document.getElementById('mb-tournament-details-not-found');
+      const errorState = document.getElementById('mb-tournament-details-error');
+      const contentEl = document.getElementById('mb-tournament-details-content');
+      const retryBtn = document.getElementById('mb-tournament-details-retry');
+
+      const heroImg = document.getElementById('mb-tournament-details-hero-img');
+      const heroLabel = document.getElementById('mb-tournament-details-hero-label');
+      const statusEl = document.getElementById('mb-tournament-details-status');
+      const heroTitle = document.getElementById('mb-tournament-details-hero-title');
+      const heroDesc = document.getElementById('mb-tournament-details-hero-desc');
+      const heroMeta = document.getElementById('mb-tournament-details-hero-meta');
+      const heroActions = document.getElementById('mb-tournament-details-hero-actions');
+      const crumbCurrent = document.getElementById('mb-tournament-details-crumb-current');
+
+      const aboutWrap = document.getElementById('mb-tournament-details-about');
+      const dashboardWrap = document.getElementById('mb-tournament-details-dashboard');
+      const formatWrap = document.getElementById('mb-tournament-details-format-wrap');
+      const scheduleFilters = document.getElementById('mb-tournament-details-schedule-filters');
+      const scheduleWrap = document.getElementById('mb-tournament-details-schedule-wrap');
+      const teamsWrap = document.getElementById('mb-tournament-details-teams-wrap');
+      const registrationWrap = document.getElementById('mb-tournament-details-registration-wrap');
+      const resultsSection = document.getElementById('mb-tournament-details-results-section');
+      const resultsWrap = document.getElementById('mb-tournament-details-results-wrap');
+      const updatesSection = document.getElementById('mb-tournament-details-updates-section');
+      const updatesWrap = document.getElementById('mb-tournament-details-updates');
+      const gallerySection = document.getElementById('mb-tournament-details-gallery-section');
+      const galleryWrap = document.getElementById('mb-tournament-details-gallery');
+      const faqWrap = document.getElementById('mb-tournament-details-faq');
+      const relatedSection = document.getElementById('mb-tournament-details-related-section');
+      const relatedWrap = document.getElementById('mb-tournament-details-related');
+      const finalActions = document.getElementById('mb-tournament-details-final-actions');
+
+      const lightbox = document.getElementById('mb-tournament-details-lightbox');
+      const lightboxImg = document.getElementById('mb-tournament-details-lightbox-img');
+      const lightboxClose = document.getElementById('mb-tournament-details-lightbox-close');
+
+      const pageTitleEl = document.getElementById('mb-tournament-details-page-title');
+      const metaDescEl = document.getElementById('mb-tournament-details-meta-desc');
+      const canonicalEl = document.getElementById('mb-tournament-details-canonical');
+      const ogTitleEl = document.getElementById('mb-tournament-details-og-title');
+      const ogDescEl = document.getElementById('mb-tournament-details-og-desc');
+      const ogImgEl = document.getElementById('mb-tournament-details-og-img');
+
+      /* ============================================
+         STATUS MAPPING
+         ============================================ */
+      const STATUS_MAP = {
+        open: { label: 'Registration Open', cls: 'mb-tournament-details-status--open' },
+        soon: { label: 'Coming Soon', cls: 'mb-tournament-details-status--soon' },
+        full: { label: 'Registration Full', cls: 'mb-tournament-details-status--full' },
+        closed: { label: 'Registration Closed', cls: 'mb-tournament-details-status--closed' },
+        completed: { label: 'Completed', cls: 'mb-tournament-details-status--completed' },
+        postponed: { label: 'Postponed', cls: 'mb-tournament-details-status--postponed' },
+        cancelled: { label: 'Cancelled', cls: 'mb-tournament-details-status--cancelled' }
+      };
+
+      /* ============================================
+         HELPERS
+         ============================================ */
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function formatDate(iso) {
+        if (!iso) return null;
+        const d = new Date(iso + (iso.length <= 10 ? 'T00:00:00' : ''));
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+
+      function showState(state) {
+        skeleton.classList.toggle('mb-tournament-details-hidden', state !== 'loading');
+        invalidState.classList.toggle('mb-tournament-details-hidden', state !== 'invalid');
+        notFoundState.classList.toggle('mb-tournament-details-hidden', state !== 'not-found');
+        errorState.classList.toggle('mb-tournament-details-hidden', state !== 'error');
+        contentEl.classList.toggle('mb-tournament-details-hidden', state !== 'content');
+      }
+
+      function getParam(name) {
+        try { return new URLSearchParams(window.location.search).get(name); }
+        catch (e) { return null; }
+      }
+
+      /* ============================================
+         DEMO DATA — MULTIPLE TOURNAMENTS
+         ============================================
+         These are demo records for layout testing.
+         In production, replace getTournamentById with:
+           GET /api/tournaments/details.php?id=TOURNAMENT_ID
+           GET /api/tournaments/schedule.php?id=TOURNAMENT_ID
+           GET /api/tournaments/teams.php?id=TOURNAMENT_ID
+           GET /api/tournaments/results.php?id=TOURNAMENT_ID
+           GET /api/tournaments/updates.php?id=TOURNAMENT_ID
+           GET /api/tournaments/related.php?id=TOURNAMENT_ID
+         ============================================ */
+      const DEMO_TOURNAMENTS = {
+        '1': {
+          tournament_id: 1,
+          tournament_name: 'MATCH-BOX Summer Cup',
+          published: true,
+          short_description: 'A competitive 4-a-side football tournament bringing teams together for a full day of small-sided football at MATCH-BOX.',
+          full_description: 'The MATCH-BOX Summer Cup is a 4-a-side football tournament designed for teams who want to compete, enjoy the game, and experience the excitement of small-sided football. Team registration is open for the published competition window. Tournament-specific rules, match schedule, and results will be published here as they become available.',
+          banner_image: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1600&auto=format&fit=crop',
+          tournament_start_date: '2025-08-16',
+          tournament_end_date: '2025-08-16',
+          registration_deadline: '2025-08-05',
+          registration_status: 'open',
+          maximum_teams: 16,
+          registered_teams_count: 9,
+          entry_fee: null,
+          prize_details: null,
+          match_format: '4-a-side football matches',
+          tournament_rules: {
+            'Match Format': '4-a-side football matches. Tournament-specific duration will be published in the official schedule.',
+            'Squad Size': 'Squad size is defined by the tournament organiser. The 4-a-side format describes players on the pitch, not the total registered squad.',
+            'Substitutes': 'Substitute rules are published with the tournament rules.',
+            'Player Eligibility': 'Player eligibility conditions are configured by the tournament organiser.'
+          },
+          venue_information: { name: 'MATCH-BOX Football Ground', address: null, city: null },
+          matches: [
+            { match_number: 1, round: 'Group Stage', team_a: 'Team A', team_b: 'Team B', date: '2025-08-16', kickoff: '09:00', status: 'upcoming', score_a: null, score_b: null },
+            { match_number: 2, round: 'Group Stage', team_a: 'Team C', team_b: 'Team D', date: '2025-08-16', kickoff: '10:00', status: 'upcoming', score_a: null, score_b: null }
+          ],
+          teams: null,
+          results: null,
+          updates: [
+            { title: 'Registration Now Open', category: 'Registration Update', published_at: '2025-06-01', description: 'Team registration for the MATCH-BOX Summer Cup is now open.' }
+          ],
+          gallery: [
+            'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=800&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop'
+          ]
+        },
+        '2': {
+          tournament_id: 2,
+          tournament_name: 'MATCH-BOX Midweek League',
+          published: true,
+          short_description: 'A midweek small-sided football league for corporate and group teams.',
+          full_description: 'The MATCH-BOX Midweek League is a recurring 4-a-side football competition for corporate and group teams. Registration is currently full for this season.',
+          banner_image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1600&auto=format&fit=crop',
+          tournament_start_date: '2025-09-10',
+          tournament_end_date: '2025-10-15',
+          registration_deadline: '2025-08-30',
+          registration_status: 'full',
+          maximum_teams: 12,
+          registered_teams_count: 12,
+          entry_fee: null,
+          prize_details: null,
+          match_format: '4-a-side football matches',
+          tournament_rules: {
+            'Match Format': '4-a-side football matches.',
+            'Squad Size': 'Squad size is defined by the tournament organiser.'
+          },
+          venue_information: { name: 'MATCH-BOX Football Ground', address: null, city: null },
+          matches: [],
+          teams: null,
+          results: null,
+          updates: null,
+          gallery: []
+        },
+        '3': {
+          tournament_id: 3,
+          tournament_name: 'MATCH-BOX Junior Cup',
+          published: true,
+          short_description: 'A football tournament for school and student teams.',
+          full_description: 'The MATCH-BOX Junior Cup is a school and student football tournament. Registration details will be published once confirmed.',
+          banner_image: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=1600&auto=format&fit=crop',
+          tournament_start_date: '2025-10-04',
+          tournament_end_date: '2025-10-04',
+          registration_deadline: null,
+          registration_status: 'soon',
+          maximum_teams: null,
+          registered_teams_count: null,
+          entry_fee: null,
+          prize_details: null,
+          match_format: '4-a-side football matches',
+          tournament_rules: null,
+          venue_information: { name: null, address: null, city: null },
+          matches: [],
+          teams: null,
+          results: null,
+          updates: null,
+          gallery: []
+        },
+        '15': {
+          tournament_id: 15,
+          tournament_name: 'MATCH-BOX Winter Classic',
+          published: true,
+          short_description: 'A winter 4-a-side football tournament for competitive teams at MATCH-BOX.',
+          full_description: 'The MATCH-BOX Winter Classic is a competitive 4-a-side football tournament. Registration has closed for this season and match results will be published here as they become available.',
+          banner_image: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1600&auto=format&fit=crop',
+          tournament_start_date: '2025-12-14',
+          tournament_end_date: '2025-12-14',
+          registration_deadline: '2025-12-01',
+          registration_status: 'closed',
+          maximum_teams: 8,
+          registered_teams_count: 8,
+          entry_fee: null,
+          prize_details: null,
+          match_format: '4-a-side football matches',
+          tournament_rules: {
+            'Match Format': '4-a-side football matches.',
+            'Squad Size': 'Squad size is defined by the tournament organiser.'
+          },
+          venue_information: { name: 'MATCH-BOX Football Ground', address: null, city: null },
+          matches: [],
+          teams: null,
+          results: null,
+          updates: null,
+          gallery: []
+        }
+      };
+
+      /* ============================================
+         RENDERERS
+         ============================================ */
+      function renderStatus(status) {
+        const s = STATUS_MAP[status];
+        if (!s) { statusEl.style.display = 'none'; return; }
+        statusEl.className = 'mb-tournament-details-status ' + s.cls;
+        statusEl.textContent = s.label;
+        statusEl.style.display = 'inline-flex';
+      }
+
+      function renderHero(t) {
+        heroImg.src = t.banner_image || '';
+        heroImg.alt = (t.tournament_name || 'Tournament') + ' banner';
+        heroTitle.textContent = t.tournament_name || 'Tournament';
+        heroDesc.textContent = t.short_description || '';
+        crumbCurrent.textContent = t.tournament_name || 'Tournament Details';
+
+        renderStatus(t.registration_status);
+
+        const meta = [];
+        if (t.tournament_start_date) {
+          meta.push(`<span class="mb-tournament-details-hero__meta-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            ${escapeHtml(formatDate(t.tournament_start_date))}
+          </span>`);
+        }
+        if (t.registration_deadline) {
+          meta.push(`<span class="mb-tournament-details-hero__meta-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            Deadline: ${escapeHtml(formatDate(t.registration_deadline))}
+          </span>`);
+        }
+        if (t.maximum_teams != null) {
+          meta.push(`<span class="mb-tournament-details-hero__meta-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            Max Teams: ${escapeHtml(t.maximum_teams)}
+          </span>`);
+        }
+        if (t.registered_teams_count != null) {
+          meta.push(`<span class="mb-tournament-details-hero__meta-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Registered: ${escapeHtml(t.registered_teams_count)}
+          </span>`);
+        }
+        heroMeta.innerHTML = meta.join('');
+
+        const status = t.registration_status;
+        let actions = '';
+        if (status === 'open') {
+          actions += `<a href="tournament-register.html?tournament_id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--primary">REGISTER YOUR TEAM</a>`;
+          actions += `<a href="#mb-tournament-details-reg-title" class="mb-tournament-details-btn mb-tournament-details-btn--outline">REGISTRATION INFO</a>`;
+        } else if (status === 'soon') {
+          actions += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--outline" disabled aria-disabled="true">REGISTRATION OPENING SOON</button>`;
+        } else if (status === 'full') {
+          actions += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--outline" disabled aria-disabled="true">REGISTRATION FULL</button>`;
+        } else if (status === 'closed' || status === 'cancelled') {
+          actions += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--outline" disabled aria-disabled="true">REGISTRATION CLOSED</button>`;
+        } else if (status === 'completed') {
+          actions += `<a href="#mb-tournament-details-results-title" class="mb-tournament-details-btn mb-tournament-details-btn--outline">VIEW RESULTS</a>`;
+        } else if (status === 'postponed') {
+          actions += `<a href="#mb-tournament-details-updates-title" class="mb-tournament-details-btn mb-tournament-details-btn--outline">OFFICIAL UPDATE</a>`;
+        }
+        heroActions.innerHTML = actions;
+
+        const title = (t.tournament_name || 'Football Tournament') + ' | MATCH-BOX Football Tournament';
+        const desc = 'Explore ' + (t.tournament_name || 'this tournament') + ' at MATCH-BOX. View tournament information, registration details, fixtures, rules, and results.';
+        pageTitleEl.textContent = title;
+        metaDescEl.setAttribute('content', desc);
+        canonicalEl.setAttribute('href', 'https://match-box.example.com/tournament-details.html?id=' + encodeURIComponent(t.tournament_id));
+        ogTitleEl.setAttribute('content', title);
+        ogDescEl.setAttribute('content', desc);
+        if (t.banner_image) ogImgEl.setAttribute('content', t.banner_image);
+      }
+
+      function renderAbout(t) {
+        const parts = [];
+        if (t.full_description) parts.push(`<p>${escapeHtml(t.full_description)}</p>`);
+        else if (t.short_description) parts.push(`<p>${escapeHtml(t.short_description)}</p>`);
+        aboutWrap.innerHTML = parts.length ? parts.join('') : '<p style="color:#6b7a6e;">Tournament description will be published soon.</p>';
+      }
+
+      function renderDashboard(t) {
+        const cards = [];
+        const add = (label, value, iconPath) => {
+          if (value === null || value === undefined || value === '') return;
+          cards.push(`<div class="mb-tournament-details-dash-card">
+            <div class="mb-tournament-details-dash-card__icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">${iconPath}</svg>
+            </div>
+            <div class="mb-tournament-details-dash-card__label">${escapeHtml(label)}</div>
+            <div class="mb-tournament-details-dash-card__value">${escapeHtml(value)}</div>
+          </div>`);
+        };
+
+        add('Tournament Schedule', t.tournament_start_date ? formatDate(t.tournament_start_date) + (t.tournament_end_date && t.tournament_end_date !== t.tournament_start_date ? ' – ' + formatDate(t.tournament_end_date) : '') : null,
+          '<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>');
+        add('Team Registration', STATUS_MAP[t.registration_status] ? STATUS_MAP[t.registration_status].label : null,
+          '<path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>');
+        add('Entry Fee', t.entry_fee,
+          '<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>');
+        add('Prize Information', t.prize_details,
+          '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>');
+        add('Match Format', t.match_format,
+          '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="4"/>');
+        add('Venue', t.venue_information && t.venue_information.name ? t.venue_information.name : null,
+          '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>');
+
+        dashboardWrap.innerHTML = cards.length ? cards.join('') : '<p style="font-size:0.9rem;color:#6b7a6e;">Tournament details will be published soon.</p>';
+      }
+
+      function renderFormat(t) {
+        const rules = t.tournament_rules || {};
+        const keys = Object.keys(rules);
+        if (!keys.length) {
+          formatWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;text-transform:uppercase;letter-spacing:0.04em;">TOURNAMENT RULES WILL BE ANNOUNCED BY THE ORGANISERS.</div>';
+          return;
+        }
+        formatWrap.innerHTML = '<div class="mb-tournament-details-format-grid">' +
+          keys.map(k => `<div class="mb-tournament-details-rule-card">
+            <div class="mb-tournament-details-rule-card__title">${escapeHtml(k)}</div>
+            <p class="mb-tournament-details-rule-card__desc">${escapeHtml(rules[k])}</p>
+          </div>`).join('') + '</div>';
+      }
+
+      let scheduleFilter = 'all';
+
+      function renderSchedule(t) {
+        const matches = t.matches || [];
+        if (!matches.length) {
+          scheduleFilters.innerHTML = '';
+          scheduleWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;text-transform:uppercase;letter-spacing:0.04em;">MATCH SCHEDULE HAS NOT BEEN ANNOUNCED YET.</div>';
+          return;
+        }
+
+        scheduleFilters.innerHTML = `
+          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'all' ? 'mb-tournament-details-filter--active' : ''}" data-filter="all">All Matches</button>
+          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'upcoming' ? 'mb-tournament-details-filter--active' : ''}" data-filter="upcoming">Upcoming</button>
+          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'completed' ? 'mb-tournament-details-filter--active' : ''}" data-filter="completed">Completed</button>
+          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'group' ? 'mb-tournament-details-filter--active' : ''}" data-filter="group">Group Stage</button>
+          <button type="button" class="mb-tournament-details-filter ${scheduleFilter === 'knockout' ? 'mb-tournament-details-filter--active' : ''}" data-filter="knockout">Knockout</button>
+        `;
+
+        scheduleFilters.querySelectorAll('[data-filter]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            scheduleFilter = btn.getAttribute('data-filter');
+            renderSchedule(t);
+          });
+        });
+
+        const filtered = matches.filter(m => {
+          if (scheduleFilter === 'all') return true;
+          if (scheduleFilter === 'upcoming') return m.status === 'upcoming';
+          if (scheduleFilter === 'completed') return m.status === 'completed';
+          if (scheduleFilter === 'group') return (m.round || '').toLowerCase().includes('group');
+          if (scheduleFilter === 'knockout') return (m.round || '').toLowerCase().includes('knockout') || (m.round || '').toLowerCase().includes('final');
+          return true;
+        });
+
+        if (!filtered.length) {
+          scheduleWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;">No matches match the selected filter.</div>';
+          return;
+        }
+
+        scheduleWrap.innerHTML = '<div class="mb-tournament-details-match-list">' + filtered.map(m => {
+          const score = (m.score_a !== null && m.score_b !== null && m.score_a !== undefined && m.score_b !== undefined)
+            ? `${m.score_a} – ${m.score_b}` : '';
+          const meta = [];
+          if (m.date) meta.push(formatDate(m.date));
+          if (m.kickoff) meta.push(m.kickoff);
+          if (m.status) meta.push(m.status);
+          return `<div class="mb-tournament-details-match">
+            <div class="mb-tournament-details-match__num">${escapeHtml(m.match_number || '—')}</div>
+            <div class="mb-tournament-details-match__body">
+              <div class="mb-tournament-details-match__round">${escapeHtml(m.round || 'Match')}</div>
+              <div class="mb-tournament-details-match__teams">${escapeHtml(m.team_a || 'TBD')} vs ${escapeHtml(m.team_b || 'TBD')}</div>
+              <div class="mb-tournament-details-match__meta">${escapeHtml(meta.join(' · '))}</div>
+            </div>
+            <div class="mb-tournament-details-match__score">${escapeHtml(score)}</div>
+          </div>`;
+        }).join('') + '</div>';
+      }
+
+      function renderTeams(t) {
+        if (!t.teams || !t.teams.length) {
+          teamsWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;text-transform:uppercase;letter-spacing:0.04em;">PARTICIPATING TEAMS WILL BE ANNOUNCED SOON.</div>';
+          return;
+        }
+        teamsWrap.innerHTML = '<div class="mb-tournament-details-teams">' + t.teams.map(team => {
+          const initial = (team.name || '?').charAt(0).toUpperCase();
+          return `<div class="mb-tournament-details-team">
+            <div class="mb-tournament-details-team__logo">${team.logo ? `<img src="${escapeHtml(team.logo)}" alt="${escapeHtml(team.name)} logo">` : escapeHtml(initial)}</div>
+            <div class="mb-tournament-details-team__name">${escapeHtml(team.name || 'Team')}</div>
+          </div>`;
+        }).join('') + '</div>';
+      }
+
+      function renderRegistration(t) {
+        const status = t.registration_status;
+        let html = '<div class="mb-tournament-details-registration">';
+
+        html += `<div class="mb-tournament-details-registration__row">
+          <span>Registration Status</span>
+          <span>${escapeHtml(STATUS_MAP[status] ? STATUS_MAP[status].label : '—')}</span>
+        </div>`;
+
+        if (t.registration_deadline) {
+          html += `<div class="mb-tournament-details-registration__row">
+            <span>Registration Deadline</span>
+            <span>${escapeHtml(formatDate(t.registration_deadline))}</span>
+          </div>`;
+        }
+        if (t.maximum_teams != null) {
+          html += `<div class="mb-tournament-details-registration__row">
+            <span>Maximum Teams</span>
+            <span>${escapeHtml(t.maximum_teams)}</span>
+          </div>`;
+        }
+        if (t.entry_fee) {
+          html += `<div class="mb-tournament-details-registration__row">
+            <span>Entry Fee</span>
+            <span>${escapeHtml(t.entry_fee)}</span>
+          </div>`;
+        }
+
+        if (t.maximum_teams != null && t.registered_teams_count != null) {
+          const max = Number(t.maximum_teams);
+          const reg = Number(t.registered_teams_count);
+          const pct = max > 0 ? Math.min(100, Math.round((reg / max) * 100)) : 0;
+          html += `<div style="margin-top:1.25rem;">
+            <div class="mb-tournament-details-progress-bar">
+              <div class="mb-tournament-details-progress-bar__fill" style="width:${pct}%;"></div>
+            </div>
+            <div class="mb-tournament-details-progress-stats">
+              <span>${reg} registered</span>
+              <span>${max} maximum</span>
+            </div>
+          </div>`;
+        }
+
+        if (status === 'open') {
+          html += `<a href="tournament-register.html?tournament_id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--primary mb-tournament-details-btn--full">REGISTER YOUR TEAM</a>`;
+        } else if (status === 'soon') {
+          html += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full" disabled aria-disabled="true">REGISTRATION OPENING SOON</button>`;
+        } else if (status === 'full') {
+          html += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full" disabled aria-disabled="true">REGISTRATION FULL</button>`;
+        } else if (status === 'closed' || status === 'cancelled') {
+          html += `<button type="button" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full" disabled aria-disabled="true">REGISTRATION CLOSED</button>`;
+        } else if (status === 'completed') {
+          html += `<a href="#mb-tournament-details-results-title" class="mb-tournament-details-btn mb-tournament-details-btn--dark mb-tournament-details-btn--full">VIEW RESULTS</a>`;
+        }
+
+        html += `<p style="font-size:0.78rem;color:#8a9a8e;margin-top:1rem;line-height:1.5;">Registration eligibility and capacity are validated by the MATCH-BOX backend. The 4-a-side format describes the match format, not necessarily the total squad size.</p>`;
+        html += '</div>';
+
+        registrationWrap.innerHTML = html;
+      }
+
+      function renderResults(t) {
+        if (!t.results) {
+          resultsSection.classList.add('mb-tournament-details-hidden');
+          return;
+        }
+        resultsSection.classList.remove('mb-tournament-details-hidden');
+        resultsWrap.innerHTML = '<div style="background:#fff;border:2px dashed #d9e0d9;border-radius:1rem;padding:2rem;text-align:center;font-size:0.88rem;font-weight:700;color:#6b7a6e;">RESULTS AND STANDINGS WILL BE PUBLISHED HERE WHEN AVAILABLE.</div>';
+      }
+
+      function renderUpdates(t) {
+        if (!t.updates || !t.updates.length) {
+          updatesSection.classList.add('mb-tournament-details-hidden');
+          return;
+        }
+        updatesSection.classList.remove('mb-tournament-details-hidden');
+        updatesWrap.innerHTML = t.updates.map(u => `
+          <div class="mb-tournament-details-update">
+            <div class="mb-tournament-details-update__meta">${escapeHtml(u.category || 'Update')} · ${escapeHtml(formatDate(u.published_at))}</div>
+            <div class="mb-tournament-details-update__title">${escapeHtml(u.title)}</div>
+            <p class="mb-tournament-details-update__desc">${escapeHtml(u.description || '')}</p>
+          </div>
+        `).join('');
+      }
+
+      function renderGallery(t) {
+        if (!t.gallery || !t.gallery.length) {
+          gallerySection.classList.add('mb-tournament-details-hidden');
+          return;
+        }
+        gallerySection.classList.remove('mb-tournament-details-hidden');
+        galleryWrap.innerHTML = t.gallery.map((src, i) => `
+          <button type="button" class="mb-tournament-details-gallery__item" data-gallery-src="${escapeHtml(src)}" aria-label="View tournament image ${i + 1}">
+            <img src="${escapeHtml(src)}" alt="Football tournament visual ${i + 1}" loading="lazy">
+          </button>
+        `).join('');
+      }
+
+      function renderFaq(t) {
+        const deadline = t.registration_deadline ? formatDate(t.registration_deadline) : null;
+        const fee = t.entry_fee || 'Entry fee information will be published when available.';
+        const squadText = 'Squad size is defined by the tournament organiser. The 4-a-side format describes players on the pitch, not the total registered squad.';
+        const contactLink = '<a href="contact.html">contact page</a>';
+
+        const faqs = [
+          { q: 'How can my team register?', a: 'If registration is open, use the Register Your Team button above and complete the tournament registration form.' },
+          { q: 'What does 4-a-side football mean?', a: 'It means four players per team are on the pitch during play. Total squad size and substitutes depend on the published tournament rules.' },
+          { q: 'How many players can be included in a squad?', a: squadText },
+          { q: 'What is the registration deadline?', a: deadline ? 'The published registration deadline is ' + deadline + '.' : 'The registration deadline will be published when available.' },
+          { q: 'Is there an entry fee?', a: fee },
+          { q: 'Where can I find the match schedule?', a: 'The match schedule is displayed on this page under Match Schedule once it is officially published.' },
+          { q: 'When will participating teams be announced?', a: 'Participating teams are displayed on this page when officially confirmed by the organiser.' },
+          { q: 'Where will tournament results be published?', a: 'Results and standings are displayed under Results & Standings when officially published.' },
+          { q: 'Can I register after the deadline?', a: 'Registration is subject to the published deadline and current tournament status.' },
+          { q: 'How can I contact MATCH-BOX about this tournament?', a: 'Please use the official ' + contactLink + ' for tournament-related enquiries.' }
+        ];
+
+        faqWrap.innerHTML = faqs.map((f, i) => `
+          <div class="mb-tournament-details-faq__item" data-open="false">
+            <button type="button" class="mb-tournament-details-faq__question" aria-expanded="false" aria-controls="mb-td-faq-a${i + 1}" id="mb-td-faq-q${i + 1}">
+              ${escapeHtml(f.q)}
+              <span class="mb-tournament-details-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-details-faq__answer" id="mb-td-faq-a${i + 1}" role="region" aria-labelledby="mb-td-faq-q${i + 1}">
+              <p>${f.a}</p>
+            </div>
+          </div>
+        `).join('');
+
+        faqWrap.querySelectorAll('.mb-tournament-details-faq__item').forEach(item => {
+          const btn = item.querySelector('.mb-tournament-details-faq__question');
+          btn.addEventListener('click', () => {
+            const isOpen = item.getAttribute('data-open') === 'true';
+            faqWrap.querySelectorAll('.mb-tournament-details-faq__item').forEach(o => {
+              if (o !== item) {
+                o.setAttribute('data-open', 'false');
+                o.querySelector('.mb-tournament-details-faq__question').setAttribute('aria-expanded', 'false');
+              }
+            });
+            item.setAttribute('data-open', String(!isOpen));
+            btn.setAttribute('aria-expanded', String(!isOpen));
+          });
+        });
+      }
+
+      function renderRelated(t) {
+        const others = Object.values(DEMO_TOURNAMENTS).filter(
+          x => x.published && String(x.tournament_id) !== String(t.tournament_id)
+        );
+        if (!others.length) {
+          relatedSection.classList.add('mb-tournament-details-hidden');
+          return;
+        }
+        relatedSection.classList.remove('mb-tournament-details-hidden');
+        relatedWrap.innerHTML = others.map(o => `
+          <a href="tournament-details.html?id=${encodeURIComponent(o.tournament_id)}" class="mb-tournament-details-related-card">
+            <div class="mb-tournament-details-related-card__img">
+              <img src="${escapeHtml(o.banner_image)}" alt="${escapeHtml(o.tournament_name)} banner" loading="lazy">
+            </div>
+            <div class="mb-tournament-details-related-card__body">
+              <h3 class="mb-tournament-details-related-card__title">${escapeHtml(o.tournament_name)}</h3>
+              <div class="mb-tournament-details-related-card__meta">${escapeHtml(formatDate(o.tournament_start_date) || '')} · ${escapeHtml(STATUS_MAP[o.registration_status] ? STATUS_MAP[o.registration_status].label : '')}</div>
+              <span class="mb-tournament-details-related-card__cta">VIEW DETAILS →</span>
+            </div>
+          </a>
+        `).join('');
+      }
+
+      function renderFinalActions(t) {
+        const status = t.registration_status;
+        let html = '';
+        if (status === 'open') {
+          html += `<a href="tournament-register.html?tournament_id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--primary">REGISTER YOUR TEAM</a>`;
+        } else if (status === 'soon') {
+          html += `<a href="#mb-tournament-details-updates-title" class="mb-tournament-details-btn mb-tournament-details-btn--primary">EXPLORE TOURNAMENT UPDATES</a>`;
+        } else if (status === 'completed') {
+          html += `<a href="#mb-tournament-details-results-title" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW RESULTS</a>`;
+        } else if (status === 'full' || status === 'closed' || status === 'cancelled') {
+          html += `<a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">EXPLORE OTHER TOURNAMENTS</a>`;
+        }
+        html += `<a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--outline">VIEW ALL TOURNAMENTS</a>`;
+        finalActions.innerHTML = html;
+      }
+
+      function renderTournament(t) {
+        renderHero(t);
+        renderAbout(t);
+        renderDashboard(t);
+        renderFormat(t);
+        renderSchedule(t);
+        renderTeams(t);
+        renderRegistration(t);
+        renderResults(t);
+        renderUpdates(t);
+        renderGallery(t);
+        renderFaq(t);
+        renderRelated(t);
+        renderFinalActions(t);
+        showState('content');
+      }
+
+      /* ============================================
+         LOADER — FIXED
+         ============================================ */
+      function loadTournament() {
+        const id = getParam('id');
+
+        // No ID provided → show invalid state with helpful context
+        if (!id || id.trim() === '') {
+          showState('invalid');
+          // Populate list of available demo tournaments to help the visitor
+          if (invalidActions) {
+            const available = Object.values(DEMO_TOURNAMENTS).filter(x => x.published).slice(0, 3);
+            if (available.length) {
+              const linksHtml = available.map(t =>
+                `<a href="tournament-details.html?id=${encodeURIComponent(t.tournament_id)}" class="mb-tournament-details-btn mb-tournament-details-btn--ghost">${escapeHtml(t.tournament_name)}</a>`
+              ).join('');
+              invalidActions.innerHTML = linksHtml + `<a href="tournaments.html" class="mb-tournament-details-btn mb-tournament-details-btn--primary">VIEW ALL TOURNAMENTS</a>`;
+            }
+          }
+          return;
+        }
+
+        showState('loading');
+
+        // Frontend demo mode:
+        // Replace the setTimeout block with real fetch() calls in production.
+        setTimeout(() => {
+          const t = DEMO_TOURNAMENTS[id];
+          if (!t) { showState('not-found'); return; }
+          if (!t.published) { showState('not-found'); return; }
+          try {
+            renderTournament(t);
+          } catch (err) {
+            console.error(err);
+            showState('error');
+          }
+        }, 300);
+      }
+
+      retryBtn?.addEventListener('click', loadTournament);
+
+      /* ============================================
+         GALLERY LIGHTBOX
+         ============================================ */
+      function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        lightboxClose.focus();
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        lightboxImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      galleryWrap?.addEventListener('click', e => {
+        const btn = e.target.closest('[data-gallery-src]');
+        if (!btn) return;
+        openLightbox(btn.getAttribute('data-gallery-src'));
+      });
+
+      galleryWrap?.addEventListener('keydown', e => {
+        const btn = e.target.closest('[data-gallery-src]');
+        if (!btn) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(btn.getAttribute('data-gallery-src'));
+        }
+      });
+
+      lightboxClose?.addEventListener('click', closeLightbox);
+      lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+      });
+
+      /* ============================================
+         INIT
+         ============================================ */
+      loadTournament();
+
+    })();
+  </script>
+</body>
+</html>

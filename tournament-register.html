@@ -1,0 +1,4465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match-Box · Advanced Header, Auth & Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --deep-charcoal: #101511;
+      --almost-black: #080B09;
+      --lime-green: #B7F34A;
+      --football-green: #285C35;
+      --white: #FFFFFF;
+      --light-bg: #F5F7F3;
+      --muted-grey: #777F78;
+      --font-primary: 'Inter', sans-serif;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --transition: 0.25s ease;
+      --header-height: 72px;
+      --announce-height: 38px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--light-bg);
+      color: var(--deep-charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========== REUSABLE ========== */
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+
+    .btn-lime {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-lime:hover {
+      background: #a4e03a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(183, 243, 74, 0.25);
+    }
+
+    .btn-outline-lime {
+      background: transparent;
+      color: var(--lime-green);
+      border: 1px solid var(--lime-green);
+    }
+
+    .btn-outline-lime:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+    }
+
+    .btn-dark-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-dark-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    /* ========== ANNOUNCEMENT BAR — normal flow, at top ========== */
+    .announce-bar {
+      background: var(--football-green);
+      color: var(--white);
+      height: var(--announce-height);
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      width: 100%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .announce-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .announce-bar span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .announce-bar a {
+      color: var(--lime-green);
+      font-weight: 700;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .announce-bar a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    /* ========== MAIN HEADER — in flow normally, becomes fixed on scroll ========== */
+    .main-header {
+      position: relative; /* in normal document flow at page load */
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      background: var(--deep-charcoal);
+      display: flex;
+      align-items: center;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    /* When scrolled past the announcement bar: pin to top of viewport */
+    .main-header.is-fixed {
+      position: fixed;
+      top: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* Placeholder that reserves header space when header becomes fixed */
+    .header-placeholder {
+      display: none;
+      height: var(--header-height);
+    }
+
+    .header-placeholder.active {
+      display: block;
+    }
+
+    .main-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* ----- Logo ----- */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--lime-green);
+      border-radius: 50%;
+      color: var(--almost-black);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      min-width: 0;
+    }
+
+    .logo-text .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo-text .tagline {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime-green);
+    }
+
+    /* ----- Desktop Navigation ----- */
+    .desktop-nav {
+      display: none;
+      height: 100%;
+    }
+
+    .desktop-nav ul {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0 0.9rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--lime-green);
+    }
+
+    .nav-link i {
+      font-size: 0.7rem;
+      transition: transform var(--transition);
+    }
+
+    .nav-item:hover .nav-link i {
+      transform: rotate(180deg);
+    }
+
+    .nav-link.active {
+      color: var(--lime-green);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 0.9rem;
+      right: 0.9rem;
+      height: 2px;
+      background: var(--lime-green);
+      border-radius: 2px;
+    }
+
+    /* ----- Dropdown Panel ----- */
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 280px;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .nav-item:hover .dropdown-panel,
+    .nav-item:focus-within .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 0.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #e9ece9;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      display: flex;
+      gap: 12px;
+      padding: 0.65rem 1.5rem;
+      transition: background var(--transition);
+    }
+
+    .dropdown-item:hover {
+      background: #f0f5ec;
+    }
+
+    .dropdown-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--light-bg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--football-green);
+      font-size: 0.9rem;
+    }
+
+    .dropdown-text h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .dropdown-text p {
+      font-size: 0.75rem;
+      color: var(--muted-grey);
+      line-height: 1.3;
+    }
+
+    /* ----- Header Actions (desktop) ----- */
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .auth-btn {
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--lime-green);
+    }
+
+    .account-icon-btn {
+      color: var(--white);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+    }
+
+    .account-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .account-menu-wrapper {
+      position: relative;
+    }
+
+    .account-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      background: transparent;
+      padding: 4px 8px 4px 4px;
+      border-radius: 30px;
+      transition: background var(--transition);
+    }
+
+    .account-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .avatar-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .account-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      min-width: 240px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .account-menu-wrapper.open .account-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .account-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--deep-charcoal);
+      transition: background var(--transition);
+    }
+
+    .account-dropdown a:hover {
+      background: #f0f5ec;
+      color: var(--football-green);
+    }
+
+    .account-dropdown a i {
+      width: 16px;
+      color: var(--muted-grey);
+    }
+
+    .account-dropdown .divider {
+      height: 1px;
+      background: #e9ece9;
+      margin: 0.4rem 1rem;
+    }
+
+    /* ----- Mobile Header Actions ----- */
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .mobile-book-btn {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hamburger {
+      color: var(--white);
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ----- Mobile Drawer ----- */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 88%;
+      max-width: 380px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--deep-charcoal);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem 1.25rem;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-drawer.open {
+      right: 0;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.75);
+      z-index: 2400;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 12px;
+    }
+
+    .drawer-close {
+      color: var(--white);
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .drawer-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .drawer-nav {
+      flex: 1;
+    }
+
+    .drawer-nav > li {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .drawer-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      width: 100%;
+      text-align: left;
+      transition: color var(--transition);
+    }
+
+    .drawer-link:hover {
+      color: var(--lime-green);
+    }
+
+    .drawer-link i {
+      font-size: 0.8rem;
+      transition: transform var(--transition);
+    }
+
+    .drawer-sub {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 0.5rem;
+    }
+
+    .drawer-sub.open {
+      max-height: 500px;
+    }
+
+    .drawer-sub a {
+      display: block;
+      color: #b0b8b0;
+      font-size: 0.85rem;
+      padding: 0.6rem 0 0.6rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .drawer-sub a:hover {
+      color: var(--lime-green);
+      border-left-color: var(--lime-green);
+    }
+
+    .drawer-cta {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+
+    .drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-auth .btn {
+      width: 100%;
+      padding: 0.8rem;
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 9, 0.85);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    }
+
+    .modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-grey);
+      font-size: 1.2rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--deep-charcoal);
+    }
+
+    .auth-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.25rem;
+      padding-right: 2rem;
+    }
+
+    .auth-modal .subtext {
+      font-size: 0.85rem;
+      color: var(--muted-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--deep-charcoal);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 2.5rem 0.7rem 0.9rem;
+      border: 1px solid #d4dcd4;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--football-green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 53, 0.15);
+    }
+
+    .input-wrapper input.error {
+      border-color: #d32f2f;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 10px;
+      background: none;
+      color: var(--muted-grey);
+      font-size: 0.95rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color var(--transition);
+    }
+
+    .input-icon-right:hover {
+      color: var(--deep-charcoal);
+    }
+
+    .error-msg {
+      font-size: 0.7rem;
+      color: #d32f2f;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .checkbox-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--deep-charcoal);
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      accent-color: var(--football-green);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .link-text {
+      color: var(--football-green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+
+    .link-text:hover {
+      color: var(--lime-green);
+      text-decoration: underline;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-actions .btn {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted-grey);
+      margin-top: 1rem;
+    }
+
+    .auth-switch .link-text {
+      font-size: 0.8rem;
+    }
+
+    .message-area {
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .message-area.error {
+      display: block;
+      background: #fdecea;
+      color: #b71c1c;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .message-area.success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border-left: 3px solid #2e7d32;
+    }
+
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: #e0e0e0;
+      transition: background 0.2s;
+    }
+
+    .strength-bar.weak { background: #e53935; }
+    .strength-bar.medium { background: #fbc02d; }
+    .strength-bar.strong { background: #43a047; }
+
+    .strength-text {
+      font-size: 0.7rem;
+      color: var(--muted-grey);
+      margin-top: 2px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--almost-black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--deep-charcoal);
+      color: var(--white);
+      padding-top: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .footer-cta {
+      background: var(--football-green);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .footer-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-cta p {
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 1.75rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .footer-cta-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-main {
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-brand .logo-area {
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+      max-width: 300px;
+      margin-bottom: 1.25rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--lime-green);
+      color: var(--almost-black);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime-green);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      transition: color var(--transition), padding-left var(--transition);
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .footer-col ul a:hover {
+      color: var(--lime-green);
+      padding-left: 4px;
+    }
+
+    .footer-contact-info li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.8rem;
+      align-items: flex-start;
+      word-break: break-word;
+    }
+
+    .footer-contact-info i {
+      color: var(--lime-green);
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .newsletter {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .newsletter h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .newsletter p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .newsletter-form input {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--font-primary);
+      font-size: 0.85rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: var(--lime-green);
+    }
+
+    .newsletter-form .btn {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .newsletter-msg {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      display: none;
+      word-break: break-word;
+    }
+
+    .newsletter-msg.error {
+      display: block;
+      color: #ef9a9a;
+    }
+
+    .newsletter-msg.success {
+      display: block;
+      color: var(--lime-green);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255,255,255,0.5);
+      transition: color var(--transition);
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--lime-green);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lime-green);
+      color: var(--almost-black);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(183, 243, 74, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 900;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: #a4e03a;
+      transform: translateY(-3px);
+    }
+
+    /* ========== RESPONSIVE ========== */
+
+    /* Mobile & tablet: up to 1023px */
+    @media (max-width: 1023px) {
+      .desktop-nav { display: none !important; }
+      .header-actions { display: none !important; }
+      .mobile-header-actions { display: flex !important; }
+
+      .main-header .container { padding: 0 16px; gap: 8px; }
+      .logo-text .brand-name { font-size: 1.25rem; }
+      .logo-text .tagline { font-size: 0.5rem; }
+      .logo-icon { width: 32px; height: 32px; font-size: 1rem; }
+      .container { padding: 0 16px; }
+      .announce-bar .container { padding: 0 16px; gap: 6px; }
+      .announce-bar { font-size: 0.65rem; }
+      .announce-bar span { font-size: 0.65rem; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-cta { padding: 2rem 0; }
+      .footer-cta-btns .btn { width: 100%; max-width: 280px; }
+      .footer-cta p { font-size: 0.9rem; padding: 0 8px; }
+      .auth-modal { padding: 1.5rem 1.25rem; }
+      .auth-modal h2 { font-size: 1.5rem; }
+      .newsletter-form .btn { width: 100%; }
+    }
+
+    /* Very small mobile */
+    @media (max-width: 380px) {
+      .mobile-book-btn span { display: none; }
+      .mobile-book-btn { padding: 0.5rem 0.6rem; }
+      .logo-text .brand-name { font-size: 1.1rem; }
+      .main-header .container { padding: 0 10px; }
+    }
+
+    /* Desktop: 1024px and above */
+    @media (min-width: 1024px) {
+      .desktop-nav { display: block !important; }
+      .header-actions { display: flex !important; }
+      .mobile-header-actions { display: none !important; }
+
+      .footer-grid {
+        grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr 0.8fr;
+        gap: 2rem;
+      }
+      .footer-brand { grid-column: span 1; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .footer-cta-btns { gap: 1rem; }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* Desktop wide */
+    @media (min-width: 1440px) {
+      .container { padding: 0 40px; }
+      .desktop-nav .nav-link { font-size: 0.85rem; padding: 0 0.9rem; }
+      .header-actions { gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /*Tounament page goes here...............*/
+        .mb-tournament-reg-main {
+      --mb-tr-charcoal: #101511;
+      --mb-tr-deep: #080B09;
+      --mb-tr-lime: #B7F34A;
+      --mb-tr-forest: #285C35;
+      --mb-tr-white: #FFFFFF;
+      --mb-tr-light: #F5F7F2;
+      --mb-tr-border: #d9e0d9;
+      --mb-tr-error: #c0392b;
+      --mb-tr-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+      --mb-tr-shadow-sm: 0 10px 20px -10px rgba(0,0,0,0.2);
+      --mb-tr-radius: 1.5rem;
+      --mb-tr-radius-btn: 3rem;
+      --mb-tr-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--mb-tr-white);
+      color: var(--mb-tr-charcoal);
+      font-family: var(--mb-tr-font);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .mb-tournament-reg-main *,
+    .mb-tournament-reg-main *::before,
+    .mb-tournament-reg-main *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mb-tournament-reg-main img { max-width: 100%; height: auto; display: block; }
+
+    .mb-tournament-reg-container {
+      width: 100%;
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 4rem);
+    }
+
+    .mb-tournament-reg-section { padding-block: clamp(3rem, 8vw, 6rem); }
+    .mb-tournament-reg-section--light { background: var(--mb-tr-light); color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-section--white { background: var(--mb-tr-white); color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-section--dark { background: var(--mb-tr-charcoal); color: var(--mb-tr-white); }
+
+    .mb-tournament-reg-eyebrow {
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mb-tr-lime);
+      margin-bottom: 0.75rem;
+    }
+
+    .mb-tournament-reg-section--light .mb-tournament-reg-eyebrow,
+    .mb-tournament-reg-section--white .mb-tournament-reg-eyebrow { color: var(--mb-tr-forest); }
+
+    .mb-tournament-reg-h2 {
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .mb-tournament-reg-text-lg {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+
+    .mb-tournament-reg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.875rem;
+      padding: 0.9rem 2rem;
+      border-radius: var(--mb-tr-radius-btn);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      line-height: 1.2;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .mb-tournament-reg-btn:focus-visible { outline: 3px solid var(--mb-tr-lime); outline-offset: 4px; }
+    .mb-tournament-reg-btn--primary { background: var(--mb-tr-lime); color: var(--mb-tr-deep); border-color: var(--mb-tr-lime); }
+    .mb-tournament-reg-btn--primary:hover { background: #c6ff6b; border-color: #c6ff6b; }
+    .mb-tournament-reg-btn--outline { border-color: rgba(255,255,255,0.35); color: var(--mb-tr-white); background: transparent; }
+    .mb-tournament-reg-btn--outline:hover { border-color: var(--mb-tr-lime); color: var(--mb-tr-lime); }
+    .mb-tournament-reg-btn--dark { background: var(--mb-tr-charcoal); color: var(--mb-tr-white); border-color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-btn--dark:hover { background: #1f2a21; border-color: #1f2a21; }
+    .mb-tournament-reg-btn--full { width: 100%; }
+    .mb-tournament-reg-btn--sm { padding: 0.65rem 1.25rem; font-size: 0.75rem; }
+    .mb-tournament-reg-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .mb-tournament-reg-reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .mb-tournament-reg-reveal.mb-tournament-reg-visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================
+       HERO  (NEW IMAGE #1 — tournament match action)
+       ============================================ */
+    .mb-tournament-reg-hero {
+      position: relative;
+      background: var(--mb-tr-deep);
+      color: var(--mb-tr-white);
+      min-height: 78vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .mb-tournament-reg-hero__bg { position: absolute; inset: 0; z-index: 1; }
+    .mb-tournament-reg-hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+
+    .mb-tournament-reg-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(8,11,9,0.94) 0%, rgba(8,11,9,0.72) 55%, rgba(8,11,9,0.42) 100%);
+      z-index: 2;
+    }
+
+    .mb-tournament-reg-hero__content {
+      position: relative;
+      z-index: 3;
+      padding-block: clamp(4rem, 12vw, 7rem);
+      max-width: 900px;
+    }
+
+    .mb-tournament-reg-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(183, 243, 74, 0.12);
+      border-left: 4px solid var(--mb-tr-lime);
+      padding: 0.5rem 1.2rem;
+      border-radius: 0 2rem 2rem 0;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mb-tr-lime);
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-tournament-reg-hero__title {
+      font-size: clamp(2.4rem, 8vw, 4.8rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .mb-tournament-reg-hero__title span { color: var(--mb-tr-lime); }
+
+    .mb-tournament-reg-hero__desc {
+      max-width: 55ch;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .mb-tournament-reg-hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+
+    /* ============================================
+       NEW SECTION — TOURNAMENT ATMOSPHERE SHOWCASE
+       (NEW IMAGE #2 — team huddle before kickoff)
+       ============================================ */
+    .mb-tournament-reg-atmosphere {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(2rem, 6vw, 5rem);
+      align-items: center;
+    }
+
+    .mb-tournament-reg-atmosphere__image {
+      flex: 1 1 380px;
+      border-radius: var(--mb-tr-radius);
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      box-shadow: var(--mb-tr-shadow);
+      position: relative;
+    }
+
+    .mb-tournament-reg-atmosphere__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mb-tournament-reg-atmosphere__badge {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 1.25rem;
+      background: rgba(16,21,17,0.8);
+      backdrop-filter: blur(6px);
+      color: var(--mb-tr-white);
+      padding: 0.5rem 1.1rem;
+      border-radius: 3rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-left: 3px solid var(--mb-tr-lime);
+    }
+
+    .mb-tournament-reg-atmosphere__content { flex: 1 1 380px; }
+
+    .mb-tournament-reg-atmosphere__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .mb-tournament-reg-atmosphere__list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+      color: #3a4a3e;
+      line-height: 1.5;
+    }
+
+    .mb-tournament-reg-atmosphere__list li::before {
+      content: '✓';
+      color: var(--mb-tr-forest);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* ============================================
+       TOURNAMENT SELECTION
+       ============================================ */
+    .mb-tournament-reg-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.75rem;
+      margin-top: 3rem;
+    }
+
+    .mb-tournament-reg-card {
+      background: var(--mb-tr-white);
+      border-radius: var(--mb-tr-radius);
+      overflow: hidden;
+      border: 2px solid var(--mb-tr-border);
+      box-shadow: var(--mb-tr-shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .mb-tournament-reg-card:hover { transform: translateY(-4px); box-shadow: var(--mb-tr-shadow); }
+    .mb-tournament-reg-card.mb-tournament-reg-card--selected { border-color: var(--mb-tr-lime); box-shadow: 0 0 0 3px rgba(183,243,74,0.25); }
+    .mb-tournament-reg-card.mb-tournament-reg-card--disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .mb-tournament-reg-card__media {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #d9e0d9;
+      position: relative;
+    }
+
+    .mb-tournament-reg-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .mb-tournament-reg-card:hover .mb-tournament-reg-card__media img { transform: scale(1.04); }
+
+    .mb-tournament-reg-card__status {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 3rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      backdrop-filter: blur(6px);
+    }
+
+    .mb-tournament-reg-card__status--open { background: rgba(92,184,92,0.92); color: white; }
+    .mb-tournament-reg-card__status--soon { background: rgba(241,196,15,0.92); color: #333; }
+    .mb-tournament-reg-card__status--full { background: rgba(192,57,43,0.92); color: white; }
+    .mb-tournament-reg-card__status--closed { background: rgba(127,140,141,0.92); color: white; }
+    .mb-tournament-reg-card__status--completed { background: rgba(52,73,94,0.92); color: white; }
+
+    .mb-tournament-reg-card__body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+    .mb-tournament-reg-card__title { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-card__desc { font-size: 0.9rem; color: #5a6a5e; line-height: 1.5; margin-bottom: 1rem; flex: 1; }
+
+    .mb-tournament-reg-card__meta { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: #4a5a4e; margin-bottom: 1.25rem; }
+    .mb-tournament-reg-card__meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+    .mb-tournament-reg-card__select { width: 100%; }
+
+    .mb-tournament-reg-card--selected .mb-tournament-reg-card__select {
+      background: var(--mb-tr-forest);
+      border-color: var(--mb-tr-forest);
+      color: var(--mb-tr-white);
+    }
+
+    /* Empty state */
+    .mb-tournament-reg-empty {
+      text-align: center;
+      padding: clamp(3rem, 8vw, 5rem) 2rem;
+      background: var(--mb-tr-white);
+      border-radius: var(--mb-tr-radius);
+      border: 2px dashed var(--mb-tr-border);
+    }
+
+    .mb-tournament-reg-empty__title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 0.75rem; color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-empty__desc { font-size: 0.95rem; color: #6b7a6e; max-width: 50ch; margin: 0 auto 1.5rem; line-height: 1.6; }
+
+    /* ============================================
+       PROGRESS INDICATOR
+       ============================================ */
+    .mb-tournament-reg-progress {
+      display: flex;
+      gap: 0;
+      margin: 2.5rem 0 3rem;
+      position: relative;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .mb-tournament-reg-progress__step {
+      flex: 1;
+      min-width: 90px;
+      position: relative;
+      text-align: center;
+      padding: 0 0.5rem;
+    }
+
+    .mb-tournament-reg-progress__step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 1.15rem;
+      right: -50%;
+      width: 100%;
+      height: 2px;
+      background: var(--mb-tr-border);
+      z-index: 0;
+    }
+
+    .mb-tournament-reg-progress__step.mb-tournament-reg-progress__step--done:not(:last-child)::after { background: var(--mb-tr-forest); }
+
+    .mb-tournament-reg-progress__dot {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      background: var(--mb-tr-white);
+      border: 2px solid var(--mb-tr-border);
+      color: #8a9a8e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin: 0 auto 0.5rem;
+      position: relative;
+      z-index: 1;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .mb-tournament-reg-progress__step--active .mb-tournament-reg-progress__dot {
+      background: var(--mb-tr-lime);
+      border-color: var(--mb-tr-lime);
+      color: var(--mb-tr-deep);
+    }
+
+    .mb-tournament-reg-progress__step--done .mb-tournament-reg-progress__dot {
+      background: var(--mb-tr-forest);
+      border-color: var(--mb-tr-forest);
+      color: var(--mb-tr-white);
+    }
+
+    .mb-tournament-reg-progress__label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #8a9a8e;
+      line-height: 1.3;
+    }
+
+    .mb-tournament-reg-progress__step--active .mb-tournament-reg-progress__label { color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-progress__step--done .mb-tournament-reg-progress__label { color: var(--mb-tr-forest); }
+
+    /* ============================================
+       FORM
+       ============================================ */
+    .mb-tournament-reg-form-wrapper {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .mb-tournament-reg-form {
+      background: var(--mb-tr-white);
+      border-radius: var(--mb-tr-radius);
+      box-shadow: var(--mb-tr-shadow-sm);
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      border: 1px solid var(--mb-tr-border);
+    }
+
+    .mb-tournament-reg-step-panel { display: none; }
+    .mb-tournament-reg-step-panel.mb-tournament-reg-step-panel--active { display: block; }
+
+    .mb-tournament-reg-step-panel__title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+      color: var(--mb-tr-charcoal);
+    }
+
+    .mb-tournament-reg-step-panel__title span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.85rem;
+      height: 1.85rem;
+      border-radius: 50%;
+      background: var(--mb-tr-lime);
+      color: var(--mb-tr-deep);
+      font-weight: 800;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .mb-tournament-reg-step-panel__desc {
+      font-size: 0.9rem;
+      color: #6b7a6e;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    /* NEW: football strip image at top of step panels */
+    .mb-tournament-reg-step-img {
+      aspect-ratio: 21 / 6;
+      overflow: hidden;
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      background: #d9e0d9;
+    }
+
+    .mb-tournament-reg-step-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .mb-tournament-reg-field { margin-bottom: 1.1rem; }
+
+    .mb-tournament-reg-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--mb-tr-charcoal);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .mb-tournament-reg-field label .mb-tournament-reg-required { color: var(--mb-tr-error); margin-left: 0.15rem; }
+
+    .mb-tournament-reg-field input,
+    .mb-tournament-reg-field select,
+    .mb-tournament-reg-field textarea {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: 2px solid var(--mb-tr-border);
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      background: var(--mb-tr-white);
+      color: var(--mb-tr-charcoal);
+    }
+
+    .mb-tournament-reg-field input:focus,
+    .mb-tournament-reg-field select:focus,
+    .mb-tournament-reg-field textarea:focus { outline: none; border-color: var(--mb-tr-forest); }
+
+    .mb-tournament-reg-field input.mb-tournament-reg-input-error,
+    .mb-tournament-reg-field select.mb-tournament-reg-input-error,
+    .mb-tournament-reg-field textarea.mb-tournament-reg-input-error { border-color: var(--mb-tr-error); }
+
+    .mb-tournament-reg-field textarea { resize: vertical; min-height: 80px; }
+
+    .mb-tournament-reg-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .mb-tournament-reg-field-hint { font-size: 0.75rem; color: #8a9a8e; margin-top: 0.3rem; line-height: 1.4; }
+
+    .mb-tournament-reg-error-msg { display: none; font-size: 0.75rem; color: var(--mb-tr-error); margin-top: 0.25rem; font-weight: 600; }
+    .mb-tournament-reg-error-msg.visible { display: block; }
+
+    .mb-tournament-reg-info-box {
+      background: var(--mb-tr-light);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--mb-tr-forest);
+    }
+
+    .mb-tournament-reg-info-box__name { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-info-box__row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #4a5a4e; padding: 0.25rem 0; }
+    .mb-tournament-reg-info-box__row span:last-child { font-weight: 700; color: var(--mb-tr-charcoal); text-align: right; }
+
+    .mb-tournament-reg-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #4a5a4e;
+    }
+
+    .mb-tournament-reg-checkbox input {
+      width: 18px;
+      height: 18px;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      accent-color: var(--mb-tr-forest);
+      cursor: pointer;
+    }
+
+    .mb-tournament-reg-checkbox label {
+      cursor: pointer;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: 0.85rem;
+    }
+
+    .mb-tournament-reg-checkbox a { color: var(--mb-tr-forest); font-weight: 600; text-decoration: underline; }
+
+    .mb-tournament-reg-team-preview {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--mb-tr-light);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-tournament-reg-team-preview__logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 0.75rem;
+      background: var(--mb-tr-forest);
+      color: var(--mb-tr-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .mb-tournament-reg-team-preview__logo img { width: 100%; height: 100%; object-fit: cover; }
+    .mb-tournament-reg-team-preview__name { font-weight: 800; font-size: 1.05rem; color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-team-preview__sub { font-size: 0.8rem; color: #6b7a6e; }
+
+    .mb-tournament-reg-logo-upload {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .mb-tournament-reg-logo-upload input[type="file"] {
+      padding: 0.6rem;
+      border: 2px dashed var(--mb-tr-border);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      flex: 1 1 200px;
+    }
+
+    .mb-tournament-reg-logo-upload input[type="file"]:focus { outline: 2px solid var(--mb-tr-lime); outline-offset: 2px; }
+
+    .mb-tournament-reg-logo-preview {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .mb-tournament-reg-logo-preview.visible { display: flex; }
+
+    .mb-tournament-reg-logo-preview img {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      border: 1px solid var(--mb-tr-border);
+    }
+
+    /* ============================================
+       PLAYER ROSTER
+       ============================================ */
+    .mb-tournament-reg-squad-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .mb-tournament-reg-squad-count {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--mb-tr-forest);
+      background: rgba(40,92,53,0.08);
+      padding: 0.4rem 1rem;
+      border-radius: 3rem;
+    }
+
+    .mb-tournament-reg-player {
+      border: 1px solid var(--mb-tr-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      position: relative;
+      background: var(--mb-tr-white);
+      transition: border-color 0.2s;
+    }
+
+    .mb-tournament-reg-player:focus-within { border-color: var(--mb-tr-forest); }
+
+    .mb-tournament-reg-player__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .mb-tournament-reg-player__number {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--mb-tr-forest);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .mb-tournament-reg-player__remove {
+      background: none;
+      border: 1px solid var(--mb-tr-border);
+      border-radius: 0.5rem;
+      color: var(--mb-tr-error);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .mb-tournament-reg-player__remove:hover { background: #fdecea; border-color: var(--mb-tr-error); }
+    .mb-tournament-reg-player__remove:focus-visible { outline: 3px solid var(--mb-tr-lime); outline-offset: 2px; }
+
+    .mb-tournament-reg-player__fields {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 0.8fr;
+      gap: 0.75rem;
+    }
+
+    .mb-tournament-reg-player .mb-tournament-reg-field { margin-bottom: 0; }
+
+    .mb-tournament-reg-add-player { margin-top: 0.5rem; }
+
+    /* ============================================
+       REVIEW
+       ============================================ */
+    .mb-tournament-reg-review-block {
+      background: var(--mb-tr-light);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .mb-tournament-reg-review-block__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .mb-tournament-reg-review-block__title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--mb-tr-forest);
+    }
+
+    .mb-tournament-reg-review-block__edit {
+      background: none;
+      border: none;
+      color: var(--mb-tr-forest);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+    }
+
+    .mb-tournament-reg-review-block__edit:focus-visible { outline: 3px solid var(--mb-tr-lime); outline-offset: 2px; }
+
+    .mb-tournament-reg-review-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.9rem;
+      padding: 0.35rem 0;
+      color: #4a5a4e;
+    }
+
+    .mb-tournament-reg-review-row span:last-child { font-weight: 700; color: var(--mb-tr-charcoal); text-align: right; word-break: break-word; }
+
+    .mb-tournament-reg-review-players {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .mb-tournament-reg-review-players li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--mb-tr-charcoal);
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--mb-tr-border);
+    }
+
+    .mb-tournament-reg-review-players li:last-child { border-bottom: none; }
+
+    /* ============================================
+       STEP NAVIGATION
+       ============================================ */
+    .mb-tournament-reg-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--mb-tr-border);
+      flex-wrap: wrap;
+    }
+
+    .mb-tournament-reg-nav .mb-tournament-reg-btn { flex: 1 1 auto; min-width: 140px; }
+
+    /* ============================================
+       SUMMARY PANEL
+       (NEW IMAGE #3 — football ground / pitch)
+       ============================================ */
+    .mb-tournament-reg-summary {
+      position: sticky;
+      top: 1.5rem;
+      background: var(--mb-tr-white);
+      border-radius: var(--mb-tr-radius);
+      box-shadow: var(--mb-tr-shadow-sm);
+      padding: clamp(1.25rem, 3vw, 1.75rem);
+      border: 1px solid var(--mb-tr-border);
+      overflow: hidden;
+    }
+
+    .mb-tournament-reg-summary__img {
+      aspect-ratio: 16 / 7;
+      overflow: hidden;
+      border-radius: 1rem;
+      margin-bottom: 1.25rem;
+      background: #d9e0d9;
+    }
+
+    .mb-tournament-reg-summary__img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .mb-tournament-reg-summary__title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .mb-tournament-reg-summary__group { margin-bottom: 1.25rem; }
+
+    .mb-tournament-reg-summary__group-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--mb-tr-forest);
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--mb-tr-border);
+    }
+
+    .mb-tournament-reg-summary__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.4rem 0;
+      font-size: 0.85rem;
+    }
+
+    .mb-tournament-reg-summary__label { color: #6b7a6e; font-weight: 500; flex-shrink: 0; }
+    .mb-tournament-reg-summary__value { font-weight: 700; text-align: right; color: var(--mb-tr-charcoal); word-break: break-word; }
+    .mb-tournament-reg-summary__value--empty { color: #b0b8b1; font-weight: 500; }
+
+    .mb-tournament-reg-summary__note {
+      font-size: 0.72rem;
+      color: #8a9a8e;
+      margin-top: 1rem;
+      line-height: 1.4;
+    }
+
+    /* ============================================
+       CONFIRMATION / ERROR
+       (NEW IMAGE #4 — team celebration)
+       ============================================ */
+    .mb-tournament-reg-confirm {
+      display: none;
+      background: #eaf7e6;
+      border: 2px solid #5cb85c;
+      border-radius: var(--mb-tr-radius);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .mb-tournament-reg-confirm.visible { display: block; }
+
+    /* NEW: football celebration strip in confirmation */
+    .mb-tournament-reg-confirm__img {
+      aspect-ratio: 21 / 7;
+      overflow: hidden;
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      background: #d9e0d9;
+    }
+
+    .mb-tournament-reg-confirm__img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .mb-tournament-reg-confirm__icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1.25rem;
+      background: #5cb85c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mb-tournament-reg-confirm__icon svg { width: 30px; height: 30px; fill: white; }
+    .mb-tournament-reg-confirm__title { font-size: 1.4rem; font-weight: 800; color: #2e6b2e; margin-bottom: 0.5rem; }
+    .mb-tournament-reg-confirm__desc { font-size: 0.95rem; color: #3a5a3a; line-height: 1.6; margin-bottom: 1.5rem; }
+
+    .mb-tournament-reg-confirm__ref {
+      display: inline-block;
+      background: var(--mb-tr-white);
+      border: 1px dashed #5cb85c;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #2e6b2e;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .mb-tournament-reg-confirm__details {
+      background: var(--mb-tr-white);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .mb-tournament-reg-confirm__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .mb-tournament-reg-error-panel {
+      display: none;
+      background: #fdecea;
+      border: 2px solid var(--mb-tr-error);
+      border-radius: var(--mb-tr-radius);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .mb-tournament-reg-error-panel.visible { display: block; }
+    .mb-tournament-reg-error-panel__title { font-size: 1.1rem; font-weight: 800; color: #a93226; margin-bottom: 0.5rem; }
+    .mb-tournament-reg-error-panel__desc { font-size: 0.9rem; color: #7b2d26; line-height: 1.5; margin-bottom: 1.25rem; }
+
+    /* ============================================
+       FAQ
+       ============================================ */
+    .mb-tournament-reg-faq__list {
+      max-width: 900px;
+      margin: 3rem auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .mb-tournament-reg-faq__item {
+      border: 1px solid var(--mb-tr-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      background: var(--mb-tr-white);
+      transition: border-color 0.2s;
+    }
+
+    .mb-tournament-reg-faq__item[data-open="true"] { border-color: var(--mb-tr-forest); }
+
+    .mb-tournament-reg-faq__question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1.1rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      color: var(--mb-tr-charcoal);
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    .mb-tournament-reg-faq__question:hover { background: var(--mb-tr-light); }
+    .mb-tournament-reg-faq__question:focus-visible { outline: 3px solid var(--mb-tr-lime); outline-offset: -3px; border-radius: 1rem; }
+
+    .mb-tournament-reg-faq__icon { flex-shrink: 0; width: 22px; height: 22px; position: relative; display: flex; align-items: center; justify-content: center; }
+    .mb-tournament-reg-faq__icon::before,
+    .mb-tournament-reg-faq__icon::after { content: ''; position: absolute; background: var(--mb-tr-forest); border-radius: 2px; transition: transform 0.25s ease; }
+    .mb-tournament-reg-faq__icon::before { width: 14px; height: 2px; }
+    .mb-tournament-reg-faq__icon::after { width: 2px; height: 14px; }
+    .mb-tournament-reg-faq__item[data-open="true"] .mb-tournament-reg-faq__icon::after { transform: rotate(90deg) scaleY(0); }
+    .mb-tournament-reg-faq__item[data-open="true"] .mb-tournament-reg-faq__icon::before { background: var(--mb-tr-lime); }
+
+    .mb-tournament-reg-faq__answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 1.25rem; }
+    .mb-tournament-reg-faq__item[data-open="true"] .mb-tournament-reg-faq__answer { max-height: 340px; padding: 0 1.25rem 1.25rem; }
+    .mb-tournament-reg-faq__answer p { font-size: 0.9rem; color: #4a5a4e; line-height: 1.6; }
+
+    /* ============================================
+       INFO SECTION
+       ============================================ */
+    .mb-tournament-reg-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .mb-tournament-reg-info-card {
+      background: var(--mb-tr-white);
+      border-radius: var(--mb-tr-radius);
+      padding: 1.75rem 1.5rem;
+      border: 1px solid var(--mb-tr-border);
+    }
+
+    .mb-tournament-reg-info-card__number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      background: var(--mb-tr-lime);
+      color: var(--mb-tr-deep);
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .mb-tournament-reg-info-card__title { font-size: 1rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--mb-tr-charcoal); }
+    .mb-tournament-reg-info-card__desc { font-size: 0.85rem; color: #5a6a5e; line-height: 1.5; }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .mb-tournament-reg-form-wrapper { grid-template-columns: 1fr; }
+      .mb-tournament-reg-summary { position: static; }
+      .mb-tournament-reg-info-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .mb-tournament-reg-field-row { grid-template-columns: 1fr; }
+      .mb-tournament-reg-player__fields { grid-template-columns: 1fr 1fr; }
+      .mb-tournament-reg-player__fields .mb-tournament-reg-field:first-child { grid-column: 1 / -1; }
+      .mb-tournament-reg-info-grid { grid-template-columns: 1fr; }
+      .mb-tournament-reg-progress { gap: 0.25rem; }
+      .mb-tournament-reg-progress__label { font-size: 0.62rem; }
+      .mb-tournament-reg-atmosphere { flex-direction: column; }
+      .mb-tournament-reg-atmosphere__image { width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .mb-tournament-reg-hero__actions .mb-tournament-reg-btn { width: 100%; }
+      .mb-tournament-reg-nav .mb-tournament-reg-btn { min-width: 100%; }
+      .mb-tournament-reg-confirm__actions .mb-tournament-reg-btn { width: 100%; }
+      .mb-tournament-reg-player__fields { grid-template-columns: 1fr; }
+      .mb-tournament-reg-progress__label { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mb-tournament-reg-main *,
+      .mb-tournament-reg-main *::before,
+      .mb-tournament-reg-main *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .mb-tournament-reg-reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT BAR — at top of page, scrolls with the page -->
+  <div class="announce-bar" id="announceBar">
+    <div class="container">
+      <span>READY FOR YOUR NEXT GAME? BOOK YOUR MATCH-BOX SESSION TODAY.</span>
+      <a href="pages/book-to-play.html">BOOK NOW →</a>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER — starts in normal flow, becomes fixed after scrolling past the announcement bar -->
+  <header class="main-header" id="mainHeader">
+    <div class="container">
+      <a href="index.html" class="logo-area" aria-label="Match-Box home">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <ul>
+          <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item">
+            <a href="book-to-play.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Play <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">PLAY AT MATCH-BOX</div>
+              <a href="book-to-play.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="dropdown-text"><h4>Book a Pitch</h4><p>Reserve a one-hour football session with your friends.</p></div>
+              </a>
+              <a href="about.html#concept" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="dropdown-text"><h4>How It Works</h4><p>Discover how 4-a-side football works at Match-Box.</p></div>
+              </a>
+              <a href="price.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-tag"></i></div>
+                <div class="dropdown-text"><h4>Pricing</h4><p>Explore peak and non-peak playing rates.</p></div>
+              </a>
+              <a href="about.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-building"></i></div>
+                <div class="dropdown-text"><h4>Facility Information</h4><p>Explore the football experience and facility information.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="coaching.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Coaching <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">COACHING PROGRAMS</div>
+              <a href="coaching.html#elite" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-star"></i></div>
+                <div class="dropdown-text"><h4>Elite Coaching</h4><p>Advanced sessions for competitive players.</p></div>
+              </a>
+              <a href="coaching.html#morning" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-sun"></i></div>
+                <div class="dropdown-text"><h4>Morning Coaching</h4><p>Start your day with focused training.</p></div>
+              </a>
+              <a href="coaching.html#afternoon" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="dropdown-text"><h4>Afternoon Coaching</h4><p>Develop skills after school or work.</p></div>
+              </a>
+              <a href="coaching-registration.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="dropdown-text"><h4>Player Registration</h4><p>Explore sessions and register based on capacity.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="tournaments.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Tournaments <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">TOURNAMENTS</div>
+              <a href="tournaments.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-trophy"></i></div>
+                <div class="dropdown-text"><h4>Upcoming Tournaments</h4><p>See what's coming up on the pitch.</p></div>
+              </a>
+              <a href="tournament-details.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="dropdown-text"><h4>Tournament Details</h4><p>Rules, format, and schedules.</p></div>
+              </a>
+              <a href="tournament-register.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-users"></i></div>
+                <div class="dropdown-text"><h4>Register Your Team</h4><p>Sign up your squad for the next event.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="events.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Events <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="dropdown-panel" role="menu">
+              <div class="dropdown-heading">EVENTS</div>
+              <a href="events.html#birthday" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-birthday-cake"></i></div>
+                <div class="dropdown-text"><h4>Birthday Celebrations</h4><p>Host a memorable football birthday.</p></div>
+              </a>
+              <a href="events.html#private" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                <div class="dropdown-text"><h4>Private Football Games</h4><p>Book the pitch for your own group.</p></div>
+              </a>
+              <a href="events.html#school" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-school"></i></div>
+                <div class="dropdown-text"><h4>School Activities</h4><p>Organized football sessions for schools.</p></div>
+              </a>
+              <a href="events.html#corporate" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="dropdown-text"><h4>Corporate Team Building</h4><p>Bring your team together on the pitch.</p></div>
+              </a>
+              <a href="event-enquiry.html" class="dropdown-item" role="menuitem">
+                <div class="dropdown-icon"><i class="fas fa-envelope"></i></div>
+                <div class="dropdown-text"><h4>Submit Event Enquiry</h4><p>Tell us about your event plans.</p></div>
+              </a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="auth-btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+        <button class="auth-btn" id="registerBtn" aria-haspopup="dialog">Register</button>
+        <div class="account-menu-wrapper" id="accountMenuWrapper" style="display: none;">
+          <button class="account-trigger" id="accountTrigger" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar-initials" id="avatarInitials">JD</span>
+            <span class="account-name" id="accountName">John</span>
+            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <div class="account-dropdown" id="accountDropdown" role="menu">
+            <a href="customer/dashboard.html" role="menuitem"><i class="fas fa-th-large"></i> My Account</a>
+            <a href="customer/bookings.html" role="menuitem"><i class="fas fa-calendar-alt"></i> My Bookings</a>
+            <a href="customer/booking-history.html" role="menuitem"><i class="fas fa-history"></i> Booking History</a>
+            <a href="customer/coaching-registrations.html" role="menuitem"><i class="fas fa-chalkboard-teacher"></i> Coaching Registrations</a>
+            <a href="customer/tournament-registrations.html" role="menuitem"><i class="fas fa-trophy"></i> Tournament Registrations</a>
+            <a href="customer/event-enquiries.html" role="menuitem"><i class="fas fa-envelope-open-text"></i> Event Enquiries</a>
+            <div class="divider"></div>
+            <a href="customer/settings.html" role="menuitem"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="#" id="logoutBtn" role="menuitem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <a href="book-to-play.html" class="btn btn-lime">BOOK NOW</a>
+      </div>
+
+      <div class="mobile-header-actions">
+        <a href="book-to-play.html" class="mobile-book-btn"><i class="fas fa-calendar-check"></i> <span>BOOK NOW</span></a>
+        <button class="account-icon-btn" id="mobileAccountBtn" aria-label="My account"><i class="fas fa-user-circle"></i></button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Placeholder that reserves space when the header becomes fixed -->
+  <div class="header-placeholder" id="headerPlaceholder" aria-hidden="true"></div>
+
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile navigation">
+    <div class="drawer-header">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+        <div class="logo-text">
+          <span class="brand-name">MATCH-BOX</span>
+          <span class="tagline">Small Field. Big Fun!</span>
+        </div>
+      </a>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    </div>
+
+    <ul class="drawer-nav">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="about.html" class="drawer-link">About</a></li>
+      <li>
+        <button class="drawer-link" data-sub="playSub" aria-expanded="false">Play Football <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="playSub">
+          <a href="book-to-play.html">Book a Pitch</a>
+          <a href="about.html#concept">How It Works</a>
+          <a href="price.html">Pricing</a>
+          <a href="about.html">Facility Information</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="coachingSub" aria-expanded="false">Coaching <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="coachingSub">
+          <a href="coaching.html#elite">Elite Coaching</a>
+          <a href="coaching.html#morning">Morning Coaching</a>
+          <a href="coaching.html#afternoon">Afternoon Coaching</a>
+          <a href="coaching-registration.html">Player Registration</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="tournamentsSub" aria-expanded="false">Tournaments <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="tournamentsSub">
+          <a href="tournaments.html">Upcoming Tournaments</a>
+          <a href="tournament-details.html">Tournament Details</a>
+          <a href="tournament-register.html">Register Your Team</a>
+        </div>
+      </li>
+      <li>
+        <button class="drawer-link" data-sub="eventsSub" aria-expanded="false">Events <i class="fas fa-chevron-down"></i></button>
+        <div class="drawer-sub" id="eventsSub">
+          <a href="events.html#birthday">Birthday Celebrations</a>
+          <a href="events.html#private">Private Football Games</a>
+          <a href="events.html#school">School Activities</a>
+          <a href="events.html#corporate">Corporate Team Building</a>
+          <a href="event-enquiry.html">Submit Event Enquiry</a>
+        </div>
+      </li>
+      <li><a href="contact.html" class="drawer-link">Contact</a></li>
+    </ul>
+
+    <div class="drawer-auth" id="drawerAuth">
+      <button class="btn btn-outline-lime" id="drawerLoginBtn">Login</button>
+      <button class="btn btn-lime" id="drawerRegisterBtn">Create Account</button>
+    </div>
+
+    <div class="drawer-auth" id="drawerAccount" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span class="avatar-initials" id="drawerAvatar">JD</span>
+        <span style="color: white; font-weight: 600; font-size: 0.9rem;" id="drawerName">John</span>
+      </div>
+      <a href="customer/dashboard.html" class="btn btn-outline-lime">My Account</a>
+      <a href="customer/bookings.html" class="btn btn-outline-lime">My Bookings</a>
+      <button class="btn btn-outline-lime" id="drawerLogoutBtn">Logout</button>
+    </div>
+
+    <a href="book-to-play.html" class="btn btn-lime drawer-cta">BOOK YOUR GAME</a>
+  </aside>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <button class="modal-close" id="authModalClose" aria-label="Close modal"><i class="fas fa-times"></i></button>
+
+      <div id="loginPanel">
+        <h2 id="authModalTitle">WELCOME BACK TO MATCH-BOX</h2>
+        <p class="subtext">Sign in to access your Match-Box experience.</p>
+        <div class="message-area" id="loginMessage"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrapper">
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="error-msg" id="loginEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-icon-right" id="toggleLoginPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="loginPasswordError">Password is required.</div>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a href="#" class="link-text" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="loginSubmitBtn">LOGIN</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToRegisterBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">CREATE AN ACCOUNT</button>
+          </div>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" class="link-text" id="switchToRegisterLink">Create one</a></p>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">Demo interface. No real authentication is performed.</p>
+      </div>
+
+      <div id="registerPanel" style="display: none;">
+        <h2 id="registerTitle">JOIN THE MATCH-BOX COMMUNITY</h2>
+        <p class="subtext">Create your account and make your next football experience easier.</p>
+        <div class="message-area" id="registerMessage"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="regFullName">Full name</label>
+            <div class="input-wrapper"><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required></div>
+            <div class="error-msg" id="regFullNameError">Full name is required.</div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrapper"><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="regEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label for="regMobile">Mobile number</label>
+            <div class="input-wrapper"><input type="tel" id="regMobile" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" required></div>
+            <div class="error-msg" id="regMobileError">Please enter a valid mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar" id="strengthBar1"></div>
+              <div class="strength-bar" id="strengthBar2"></div>
+              <div class="strength-bar" id="strengthBar3"></div>
+            </div>
+            <div class="strength-text" id="strengthText"></div>
+            <div class="error-msg" id="regPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="regConfirmPassword">Confirm password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleRegConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="regConfirmPasswordError">Passwords do not match.</div>
+          </div>
+          <div class="checkbox-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <label><input type="checkbox" id="termsCheck" required> I accept the <a href="terms.html" class="link-text">Terms & Conditions</a></label>
+            <label><input type="checkbox" id="privacyCheck" required> I accept the <a href="privacy.html" class="link-text">Privacy Policy</a></label>
+            <div class="error-msg" id="termsError">You must accept the terms and privacy policy.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="registerSubmitBtn">CREATE ACCOUNT</button>
+            <button type="button" class="btn btn-dark-outline" id="switchToLoginBtn" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#" class="link-text" id="switchToLoginLink">Sign in</a></p>
+      </div>
+
+      <div id="forgotPanel" style="display: none;">
+        <h2>RESET YOUR PASSWORD</h2>
+        <p class="subtext">Enter your registered email address and we'll send reset instructions if the account exists.</p>
+        <div class="message-area" id="forgotMessage"></div>
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label for="forgotEmail">Registered email address</label>
+            <div class="input-wrapper"><input type="email" id="forgotEmail" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+            <div class="error-msg" id="forgotEmailError">Please enter a valid email address.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="forgotSubmitBtn">SEND RESET LINK</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromForgot" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+        <p style="font-size: 0.65rem; color: #999; text-align: center; margin-top: 1rem;">For security, we do not reveal whether an email is registered.</p>
+      </div>
+
+      <div id="resetPanel" style="display: none;">
+        <h2>CREATE NEW PASSWORD</h2>
+        <p class="subtext">Enter your new password below.</p>
+        <div class="message-area" id="resetMessage"></div>
+        <form id="resetForm" novalidate>
+          <div class="form-group">
+            <label for="resetPassword">New password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetPassword" name="newPassword" placeholder="New password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength" id="resetStrength">
+              <div class="strength-bar" id="resetBar1"></div>
+              <div class="strength-bar" id="resetBar2"></div>
+              <div class="strength-bar" id="resetBar3"></div>
+            </div>
+            <div class="strength-text" id="resetStrengthText"></div>
+            <div class="error-msg" id="resetPasswordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="resetConfirmPassword">Confirm new password</label>
+            <div class="input-wrapper">
+              <input type="password" id="resetConfirmPassword" name="confirmPassword" placeholder="Confirm new password" autocomplete="new-password" required>
+              <button type="button" class="input-icon-right" id="toggleResetConfirmPassword" aria-label="Show password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="error-msg" id="resetConfirmError">Passwords do not match.</div>
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-lime" id="resetSubmitBtn">RESET PASSWORD</button>
+            <button type="button" class="btn btn-dark-outline" id="backToLoginFromReset" style="background: transparent; color: var(--football-green); border-color: var(--football-green);">BACK TO LOGIN</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main class="mb-tournament-reg-main" id="mb-tournament-reg-main">
+
+    <!-- ===== HERO (NEW IMAGE #1) ===== -->
+    <section class="mb-tournament-reg-hero" id="mb-tournament-reg-hero" aria-labelledby="mb-tournament-reg-hero-title">
+      <div class="mb-tournament-reg-hero__bg">
+        <img src="https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2070&auto=format&fit=crop" alt="Football tournament match action on a small-sided pitch" fetchpriority="high">
+      </div>
+      <div class="mb-tournament-reg-hero__overlay"></div>
+      <div class="mb-tournament-reg-container">
+        <div class="mb-tournament-reg-hero__content">
+          <div class="mb-tournament-reg-hero__badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            MATCH-BOX FOOTBALL TOURNAMENTS
+          </div>
+          <h1 id="mb-tournament-reg-hero-title" class="mb-tournament-reg-hero__title">
+            YOUR TEAM. YOUR GAME.<br>
+            <span>YOUR MOMENT.</span>
+          </h1>
+          <p class="mb-tournament-reg-hero__desc">
+            Get your squad ready for the competition. Choose a tournament, register your team, and take the next step towards competing at MATCH-BOX.
+          </p>
+          <div class="mb-tournament-reg-hero__actions">
+            <a href="#mb-tournament-reg-form-section" class="mb-tournament-reg-btn mb-tournament-reg-btn--primary">REGISTER YOUR TEAM</a>
+            <a href="tournaments.html" class="mb-tournament-reg-btn mb-tournament-reg-btn--outline">EXPLORE TOURNAMENTS</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEW SECTION — TOURNAMENT ATMOSPHERE (NEW IMAGE #2) ===== -->
+    <section class="mb-tournament-reg-section mb-tournament-reg-section--light" id="mb-tournament-reg-atmosphere" aria-labelledby="mb-tournament-reg-atmosphere-title">
+      <div class="mb-tournament-reg-container">
+        <div class="mb-tournament-reg-atmosphere">
+          <div class="mb-tournament-reg-atmosphere__image mb-tournament-reg-reveal">
+            <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1200&auto=format&fit=crop" alt="Football team huddle on the pitch before a tournament match" loading="lazy">
+            <div class="mb-tournament-reg-atmosphere__badge">TOURNAMENT ATMOSPHERE</div>
+          </div>
+          <div class="mb-tournament-reg-atmosphere__content mb-tournament-reg-reveal">
+            <span class="mb-tournament-reg-eyebrow">COMPETE AT MATCH-BOX</span>
+            <h2 id="mb-tournament-reg-atmosphere-title" class="mb-tournament-reg-h2">THE PITCH IS SET. THE TEAMS ARE READY.</h2>
+            <p class="mb-tournament-reg-text-lg" style="margin-top:1rem;">
+              MATCH-BOX tournaments bring teams together for competitive 4-a-side football. Register your squad, prepare for match day, and experience the energy of small-sided competition.
+            </p>
+            <ul class="mb-tournament-reg-atmosphere__list">
+              <li>Competitive 4-a-side football tournaments</li>
+              <li>Team registration for open competitions</li>
+              <li>Captain-led squad submissions</li>
+              <li>Organised match day experience at MATCH-BOX</li>
+            </ul>
+            <div style="margin-top:2rem;">
+              <a href="#mb-tournament-reg-form-section" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark">REGISTER YOUR TEAM</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TOURNAMENT SELECTION ===== -->
+    <section class="mb-tournament-reg-section mb-tournament-reg-section--white" id="mb-tournament-reg-tournaments" aria-labelledby="mb-tournament-reg-tournaments-title">
+      <div class="mb-tournament-reg-container">
+        <span class="mb-tournament-reg-eyebrow">TOURNAMENT SELECTION</span>
+        <h2 id="mb-tournament-reg-tournaments-title" class="mb-tournament-reg-h2">CHOOSE YOUR TOURNAMENT.</h2>
+        <p class="mb-tournament-reg-text-lg" style="margin-top:0.75rem;">
+          Select the competition you want your team to participate in. Only open tournaments can be registered for.
+        </p>
+
+        <div class="mb-tournament-reg-list" id="mb-tournament-reg-list">
+          <!-- Tournament cards injected by JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div class="mb-tournament-reg-empty" id="mb-tournament-reg-empty" style="display:none;">
+          <h3 class="mb-tournament-reg-empty__title">NO OPEN TOURNAMENTS RIGHT NOW.</h3>
+          <p class="mb-tournament-reg-empty__desc">
+            New football competitions will appear here when registration opens. Check back soon for upcoming MATCH-BOX tournaments.
+          </p>
+          <a href="tournaments.html" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark">BACK TO TOURNAMENTS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FORM + SUMMARY ===== -->
+    <section class="mb-tournament-reg-section mb-tournament-reg-section--light" id="mb-tournament-reg-form-section" aria-labelledby="mb-tournament-reg-form-title">
+      <div class="mb-tournament-reg-container">
+        <span class="mb-tournament-reg-eyebrow">TEAM REGISTRATION</span>
+        <h2 id="mb-tournament-reg-form-title" class="mb-tournament-reg-h2">REGISTER YOUR TEAM.</h2>
+        <p class="mb-tournament-reg-text-lg" style="margin-top:0.75rem;">
+          Enter your team and captain details below to submit your tournament registration.
+        </p>
+
+        <!-- Progress indicator -->
+        <div class="mb-tournament-reg-progress" id="mb-tournament-reg-progress" role="list" aria-label="Registration progress">
+          <div class="mb-tournament-reg-progress__step mb-tournament-reg-progress__step--active" data-step="1" role="listitem">
+            <div class="mb-tournament-reg-progress__dot">1</div>
+            <div class="mb-tournament-reg-progress__label">Tournament</div>
+          </div>
+          <div class="mb-tournament-reg-progress__step" data-step="2" role="listitem">
+            <div class="mb-tournament-reg-progress__dot">2</div>
+            <div class="mb-tournament-reg-progress__label">Team</div>
+          </div>
+          <div class="mb-tournament-reg-progress__step" data-step="3" role="listitem">
+            <div class="mb-tournament-reg-progress__dot">3</div>
+            <div class="mb-tournament-reg-progress__label">Captain</div>
+          </div>
+          <div class="mb-tournament-reg-progress__step" data-step="4" role="listitem">
+            <div class="mb-tournament-reg-progress__dot">4</div>
+            <div class="mb-tournament-reg-progress__label">Squad</div>
+          </div>
+          <div class="mb-tournament-reg-progress__step" data-step="5" role="listitem">
+            <div class="mb-tournament-reg-progress__dot">5</div>
+            <div class="mb-tournament-reg-progress__label">Review</div>
+          </div>
+        </div>
+
+        <div class="mb-tournament-reg-form-wrapper">
+          <!-- FORM -->
+          <div class="mb-tournament-reg-form">
+            <form id="mb-tournament-reg-form" novalidate>
+
+              <!-- STEP 1 – Tournament -->
+              <div class="mb-tournament-reg-step-panel mb-tournament-reg-step-panel--active" data-panel="1">
+                <!-- NEW IMAGE #5 — football ground aerial -->
+                <div class="mb-tournament-reg-step-img">
+                  <img src="https://images.unsplash.com/photo-1459865264687-595d652de67e?q=80&w=1200&auto=format&fit=crop" alt="Football ground viewed from above with pitch markings" loading="lazy">
+                </div>
+                <h3 class="mb-tournament-reg-step-panel__title"><span>1</span> Tournament Information</h3>
+                <p class="mb-tournament-reg-step-panel__desc">Select an open tournament to register your team.</p>
+
+                <div class="mb-tournament-reg-field">
+                  <label for="mb-tournament-reg-tournament-select">Tournament <span class="mb-tournament-reg-required">*</span></label>
+                  <select id="mb-tournament-reg-tournament-select" name="tournament_id" required>
+                    <option value="">Select a tournament</option>
+                  </select>
+                  <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-tournament-select-error">Please select a tournament.</span>
+                </div>
+
+                <div class="mb-tournament-reg-info-box" id="mb-tournament-reg-info-box" style="display:none;">
+                  <div class="mb-tournament-reg-info-box__name" id="mb-tournament-reg-info-name">—</div>
+                  <div class="mb-tournament-reg-info-box__row"><span>Date</span><span id="mb-tournament-reg-info-date">—</span></div>
+                  <div class="mb-tournament-reg-info-box__row"><span>Registration Deadline</span><span id="mb-tournament-reg-info-deadline">—</span></div>
+                  <div class="mb-tournament-reg-info-box__row"><span>Status</span><span id="mb-tournament-reg-info-status">—</span></div>
+                </div>
+              </div>
+
+              <!-- STEP 2 – Team Info -->
+              <div class="mb-tournament-reg-step-panel" data-panel="2">
+                <!-- NEW IMAGE #6 — team football kit / boots -->
+                <div class="mb-tournament-reg-step-img">
+                  <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop" alt="Football players warming up on the pitch before team registration" loading="lazy">
+                </div>
+                <h3 class="mb-tournament-reg-step-panel__title"><span>2</span> Team Information</h3>
+                <p class="mb-tournament-reg-step-panel__desc">Tell us about your team.</p>
+
+                <div class="mb-tournament-reg-team-preview" id="mb-tournament-reg-team-preview">
+                  <div class="mb-tournament-reg-team-preview__logo" id="mb-tournament-reg-team-logo-preview">?</div>
+                  <div>
+                    <div class="mb-tournament-reg-team-preview__name" id="mb-tournament-reg-team-name-preview">Your Team Name</div>
+                    <div class="mb-tournament-reg-team-preview__sub" id="mb-tournament-reg-team-city-preview">Team City</div>
+                  </div>
+                </div>
+
+                <div class="mb-tournament-reg-field">
+                  <label for="mb-tournament-reg-team-name">Team Name <span class="mb-tournament-reg-required">*</span></label>
+                  <input type="text" id="mb-tournament-reg-team-name" name="team_name" placeholder="e.g. Riverside FC" required>
+                  <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-team-name-error">Please enter a team name.</span>
+                </div>
+                <div class="mb-tournament-reg-field-row">
+                  <div class="mb-tournament-reg-field">
+                    <label for="mb-tournament-reg-team-short">Team Short Name (Optional)</label>
+                    <input type="text" id="mb-tournament-reg-team-short" name="team_short_name" placeholder="e.g. RFC" maxlength="10">
+                  </div>
+                  <div class="mb-tournament-reg-field">
+                    <label for="mb-tournament-reg-team-city">Team City / Area (Optional)</label>
+                    <input type="text" id="mb-tournament-reg-team-city" name="team_city" placeholder="e.g. Bengaluru">
+                  </div>
+                </div>
+                <div class="mb-tournament-reg-field">
+                  <label for="mb-tournament-reg-team-desc">Team Description (Optional)</label>
+                  <textarea id="mb-tournament-reg-team-desc" name="team_description" placeholder="A short description of your team…"></textarea>
+                </div>
+                <div class="mb-tournament-reg-field">
+                  <label for="mb-tournament-reg-team-logo">Team Logo Upload (Optional)</label>
+                  <div class="mb-tournament-reg-logo-upload">
+                    <input type="file" id="mb-tournament-reg-team-logo" name="team_logo" accept="image/png,image/jpeg,image/webp">
+                    <div class="mb-tournament-reg-logo-preview" id="mb-tournament-reg-logo-preview">
+                      <img id="mb-tournament-reg-logo-img" src="" alt="Team logo preview">
+                      <button type="button" class="mb-tournament-reg-player__remove" id="mb-tournament-reg-logo-remove">REMOVE</button>
+                    </div>
+                  </div>
+                  <p class="mb-tournament-reg-field-hint">Accepted formats: PNG, JPG, WEBP. Max 2MB. Upload is validated on the server.</p>
+                  <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-team-logo-error">Please select a valid image under 2MB.</span>
+                </div>
+              </div>
+
+              <!-- STEP 3 – Captain -->
+              <div class="mb-tournament-reg-step-panel" data-panel="3">
+                <!-- NEW IMAGE #7 — captain / player close-up -->
+                <div class="mb-tournament-reg-step-img">
+                  <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop" alt="Football captain leading the team on the pitch" loading="lazy">
+                </div>
+                <h3 class="mb-tournament-reg-step-panel__title"><span>3</span> Captain Information</h3>
+                <p class="mb-tournament-reg-step-panel__desc">The captain is the primary contact for tournament communication.</p>
+
+                <div class="mb-tournament-reg-field">
+                  <label for="mb-tournament-reg-captain-name">Captain Full Name <span class="mb-tournament-reg-required">*</span></label>
+                  <input type="text" id="mb-tournament-reg-captain-name" name="captain_name" placeholder="e.g. Arjun Mehta" required autocomplete="name">
+                  <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-captain-name-error">Please enter the captain's name.</span>
+                </div>
+                <div class="mb-tournament-reg-field-row">
+                  <div class="mb-tournament-reg-field">
+                    <label for="mb-tournament-reg-captain-email">Captain Email <span class="mb-tournament-reg-required">*</span></label>
+                    <input type="email" id="mb-tournament-reg-captain-email" name="captain_email" placeholder="e.g. captain@example.com" required autocomplete="email">
+                    <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-captain-email-error">Please enter a valid email.</span>
+                  </div>
+                  <div class="mb-tournament-reg-field">
+                    <label for="mb-tournament-reg-captain-mobile">Captain Mobile <span class="mb-tournament-reg-required">*</span></label>
+                    <input type="tel" id="mb-tournament-reg-captain-mobile" name="captain_mobile" placeholder="e.g. 98765 43210" required autocomplete="tel">
+                    <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-captain-mobile-error">Please enter a valid 10-digit mobile number.</span>
+                  </div>
+                </div>
+                <div class="mb-tournament-reg-field">
+                  <label for="mb-tournament-reg-alt-mobile">Alternate Contact Number (Optional)</label>
+                  <input type="tel" id="mb-tournament-reg-alt-mobile" name="alternate_mobile" placeholder="e.g. 91234 56789" autocomplete="tel">
+                </div>
+              </div>
+
+              <!-- STEP 4 – Squad -->
+              <div class="mb-tournament-reg-step-panel" data-panel="4">
+                <!-- NEW IMAGE #8 — squad / team group -->
+                <div class="mb-tournament-reg-step-img">
+                  <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1200&auto=format&fit=crop" alt="Football squad preparing together for a tournament" loading="lazy">
+                </div>
+                <h3 class="mb-tournament-reg-step-panel__title"><span>4</span> Build Your Squad</h3>
+                <p class="mb-tournament-reg-step-panel__desc">Add the players who will represent your team. Squad size limits are set by the selected tournament.</p>
+
+                <div class="mb-tournament-reg-squad-header">
+                  <div class="mb-tournament-reg-squad-count" id="mb-tournament-reg-squad-count">0 players added</div>
+                  <div class="mb-tournament-reg-checkbox" style="margin:0;">
+                    <input type="checkbox" id="mb-tournament-reg-captain-player" name="captain_is_player">
+                    <label for="mb-tournament-reg-captain-player">Captain is also a team player</label>
+                  </div>
+                </div>
+
+                <div id="mb-tournament-reg-squad-list"></div>
+
+                <button type="button" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark mb-tournament-reg-add-player" id="mb-tournament-reg-add-player">+ ADD PLAYER</button>
+                <p class="mb-tournament-reg-field-hint" id="mb-tournament-reg-squad-hint" style="margin-top:0.75rem;">
+                  Squad size limits are confirmed by the selected tournament.
+                </p>
+              </div>
+
+              <!-- STEP 5 – Review -->
+              <div class="mb-tournament-reg-step-panel" data-panel="5">
+                <!-- NEW IMAGE #9 — match day / celebration -->
+                <div class="mb-tournament-reg-step-img">
+                  <img src="https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=1200&auto=format&fit=crop" alt="Football team celebrating together after a match" loading="lazy">
+                </div>
+                <h3 class="mb-tournament-reg-step-panel__title"><span>5</span> Review &amp; Submit</h3>
+                <p class="mb-tournament-reg-step-panel__desc">Review your registration details before submitting.</p>
+
+                <div class="mb-tournament-reg-review-block">
+                  <div class="mb-tournament-reg-review-block__header">
+                    <span class="mb-tournament-reg-review-block__title">Tournament</span>
+                    <button type="button" class="mb-tournament-reg-review-block__edit" data-edit-step="1">Edit</button>
+                  </div>
+                  <div class="mb-tournament-reg-review-row"><span>Name</span><span id="mb-tournament-reg-review-tournament">—</span></div>
+                  <div class="mb-tournament-reg-review-row"><span>Date</span><span id="mb-tournament-reg-review-tournament-date">—</span></div>
+                </div>
+
+                <div class="mb-tournament-reg-review-block">
+                  <div class="mb-tournament-reg-review-block__header">
+                    <span class="mb-tournament-reg-review-block__title">Team</span>
+                    <button type="button" class="mb-tournament-reg-review-block__edit" data-edit-step="2">Edit</button>
+                  </div>
+                  <div class="mb-tournament-reg-review-row"><span>Team Name</span><span id="mb-tournament-reg-review-team">—</span></div>
+                  <div class="mb-tournament-reg-review-row"><span>City</span><span id="mb-tournament-reg-review-city">—</span></div>
+                </div>
+
+                <div class="mb-tournament-reg-review-block">
+                  <div class="mb-tournament-reg-review-block__header">
+                    <span class="mb-tournament-reg-review-block__title">Captain</span>
+                    <button type="button" class="mb-tournament-reg-review-block__edit" data-edit-step="3">Edit</button>
+                  </div>
+                  <div class="mb-tournament-reg-review-row"><span>Name</span><span id="mb-tournament-reg-review-captain">—</span></div>
+                  <div class="mb-tournament-reg-review-row"><span>Email</span><span id="mb-tournament-reg-review-captain-email">—</span></div>
+                  <div class="mb-tournament-reg-review-row"><span>Mobile</span><span id="mb-tournament-reg-review-captain-mobile">—</span></div>
+                </div>
+
+                <div class="mb-tournament-reg-review-block">
+                  <div class="mb-tournament-reg-review-block__header">
+                    <span class="mb-tournament-reg-review-block__title">Squad</span>
+                    <button type="button" class="mb-tournament-reg-review-block__edit" data-edit-step="4">Edit</button>
+                  </div>
+                  <div class="mb-tournament-reg-review-row"><span>Total Players</span><span id="mb-tournament-reg-review-player-count">0</span></div>
+                  <ul class="mb-tournament-reg-review-players" id="mb-tournament-reg-review-players"></ul>
+                </div>
+
+                <div class="mb-tournament-reg-checkbox">
+                  <input type="checkbox" id="mb-tournament-reg-accurate" name="accuracy_consent" required>
+                  <label for="mb-tournament-reg-accurate">I confirm that the team information provided is accurate.</label>
+                </div>
+                <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-accurate-error" style="margin-top:-0.5rem;margin-bottom:1rem;">Please confirm the information is accurate.</span>
+
+                <div class="mb-tournament-reg-checkbox">
+                  <input type="checkbox" id="mb-tournament-reg-permission" name="permission_consent" required>
+                  <label for="mb-tournament-reg-permission">I confirm that I have permission to submit the player information included in this registration.</label>
+                </div>
+                <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-permission-error" style="margin-top:-0.5rem;margin-bottom:1rem;">Please confirm you have permission.</span>
+
+                <div class="mb-tournament-reg-checkbox">
+                  <input type="checkbox" id="mb-tournament-reg-terms" name="terms_consent" required>
+                  <label for="mb-tournament-reg-terms">I agree to the <a href="terms.html" target="_blank" rel="noopener">tournament terms and conditions</a>.</label>
+                </div>
+                <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-terms-error" style="margin-top:-0.5rem;margin-bottom:1rem;">Please accept the tournament terms.</span>
+
+                <div class="mb-tournament-reg-checkbox">
+                  <input type="checkbox" id="mb-tournament-reg-privacy" name="privacy_consent" required>
+                  <label for="mb-tournament-reg-privacy">I have read the <a href="privacy-policy.html" target="_blank" rel="noopener">privacy policy</a>.</label>
+                </div>
+                <span class="mb-tournament-reg-error-msg" id="mb-tournament-reg-privacy-error" style="margin-top:-0.5rem;margin-bottom:1rem;">Please accept the privacy policy.</span>
+              </div>
+
+              <!-- STEP NAVIGATION -->
+              <div class="mb-tournament-reg-nav">
+                <button type="button" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark" id="mb-tournament-reg-prev" style="display:none;">← BACK</button>
+                <button type="button" class="mb-tournament-reg-btn mb-tournament-reg-btn--primary" id="mb-tournament-reg-next">NEXT →</button>
+                <button type="submit" class="mb-tournament-reg-btn mb-tournament-reg-btn--primary" id="mb-tournament-reg-submit" style="display:none;">SUBMIT TEAM REGISTRATION</button>
+              </div>
+            </form>
+
+            <!-- Confirmation (NEW IMAGE #10) -->
+            <div class="mb-tournament-reg-confirm" id="mb-tournament-reg-confirm" role="status" aria-live="polite">
+              <div class="mb-tournament-reg-confirm__img">
+                <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=1200&auto=format&fit=crop" alt="Football team celebrating a successful tournament registration" loading="lazy">
+              </div>
+              <div class="mb-tournament-reg-confirm__icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+              <h4 class="mb-tournament-reg-confirm__title">YOUR TEAM IS IN THE GAME!</h4>
+              <p class="mb-tournament-reg-confirm__desc">
+                Thank you for registering your team with MATCH-BOX. Your tournament registration has been submitted successfully.
+              </p>
+              <div class="mb-tournament-reg-confirm__ref" id="mb-tournament-reg-confirm-ref">REF: —</div>
+              <div class="mb-tournament-reg-confirm__details">
+                <div class="mb-tournament-reg-review-row"><span>Tournament</span><span id="mb-tournament-reg-confirm-tournament">—</span></div>
+                <div class="mb-tournament-reg-review-row"><span>Team</span><span id="mb-tournament-reg-confirm-team">—</span></div>
+                <div class="mb-tournament-reg-review-row"><span>Captain</span><span id="mb-tournament-reg-confirm-captain">—</span></div>
+                <div class="mb-tournament-reg-review-row"><span>Players</span><span id="mb-tournament-reg-confirm-players">—</span></div>
+                <div class="mb-tournament-reg-review-row"><span>Status</span><span id="mb-tournament-reg-confirm-status">—</span></div>
+              </div>
+              <div class="mb-tournament-reg-confirm__actions">
+                <a href="tournaments.html" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark mb-tournament-reg-btn--sm">BACK TO TOURNAMENTS</a>
+                <a href="index.html" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark mb-tournament-reg-btn--sm">RETURN TO HOMEPAGE</a>
+              </div>
+            </div>
+
+            <!-- Error -->
+            <div class="mb-tournament-reg-error-panel" id="mb-tournament-reg-error-panel" role="alert">
+              <h4 class="mb-tournament-reg-error-panel__title">We couldn't submit your registration.</h4>
+              <p class="mb-tournament-reg-error-panel__desc">
+                Please try again. If the problem continues, contact MATCH-BOX directly.
+              </p>
+              <button type="button" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark mb-tournament-reg-btn--sm" id="mb-tournament-reg-retry">TRY AGAIN</button>
+            </div>
+          </div>
+
+          <!-- SUMMARY (NEW IMAGE #3) -->
+          <aside class="mb-tournament-reg-summary" aria-labelledby="mb-tournament-reg-summary-title">
+            <div class="mb-tournament-reg-summary__img">
+              <img src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&w=800&auto=format&fit=crop" alt="Football ground and pitch where tournaments take place" loading="lazy">
+            </div>
+            <h3 class="mb-tournament-reg-summary__title" id="mb-tournament-reg-summary-title">Registration Summary</h3>
+
+            <div class="mb-tournament-reg-summary__group">
+              <div class="mb-tournament-reg-summary__group-title">Tournament</div>
+              <div class="mb-tournament-reg-summary__row">
+                <span class="mb-tournament-reg-summary__label">Selected</span>
+                <span class="mb-tournament-reg-summary__value mb-tournament-reg-summary__value--empty" id="mb-tournament-reg-summary-tournament">Not selected</span>
+              </div>
+              <div class="mb-tournament-reg-summary__row">
+                <span class="mb-tournament-reg-summary__label">Date</span>
+                <span class="mb-tournament-reg-summary__value mb-tournament-reg-summary__value--empty" id="mb-tournament-reg-summary-date">—</span>
+              </div>
+            </div>
+
+            <div class="mb-tournament-reg-summary__group">
+              <div class="mb-tournament-reg-summary__group-title">Team</div>
+              <div class="mb-tournament-reg-summary__row">
+                <span class="mb-tournament-reg-summary__label">Team name</span>
+                <span class="mb-tournament-reg-summary__value mb-tournament-reg-summary__value--empty" id="mb-tournament-reg-summary-team">Not entered</span>
+              </div>
+              <div class="mb-tournament-reg-summary__row">
+                <span class="mb-tournament-reg-summary__label">Captain</span>
+                <span class="mb-tournament-reg-summary__value mb-tournament-reg-summary__value--empty" id="mb-tournament-reg-summary-captain">Not entered</span>
+              </div>
+              <div class="mb-tournament-reg-summary__row">
+                <span class="mb-tournament-reg-summary__label">Players</span>
+                <span class="mb-tournament-reg-summary__value" id="mb-tournament-reg-summary-players">0</span>
+              </div>
+            </div>
+
+            <div class="mb-tournament-reg-summary__group">
+              <div class="mb-tournament-reg-summary__group-title">Registration</div>
+              <div class="mb-tournament-reg-summary__row">
+                <span class="mb-tournament-reg-summary__label">Status</span>
+                <span class="mb-tournament-reg-summary__value mb-tournament-reg-summary__value--empty" id="mb-tournament-reg-summary-status">Not started</span>
+              </div>
+            </div>
+
+            <p class="mb-tournament-reg-summary__note">
+              Final confirmation is subject to tournament capacity and MATCH-BOX review. No payment is collected on this page.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INFO SECTION ===== -->
+    <section class="mb-tournament-reg-section mb-tournament-reg-section--white" id="mb-tournament-reg-info" aria-labelledby="mb-tournament-reg-info-title">
+      <div class="mb-tournament-reg-container">
+        <span class="mb-tournament-reg-eyebrow">REGISTRATION RULES</span>
+        <h2 id="mb-tournament-reg-info-title" class="mb-tournament-reg-h2">IMPORTANT REGISTRATION INFORMATION.</h2>
+        <div class="mb-tournament-reg-info-grid">
+          <div class="mb-tournament-reg-info-card">
+            <div class="mb-tournament-reg-info-card__number">01</div>
+            <h3 class="mb-tournament-reg-info-card__title">Select an Open Tournament</h3>
+            <p class="mb-tournament-reg-info-card__desc">Only tournaments with open registration can be selected. Closed, full, or completed tournaments cannot be registered for.</p>
+          </div>
+          <div class="mb-tournament-reg-info-card">
+            <div class="mb-tournament-reg-info-card__number">02</div>
+            <h3 class="mb-tournament-reg-info-card__title">Submit Accurate Information</h3>
+            <p class="mb-tournament-reg-info-card__desc">Provide accurate team, captain, and player information. The captain is the primary contact for all tournament communication.</p>
+          </div>
+          <div class="mb-tournament-reg-info-card">
+            <div class="mb-tournament-reg-info-card__number">03</div>
+            <h3 class="mb-tournament-reg-info-card__title">Follow Squad Rules</h3>
+            <p class="mb-tournament-reg-info-card__desc">Add players according to the selected tournament's squad rules. Squad size limits are confirmed by MATCH-BOX.</p>
+          </div>
+          <div class="mb-tournament-reg-info-card">
+            <div class="mb-tournament-reg-info-card__number">04</div>
+            <h3 class="mb-tournament-reg-info-card__title">Review Before Submitting</h3>
+            <p class="mb-tournament-reg-info-card__desc">Review all details before submission. Use the review step to correct any mistakes.</p>
+          </div>
+          <div class="mb-tournament-reg-info-card">
+            <div class="mb-tournament-reg-info-card__number">05</div>
+            <h3 class="mb-tournament-reg-info-card__title">Wait for Confirmation</h3>
+            <p class="mb-tournament-reg-info-card__desc">Submitting a registration does not automatically confirm your team. MATCH-BOX reviews each registration and provides confirmation.</p>
+          </div>
+          <div class="mb-tournament-reg-info-card">
+            <div class="mb-tournament-reg-info-card__number">06</div>
+            <h3 class="mb-tournament-reg-info-card__title">Tournament-Specific Requirements</h3>
+            <p class="mb-tournament-reg-info-card__desc">Each tournament may have its own registration requirements. Please review the tournament details before submitting your team.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="mb-tournament-reg-section mb-tournament-reg-section--light" id="mb-tournament-reg-faq" aria-labelledby="mb-tournament-reg-faq-title">
+      <div class="mb-tournament-reg-container">
+        <h2 id="mb-tournament-reg-faq-title" class="mb-tournament-reg-h2" style="text-align:center;">TOURNAMENT REGISTRATION FAQ</h2>
+        <div class="mb-tournament-reg-faq__list">
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a1" id="mb-tournament-reg-faq-q1">
+              How do I register my team?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a1" role="region" aria-labelledby="mb-tournament-reg-faq-q1">
+              <p>Select an open tournament on this page, complete the team and captain details, build your squad, review the information, and submit the registration.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a2" id="mb-tournament-reg-faq-q2">
+              Can I register for more than one tournament?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a2" role="region" aria-labelledby="mb-tournament-reg-faq-q2">
+              <p>Each registration is submitted for one tournament at a time. If you wish to register for another tournament, you can submit a separate registration.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a3" id="mb-tournament-reg-faq-q3">
+              How many players can I add to my squad?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a3" role="region" aria-labelledby="mb-tournament-reg-faq-q3">
+              <p>Squad size limits depend on the selected tournament's rules. MATCH-BOX uses a 4-a-side format, but the number of players on the pitch does not automatically define the squad size. Please review the tournament details for squad requirements.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a4" id="mb-tournament-reg-faq-q4">
+              Can I add substitutes?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a4" role="region" aria-labelledby="mb-tournament-reg-faq-q4">
+              <p>Substitute rules depend on the tournament's configuration. Please review the tournament details or contact MATCH-BOX for confirmation.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a5" id="mb-tournament-reg-faq-q5">
+              Can the captain also be included as a player?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a5" role="region" aria-labelledby="mb-tournament-reg-faq-q5">
+              <p>Yes. Use the "Captain is also a team player" checkbox in the squad step to add the captain as a player without duplicating their details.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a6" id="mb-tournament-reg-faq-q6">
+              Can I edit my team details after submission?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a6" role="region" aria-labelledby="mb-tournament-reg-faq-q6">
+              <p>Editing after submission depends on MATCH-BOX's review process. Please contact MATCH-BOX directly if you need to make changes.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a7" id="mb-tournament-reg-faq-q7">
+              How will I know whether my registration is confirmed?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a7" role="region" aria-labelledby="mb-tournament-reg-faq-q7">
+              <p>After submitting your registration, MATCH-BOX will review your details and contact the captain with the registration status.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a8" id="mb-tournament-reg-faq-q8">
+              What happens if tournament registration is full?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a8" role="region" aria-labelledby="mb-tournament-reg-faq-q8">
+              <p>Once a tournament reaches its maximum team capacity, registration is closed. Contact MATCH-BOX to ask about upcoming tournaments.</p>
+            </div>
+          </div>
+
+          <div class="mb-tournament-reg-faq__item" data-open="false">
+            <button class="mb-tournament-reg-faq__question" aria-expanded="false" aria-controls="mb-tournament-reg-faq-a9" id="mb-tournament-reg-faq-q9">
+              What should I do if I submit incorrect information?
+              <span class="mb-tournament-reg-faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="mb-tournament-reg-faq__answer" id="mb-tournament-reg-faq-a9" role="region" aria-labelledby="mb-tournament-reg-faq-q9">
+              <p>Please contact MATCH-BOX as soon as possible with your registration reference so the team can assist you.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-cta">
+      <div class="container">
+        <h2>YOUR NEXT GAME IS WAITING.</h2>
+        <p>Bring your friends, make a team, and experience the excitement of 4-a-side football.</p>
+        <div class="footer-cta-btns">
+          <a href="book-to-play.html" class="btn btn-lime">BOOK YOUR GAME</a>
+          <a href="about.html" class="btn btn-dark-outline" style="background: transparent; border-color: var(--white); color: var(--white);">EXPLORE MATCH-BOX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo-area">
+              <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+              <div class="logo-text">
+                <span class="brand-name">MATCH-BOX</span>
+                <span class="tagline">Small Field. Big Fun!</span>
+              </div>
+            </a>
+            <p>Match-Box brings people together through the excitement of small-sided football. Enjoy the game, develop your skills, and create memorable moments.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Match-Box</a></li>
+              <li><a href="book-to-play.html">Book to Play</a></li>
+              <li><a href="coaching.html">Coaching</a></li>
+              <li><a href="tournaments.html">Tournaments</a></li>
+              <li><a href="events.html">Events</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Play & Participate</h4>
+            <ul>
+              <li><a href="book-to-play.html">Book a Pitch</a></li>
+              <li><a href="coaching-registration.html">Coaching Registration</a></li>
+              <li><a href="tournaments.html">Upcoming Tournaments</a></li>
+              <li><a href="tournament-register.html">Register Your Team</a></li>
+              <li><a href="events.html#birthday">Birthday Events</a></li>
+              <li><a href="events.html#private">Private Events</a></li>
+              <li><a href="contact.html">Ask a Question</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><a href="customer/dashboard.html">My Account</a></li>
+              <li><a href="customer/bookings.html">My Bookings</a></li>
+              <li><a href="customer/booking-history.html">Booking History</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="contact.html">Contact Support</a></li>
+              <li><a href="booking-information.html">Booking Information</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Legal Information</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="refund-policy.html">Cancellation & Refund Policy</a></li>
+              <li><a href="facility-rules.html">Facility Rules & Safety Guidelines</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;">
+          <div>
+            <h4 style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lime-green); margin-bottom: 1.25rem;">Contact</h4>
+            <ul class="footer-contact-info">
+              <li><i class="fas fa-envelope"></i> <span>hello@match-box.example</span></li>
+              <li><i class="fas fa-phone-alt"></i> <span>+91 00000 00000</span></li>
+              <li><i class="fas fa-map-marker-alt"></i> <span>Match-Box Facility, Address Placeholder</span></li>
+              <li><i class="fas fa-clock"></i> <span>Operating hours: 6:00 AM – 12:00 midnight</span></li>
+            </ul>
+          </div>
+          <div class="newsletter">
+            <h4>STAY IN THE GAME.</h4>
+            <p>Get updates about upcoming tournaments, coaching, and Match-Box events.</p>
+            <form class="newsletter-form" id="newsletterForm" novalidate>
+              <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+              <button type="submit" class="btn btn-lime" id="newsletterSubmit">SUBSCRIBE</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg"></div>
+            <p style="font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem;">Demo only. Subscriptions are not stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; <span id="copyrightYear"></span> MATCH-BOX. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const header = document.getElementById('mainHeader');
+      const announceBar = document.getElementById('announceBar');
+      const headerPlaceholder = document.getElementById('headerPlaceholder');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const drawerClose = document.getElementById('drawerClose');
+      const authModalOverlay = document.getElementById('authModalOverlay');
+      const authModalClose = document.getElementById('authModalClose');
+
+      const loginPanel = document.getElementById('loginPanel');
+      const registerPanel = document.getElementById('registerPanel');
+      const forgotPanel = document.getElementById('forgotPanel');
+      const resetPanel = document.getElementById('resetPanel');
+
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const drawerLoginBtn = document.getElementById('drawerLoginBtn');
+      const drawerRegisterBtn = document.getElementById('drawerRegisterBtn');
+      const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+      const switchToRegisterLink = document.getElementById('switchToRegisterLink');
+      const switchToLoginBtn = document.getElementById('switchToLoginBtn');
+      const switchToLoginLink = document.getElementById('switchToLoginLink');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+      const backToLoginFromReset = document.getElementById('backToLoginFromReset');
+
+      const accountMenuWrapper = document.getElementById('accountMenuWrapper');
+      const accountTrigger = document.getElementById('accountTrigger');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const drawerLogoutBtn = document.getElementById('drawerLogoutBtn');
+      const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const resetForm = document.getElementById('resetForm');
+      const newsletterForm = document.getElementById('newsletterForm');
+
+      let isLoggedIn = false;
+
+      /* =========================================================
+         STICKY HEADER LOGIC
+         - At page top: header sits naturally below announce bar
+         - After scrolling past announce bar: header pins to viewport top
+         - Scroll back up: header returns to natural position
+         ========================================================= */
+      const announceHeight = announceBar.offsetHeight;
+      let headerIsFixed = false;
+
+      function updateHeaderState() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > announceHeight) {
+          if (!headerIsFixed) {
+            headerIsFixed = true;
+            header.classList.add('is-fixed');
+            headerPlaceholder.classList.add('active');
+          }
+        } else {
+          if (headerIsFixed) {
+            headerIsFixed = false;
+            header.classList.remove('is-fixed');
+            headerPlaceholder.classList.remove('active');
+          }
+        }
+      }
+
+      window.addEventListener('scroll', updateHeaderState, { passive: true });
+      window.addEventListener('resize', function() {
+        // Recompute announce height on resize
+        // (unlikely to change, but safe)
+        updateHeaderState();
+      });
+      updateHeaderState();
+
+      /* Drawer */
+      function openDrawer() {
+        mobileDrawer.classList.add('open');
+        drawerOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeDrawer() {
+        mobileDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerClose.addEventListener('click', closeDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileDrawer.classList.contains('open')) closeDrawer();
+          if (authModalOverlay.classList.contains('active')) closeAuthModal();
+          if (accountMenuWrapper.classList.contains('open')) {
+            accountMenuWrapper.classList.remove('open');
+            accountTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      document.querySelectorAll('.drawer-link[data-sub]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const subId = this.getAttribute('data-sub');
+          const sub = document.getElementById(subId);
+          const isOpen = sub.classList.contains('open');
+          document.querySelectorAll('.drawer-sub').forEach(function(s) { s.classList.remove('open'); });
+          document.querySelectorAll('.drawer-link[data-sub]').forEach(function(b) { b.setAttribute('aria-expanded', 'false'); });
+          if (!isOpen) {
+            sub.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() { closeDrawer(); });
+      });
+
+      /* Auth modal */
+      function openAuthModal(panel) {
+        authModalOverlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        showPanel(panel || 'login');
+      }
+
+      function closeAuthModal() {
+        authModalOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        clearMessages();
+        resetForms();
+      }
+
+      function showPanel(panelName) {
+        loginPanel.style.display = 'none';
+        registerPanel.style.display = 'none';
+        forgotPanel.style.display = 'none';
+        resetPanel.style.display = 'none';
+
+        if (panelName === 'login') loginPanel.style.display = 'block';
+        else if (panelName === 'register') registerPanel.style.display = 'block';
+        else if (panelName === 'forgot') forgotPanel.style.display = 'block';
+        else if (panelName === 'reset') resetPanel.style.display = 'block';
+      }
+
+      function clearMessages() {
+        document.querySelectorAll('.message-area').forEach(function(el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        });
+      }
+
+      function resetForms() {
+        loginForm.reset();
+        registerForm.reset();
+        forgotForm.reset();
+        resetForm.reset();
+        document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('visible'); });
+        document.querySelectorAll('.strength-bar').forEach(function(bar) { bar.className = 'strength-bar'; });
+        document.querySelectorAll('.strength-text').forEach(function(el) { el.textContent = ''; });
+      }
+
+      loginBtn.addEventListener('click', function() { openAuthModal('login'); });
+      registerBtn.addEventListener('click', function() { openAuthModal('register'); });
+      drawerLoginBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('login'); });
+      drawerRegisterBtn.addEventListener('click', function() { closeDrawer(); openAuthModal('register'); });
+      mobileAccountBtn.addEventListener('click', function() {
+        if (isLoggedIn) openDrawer();
+        else openAuthModal('login');
+      });
+
+      switchToRegisterBtn.addEventListener('click', function() { showPanel('register'); });
+      switchToRegisterLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('register'); });
+      switchToLoginBtn.addEventListener('click', function() { showPanel('login'); });
+      switchToLoginLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('login'); });
+      forgotPasswordLink.addEventListener('click', function(e) { e.preventDefault(); showPanel('forgot'); });
+      backToLoginFromForgot.addEventListener('click', function() { showPanel('login'); });
+      backToLoginFromReset.addEventListener('click', function() { showPanel('login'); });
+
+      authModalClose.addEventListener('click', closeAuthModal);
+      authModalOverlay.addEventListener('click', function(e) {
+        if (e.target === authModalOverlay) closeAuthModal();
+      });
+
+      /* Password toggles */
+      function setupPasswordToggle(toggleBtnId, inputId) {
+        const btn = document.getElementById(toggleBtnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+
+      setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+      setupPasswordToggle('toggleRegPassword', 'regPassword');
+      setupPasswordToggle('toggleRegConfirmPassword', 'regConfirmPassword');
+      setupPasswordToggle('toggleResetPassword', 'resetPassword');
+      setupPasswordToggle('toggleResetConfirmPassword', 'resetConfirmPassword');
+
+      /* Password strength */
+      function evaluatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        return Math.min(score, 3);
+      }
+
+      function updateStrengthBars(password, barIds, textId) {
+        const score = evaluatePasswordStrength(password);
+        const bars = barIds.map(function(id) { return document.getElementById(id); });
+        const textEl = document.getElementById(textId);
+
+        bars.forEach(function(bar, i) {
+          bar.className = 'strength-bar';
+          if (score > i) {
+            if (score === 1) bar.classList.add('weak');
+            else if (score === 2) bar.classList.add('medium');
+            else bar.classList.add('strong');
+          }
+        });
+
+        if (textEl) {
+          if (password.length === 0) textEl.textContent = '';
+          else if (score === 1) textEl.textContent = 'Weak password';
+          else if (score === 2) textEl.textContent = 'Medium strength';
+          else textEl.textContent = 'Strong password';
+        }
+      }
+
+      document.getElementById('regPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['strengthBar1', 'strengthBar2', 'strengthBar3'], 'strengthText');
+      });
+
+      document.getElementById('resetPassword').addEventListener('input', function() {
+        updateStrengthBars(this.value, ['resetBar1', 'resetBar2', 'resetBar3'], 'resetStrengthText');
+      });
+
+      /* Validation helpers */
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function isValidMobile(mobile) {
+        return /^[\+]?[\d\s\-]{10,15}$/.test(mobile);
+      }
+
+      function showError(errorId, show) {
+        const el = document.getElementById(errorId);
+        if (el) el.classList.toggle('visible', show);
+      }
+
+      function showMessage(containerId, text, type) {
+        const el = document.getElementById(containerId);
+        if (!el) return;
+        el.className = 'message-area ' + type;
+        el.textContent = text;
+      }
+
+      function clearMessage(containerId) {
+        const el = document.getElementById(containerId);
+        if (el) {
+          el.className = 'message-area';
+          el.textContent = '';
+        }
+      }
+
+      /* Login */
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('loginMessage');
+        let valid = true;
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        showError('loginEmailError', false);
+        showError('loginPasswordError', false);
+
+        if (!email || !isValidEmail(email)) { showError('loginEmailError', true); valid = false; }
+        if (!password) { showError('loginPasswordError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('loginSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Signing in...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('loginMessage', 'This is a demo interface. Real authentication is handled by the future PHP backend.', 'success');
+        }, 800);
+      });
+
+      /* Register */
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('registerMessage');
+        let valid = true;
+
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const mobile = document.getElementById('regMobile').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const terms = document.getElementById('termsCheck').checked;
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        ['regFullNameError', 'regEmailError', 'regMobileError', 'regPasswordError', 'regConfirmPasswordError', 'termsError'].forEach(function(id) {
+          showError(id, false);
+        });
+
+        if (!fullName || fullName.length < 2) { showError('regFullNameError', true); valid = false; }
+        if (!email || !isValidEmail(email)) { showError('regEmailError', true); valid = false; }
+        if (!mobile || !isValidMobile(mobile)) { showError('regMobileError', true); valid = false; }
+        if (!password || password.length < 8) { showError('regPasswordError', true); valid = false; }
+        if (password !== confirmPassword) { showError('regConfirmPasswordError', true); valid = false; }
+        if (!terms || !privacy) { showError('termsError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('registerSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating account...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('registerMessage', 'This is a demo interface. Registration will be handled by the PHP/MySQL backend.', 'success');
+        }, 1000);
+      });
+
+      /* Forgot */
+      forgotForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('forgotMessage');
+        const email = document.getElementById('forgotEmail').value.trim();
+        showError('forgotEmailError', false);
+        if (!email || !isValidEmail(email)) { showError('forgotEmailError', true); return; }
+
+        const btn = document.getElementById('forgotSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Sending...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('forgotMessage', 'If an account exists with this email, password reset instructions will be sent. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Reset */
+      resetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearMessage('resetMessage');
+        let valid = true;
+
+        const password = document.getElementById('resetPassword').value;
+        const confirm = document.getElementById('resetConfirmPassword').value;
+
+        showError('resetPasswordError', false);
+        showError('resetConfirmError', false);
+
+        if (!password || password.length < 8) { showError('resetPasswordError', true); valid = false; }
+        if (password !== confirm) { showError('resetConfirmError', true); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('resetSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Resetting...';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showMessage('resetMessage', 'Password reset would be processed by the backend. (Demo only)', 'success');
+        }, 800);
+      });
+
+      /* Newsletter */
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail').value.trim();
+        const msgEl = document.getElementById('newsletterMsg');
+        msgEl.className = 'newsletter-msg';
+        msgEl.textContent = '';
+
+        if (!email || !isValidEmail(email)) {
+          msgEl.className = 'newsletter-msg error';
+          msgEl.textContent = 'Please enter a valid email address.';
+          return;
+        }
+
+        const btn = document.getElementById('newsletterSubmit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          msgEl.className = 'newsletter-msg success';
+          msgEl.textContent = 'Thanks! (Demo only – no subscription is stored.)';
+          document.getElementById('newsletterEmail').value = '';
+        }, 700);
+      });
+
+      /* Logout (demo) */
+      function simulateLogout() {
+        isLoggedIn = false;
+        document.querySelectorAll('.auth-btn').forEach(function(b) { b.style.display = ''; });
+        accountMenuWrapper.style.display = 'none';
+        accountMenuWrapper.classList.remove('open');
+        document.getElementById('drawerAuth').style.display = 'flex';
+        document.getElementById('drawerAccount').style.display = 'none';
+        document.getElementById('avatarInitials').textContent = 'JD';
+        document.getElementById('accountName').textContent = 'John';
+        document.getElementById('drawerAvatar').textContent = 'JD';
+        document.getElementById('drawerName').textContent = 'John';
+      }
+
+      accountTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = accountMenuWrapper.classList.toggle('open');
+        accountTrigger.setAttribute('aria-expanded', isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!accountMenuWrapper.contains(e.target)) {
+          accountMenuWrapper.classList.remove('open');
+          accountTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        simulateLogout();
+      });
+
+      drawerLogoutBtn.addEventListener('click', function() {
+        simulateLogout();
+        closeDrawer();
+      });
+
+      /* Back to top */
+      const backToTop = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      }, { passive: true });
+
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Copyright year */
+      document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+      /* Close drawer if resized to desktop */
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth >= 1024) closeDrawer();
+        }, 150);
+      });
+
+      /* Keyboard support for desktop dropdowns */
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        const link = item.querySelector('.nav-link');
+        const panel = item.querySelector('.dropdown-panel');
+        if (!link || !panel) return;
+
+        link.addEventListener('focus', function() {
+          panel.style.opacity = '1';
+          panel.style.visibility = 'visible';
+          panel.style.transform = 'translateY(0)';
+          panel.style.pointerEvents = 'auto';
+        });
+
+        item.addEventListener('mouseleave', function() {
+          if (!item.contains(document.activeElement)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+
+        item.addEventListener('focusout', function(e) {
+          if (!item.contains(e.relatedTarget)) {
+            panel.style.opacity = '';
+            panel.style.visibility = '';
+            panel.style.transform = '';
+            panel.style.pointerEvents = '';
+          }
+        });
+      });
+
+    })();
+  </script>
+
+    <script>
+    (function() {
+      'use strict';
+
+      const regMain = document.querySelector('.mb-tournament-reg-main');
+      if (!regMain) return;
+
+      /* ============================================
+         DEMO TOURNAMENT DATA
+         ============================================ */
+      const TOURNAMENTS = [];
+
+      /* ============================================
+         ELEMENTS
+         ============================================ */
+      const listEl = document.getElementById('mb-tournament-reg-list');
+      const emptyEl = document.getElementById('mb-tournament-reg-empty');
+      const tournamentSelect = document.getElementById('mb-tournament-reg-tournament-select');
+      const infoBox = document.getElementById('mb-tournament-reg-info-box');
+      const infoName = document.getElementById('mb-tournament-reg-info-name');
+      const infoDate = document.getElementById('mb-tournament-reg-info-date');
+      const infoDeadline = document.getElementById('mb-tournament-reg-info-deadline');
+      const infoStatus = document.getElementById('mb-tournament-reg-info-status');
+
+      const form = document.getElementById('mb-tournament-reg-form');
+      const teamNameInput = document.getElementById('mb-tournament-reg-team-name');
+      const teamCityInput = document.getElementById('mb-tournament-reg-team-city');
+      const captainNameInput = document.getElementById('mb-tournament-reg-captain-name');
+      const captainEmailInput = document.getElementById('mb-tournament-reg-captain-email');
+      const captainMobileInput = document.getElementById('mb-tournament-reg-captain-mobile');
+      const captainPlayerCheckbox = document.getElementById('mb-tournament-reg-captain-player');
+      const squadList = document.getElementById('mb-tournament-reg-squad-list');
+      const addPlayerBtn = document.getElementById('mb-tournament-reg-add-player');
+      const squadCount = document.getElementById('mb-tournament-reg-squad-count');
+      const teamLogoInput = document.getElementById('mb-tournament-reg-team-logo');
+      const logoPreview = document.getElementById('mb-tournament-reg-logo-preview');
+      const logoImg = document.getElementById('mb-tournament-reg-logo-img');
+      const logoRemove = document.getElementById('mb-tournament-reg-logo-remove');
+      const teamLogoPreview = document.getElementById('mb-tournament-reg-team-logo-preview');
+      const teamNamePreview = document.getElementById('mb-tournament-reg-team-name-preview');
+      const teamCityPreview = document.getElementById('mb-tournament-reg-team-city-preview');
+
+      const summaryTournament = document.getElementById('mb-tournament-reg-summary-tournament');
+      const summaryDate = document.getElementById('mb-tournament-reg-summary-date');
+      const summaryTeam = document.getElementById('mb-tournament-reg-summary-team');
+      const summaryCaptain = document.getElementById('mb-tournament-reg-summary-captain');
+      const summaryPlayers = document.getElementById('mb-tournament-reg-summary-players');
+      const summaryStatus = document.getElementById('mb-tournament-reg-summary-status');
+
+      const prevBtn = document.getElementById('mb-tournament-reg-prev');
+      const nextBtn = document.getElementById('mb-tournament-reg-next');
+      const submitBtn = document.getElementById('mb-tournament-reg-submit');
+      const confirmBox = document.getElementById('mb-tournament-reg-confirm');
+      const confirmRef = document.getElementById('mb-tournament-reg-confirm-ref');
+      const confirmTournament = document.getElementById('mb-tournament-reg-confirm-tournament');
+      const confirmTeam = document.getElementById('mb-tournament-reg-confirm-team');
+      const confirmCaptain = document.getElementById('mb-tournament-reg-confirm-captain');
+      const confirmPlayers = document.getElementById('mb-tournament-reg-confirm-players');
+      const confirmStatus = document.getElementById('mb-tournament-reg-confirm-status');
+      const errorPanel = document.getElementById('mb-tournament-reg-error-panel');
+      const retryBtn = document.getElementById('mb-tournament-reg-retry');
+
+      const accurateCheckbox = document.getElementById('mb-tournament-reg-accurate');
+      const permissionCheckbox = document.getElementById('mb-tournament-reg-permission');
+      const termsCheckbox = document.getElementById('mb-tournament-reg-terms');
+      const privacyCheckbox = document.getElementById('mb-tournament-reg-privacy');
+
+      const progressSteps = regMain.querySelectorAll('.mb-tournament-reg-progress__step');
+      const panels = regMain.querySelectorAll('.mb-tournament-reg-step-panel');
+
+      let currentStep = 1;
+      let selectedTournamentId = null;
+      let playerCount = 0;
+      let uploadedLogoData = null;
+
+      function formatDate(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso + 'T00:00:00');
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+      }
+
+      function showError(input, errorEl) {
+        if (input) input.classList.add('mb-tournament-reg-input-error');
+        if (errorEl) errorEl.classList.add('visible');
+      }
+
+      function clearError(input, errorEl) {
+        if (input) input.classList.remove('mb-tournament-reg-input-error');
+        if (errorEl) errorEl.classList.remove('visible');
+      }
+
+      function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+      function validateMobile(v) { return /^(91)?[6-9]\d{9}$/.test(v.replace(/[\s\-+]/g, '')); }
+
+      function getSelectedTournament() {
+        return TOURNAMENTS.find(t => String(t.id) === String(selectedTournamentId)) || null;
+      }
+
+      function renderTournamentCards() {
+        if (!TOURNAMENTS.length) {
+          listEl.style.display = 'none';
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        listEl.style.display = 'grid';
+        emptyEl.style.display = 'none';
+
+        const statusLabels = { open: 'Registration Open', soon: 'Coming Soon', full: 'Registration Full', closed: 'Registration Closed', completed: 'Completed' };
+        const statusClasses = { open: 'mb-tournament-reg-card__status--open', soon: 'mb-tournament-reg-card__status--soon', full: 'mb-tournament-reg-card__status--full', closed: 'mb-tournament-reg-card__status--closed', completed: 'mb-tournament-reg-card__status--completed' };
+
+        listEl.innerHTML = TOURNAMENTS.map(t => {
+          const statusKey = t.registration_status || 'closed';
+          const canSelect = statusKey === 'open';
+          return `
+            <article class="mb-tournament-reg-card${canSelect ? '' : ' mb-tournament-reg-card--disabled'}" data-tournament-id="${t.id}" ${canSelect ? 'tabindex="0" role="button"' : 'aria-disabled="true"'}>
+              <div class="mb-tournament-reg-card__media">
+                <img src="${escapeHtml(t.banner_image)}" alt="${escapeHtml(t.name)} tournament banner" loading="lazy">
+                <span class="mb-tournament-reg-card__status ${statusClasses[statusKey] || statusClasses.closed}">${statusLabels[statusKey]}</span>
+              </div>
+              <div class="mb-tournament-reg-card__body">
+                <h3 class="mb-tournament-reg-card__title">${escapeHtml(t.name)}</h3>
+                <p class="mb-tournament-reg-card__desc">${escapeHtml(t.description)}</p>
+                <div class="mb-tournament-reg-card__meta">
+                  <span>📅 ${formatDate(t.date)}</span>
+                  <span>⏳ Deadline: ${formatDate(t.registration_deadline)}</span>
+                </div>
+                <button type="button" class="mb-tournament-reg-btn mb-tournament-reg-btn--dark mb-tournament-reg-btn--sm mb-tournament-reg-card__select" data-select-tournament="${t.id}" ${canSelect ? '' : 'disabled'}>
+                  ${canSelect ? 'SELECT TOURNAMENT' : 'UNAVAILABLE'}
+                </button>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        listEl.querySelectorAll('.mb-tournament-reg-card').forEach(card => {
+          const id = card.getAttribute('data-tournament-id');
+          const btn = card.querySelector('[data-select-tournament]');
+          if (btn && !btn.disabled) {
+            btn.addEventListener('click', e => { e.stopPropagation(); selectTournament(id); });
+          }
+          card.addEventListener('click', e => {
+            if (e.target.closest('[data-select-tournament]')) return;
+            const t = TOURNAMENTS.find(x => String(x.id) === String(id));
+            if (t && t.registration_status === 'open') selectTournament(id);
+          });
+          card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              const t = TOURNAMENTS.find(x => String(x.id) === String(id));
+              if (t && t.registration_status === 'open') { e.preventDefault(); selectTournament(id); }
+            }
+          });
+        });
+      }
+
+      function populateSelect() {
+        tournamentSelect.innerHTML = '<option value="">Select a tournament</option>';
+        TOURNAMENTS.forEach(t => {
+          const canSelect = t.registration_status === 'open';
+          const opt = document.createElement('option');
+          opt.value = t.id;
+          opt.textContent = t.name + (canSelect ? '' : ' — Unavailable');
+          if (!canSelect) opt.disabled = true;
+          tournamentSelect.appendChild(opt);
+        });
+      }
+
+      function selectTournament(id) {
+        selectedTournamentId = id;
+        tournamentSelect.value = id;
+        listEl.querySelectorAll('.mb-tournament-reg-card').forEach(card => {
+          const isThis = card.getAttribute('data-tournament-id') === String(id);
+          card.classList.toggle('mb-tournament-reg-card--selected', isThis);
+        });
+        const t = getSelectedTournament();
+        if (t) {
+          infoBox.style.display = 'block';
+          infoName.textContent = t.name;
+          infoDate.textContent = formatDate(t.date);
+          infoDeadline.textContent = formatDate(t.registration_deadline);
+          infoStatus.textContent = t.registration_status === 'open' ? 'Registration Open' : 'Unavailable';
+        }
+        clearError(tournamentSelect, document.getElementById('mb-tournament-reg-tournament-select-error'));
+        updateSummary();
+        document.getElementById('mb-tournament-reg-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      tournamentSelect?.addEventListener('change', function() {
+        const id = tournamentSelect.value;
+        if (id) {
+          selectedTournamentId = id;
+          listEl.querySelectorAll('.mb-tournament-reg-card').forEach(card => {
+            card.classList.toggle('mb-tournament-reg-card--selected', card.getAttribute('data-tournament-id') === id);
+          });
+          const t = getSelectedTournament();
+          if (t) {
+            infoBox.style.display = 'block';
+            infoName.textContent = t.name;
+            infoDate.textContent = formatDate(t.date);
+            infoDeadline.textContent = formatDate(t.registration_deadline);
+            infoStatus.textContent = t.registration_status === 'open' ? 'Registration Open' : 'Unavailable';
+          }
+        }
+        clearError(tournamentSelect, document.getElementById('mb-tournament-reg-tournament-select-error'));
+        updateSummary();
+      });
+
+      teamNameInput?.addEventListener('input', function() {
+        teamNamePreview.textContent = this.value.trim() || 'Your Team Name';
+        updateSummary();
+      });
+
+      teamCityInput?.addEventListener('input', function() {
+        teamCityPreview.textContent = this.value.trim() || 'Team City';
+      });
+
+      teamLogoInput?.addEventListener('change', function() {
+        const file = this.files[0];
+        clearError(teamLogoInput, document.getElementById('mb-tournament-reg-team-logo-error'));
+        if (!file) { logoPreview.classList.remove('visible'); uploadedLogoData = null; teamLogoPreview.textContent = '?'; return; }
+        if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) { showError(teamLogoInput, document.getElementById('mb-tournament-reg-team-logo-error')); this.value = ''; return; }
+        if (file.size > 2 * 1024 * 1024) { showError(teamLogoInput, document.getElementById('mb-tournament-reg-team-logo-error')); this.value = ''; return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+          uploadedLogoData = e.target.result;
+          logoImg.src = e.target.result;
+          logoPreview.classList.add('visible');
+          teamLogoPreview.innerHTML = `<img src="${e.target.result}" alt="Team logo preview">`;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      logoRemove?.addEventListener('click', function() {
+        teamLogoInput.value = '';
+        uploadedLogoData = null;
+        logoPreview.classList.remove('visible');
+        teamLogoPreview.textContent = '?';
+      });
+
+      function addPlayerCard() {
+        playerCount++;
+        const n = playerCount;
+        const div = document.createElement('div');
+        div.className = 'mb-tournament-reg-player';
+        div.setAttribute('data-player', n);
+        div.innerHTML = `
+          <div class="mb-tournament-reg-player__header">
+            <span class="mb-tournament-reg-player__number">Player ${String(n).padStart(2, '0')}</span>
+            <button type="button" class="mb-tournament-reg-player__remove" data-remove-player="${n}">REMOVE</button>
+          </div>
+          <div class="mb-tournament-reg-player__fields">
+            <div class="mb-tournament-reg-field">
+              <label for="mb-tournament-reg-player-name-${n}">Full Name <span class="mb-tournament-reg-required">*</span></label>
+              <input type="text" id="mb-tournament-reg-player-name-${n}" data-player-name="${n}" placeholder="Player name" required>
+            </div>
+            <div class="mb-tournament-reg-field">
+              <label for="mb-tournament-reg-player-position-${n}">Position <span class="mb-tournament-reg-required">*</span></label>
+              <select id="mb-tournament-reg-player-position-${n}" data-player-position="${n}" required>
+                <option value="">Select</option>
+                <option value="goalkeeper">Goalkeeper</option>
+                <option value="defender">Defender</option>
+                <option value="midfielder">Midfielder</option>
+                <option value="forward">Forward</option>
+                <option value="all-rounder">All-Rounder</option>
+              </select>
+            </div>
+            <div class="mb-tournament-reg-field">
+              <label for="mb-tournament-reg-player-jersey-${n}">Jersey #</label>
+              <input type="text" id="mb-tournament-reg-player-jersey-${n}" data-player-jersey="${n}" placeholder="Optional" maxlength="3">
+            </div>
+          </div>
+        `;
+        squadList.appendChild(div);
+        div.querySelector('[data-remove-player]').addEventListener('click', function() {
+          div.remove();
+          updateSquadCount();
+          updateSummary();
+        });
+        div.querySelectorAll('input, select').forEach(el => {
+          el.addEventListener('input', updateSummary);
+          el.addEventListener('change', updateSummary);
+        });
+        updateSquadCount();
+        updateSummary();
+      }
+
+      function updateSquadCount() {
+        const count = squadList.querySelectorAll('.mb-tournament-reg-player').length;
+        squadCount.textContent = count + (count === 1 ? ' player added' : ' players added');
+        summaryPlayers.textContent = count;
+      }
+
+      addPlayerBtn?.addEventListener('click', addPlayerCard);
+      captainPlayerCheckbox?.addEventListener('change', updateSummary);
+
+      function showStep(step) {
+        currentStep = step;
+        panels.forEach(p => p.classList.toggle('mb-tournament-reg-step-panel--active', Number(p.getAttribute('data-panel')) === step));
+        progressSteps.forEach(s => {
+          const n = Number(s.getAttribute('data-step'));
+          s.classList.toggle('mb-tournament-reg-progress__step--active', n === step);
+          s.classList.toggle('mb-tournament-reg-progress__step--done', n < step);
+        });
+        prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+        nextBtn.style.display = step === 5 ? 'none' : 'inline-flex';
+        submitBtn.style.display = step === 5 ? 'inline-flex' : 'none';
+        if (step === 5) renderReview();
+        window.scrollTo({ top: document.getElementById('mb-tournament-reg-form-section').offsetTop - 20, behavior: 'smooth' });
+      }
+
+      function validateStep(step) {
+        let valid = true;
+        let firstInvalid = null;
+        if (step === 1 && !selectedTournamentId) {
+          showError(tournamentSelect, document.getElementById('mb-tournament-reg-tournament-select-error'));
+          firstInvalid = tournamentSelect;
+          valid = false;
+        }
+        if (step === 2 && teamNameInput.value.trim().length < 2) {
+          showError(teamNameInput, document.getElementById('mb-tournament-reg-team-name-error'));
+          firstInvalid = teamNameInput;
+          valid = false;
+        }
+        if (step === 3) {
+          if (captainNameInput.value.trim().length < 2) { showError(captainNameInput, document.getElementById('mb-tournament-reg-captain-name-error')); if (!firstInvalid) firstInvalid = captainNameInput; valid = false; }
+          if (!validateEmail(captainEmailInput.value)) { showError(captainEmailInput, document.getElementById('mb-tournament-reg-captain-email-error')); if (!firstInvalid) firstInvalid = captainEmailInput; valid = false; }
+          if (!validateMobile(captainMobileInput.value)) { showError(captainMobileInput, document.getElementById('mb-tournament-reg-captain-mobile-error')); if (!firstInvalid) firstInvalid = captainMobileInput; valid = false; }
+        }
+        if (step === 4) {
+          const players = squadList.querySelectorAll('.mb-tournament-reg-player');
+          if (players.length === 0) { valid = false; alert('Please add at least one player to your squad.'); }
+          else {
+            players.forEach(p => {
+              const n = p.getAttribute('data-player');
+              const name = p.querySelector(`[data-player-name="${n}"]`);
+              const pos = p.querySelector(`[data-player-position="${n}"]`);
+              if (!name.value.trim() || !pos.value) { valid = false; if (!firstInvalid) firstInvalid = !name.value.trim() ? name : pos; }
+            });
+          }
+        }
+        if (firstInvalid) firstInvalid.focus({ preventScroll: false });
+        return valid;
+      }
+
+      nextBtn?.addEventListener('click', function() { if (validateStep(currentStep) && currentStep < 5) showStep(currentStep + 1); });
+      prevBtn?.addEventListener('click', function() { if (currentStep > 1) showStep(currentStep - 1); });
+
+      regMain.querySelectorAll('[data-edit-step]').forEach(btn => {
+        btn.addEventListener('click', function() { showStep(Number(this.getAttribute('data-edit-step'))); });
+      });
+
+      function renderReview() {
+        const t = getSelectedTournament();
+        document.getElementById('mb-tournament-reg-review-tournament').textContent = t ? t.name : '—';
+        document.getElementById('mb-tournament-reg-review-tournament-date').textContent = t ? formatDate(t.date) : '—';
+        document.getElementById('mb-tournament-reg-review-team').textContent = teamNameInput.value.trim() || '—';
+        document.getElementById('mb-tournament-reg-review-city').textContent = teamCityInput.value.trim() || '—';
+        document.getElementById('mb-tournament-reg-review-captain').textContent = captainNameInput.value.trim() || '—';
+        document.getElementById('mb-tournament-reg-review-captain-email').textContent = captainEmailInput.value.trim() || '—';
+        document.getElementById('mb-tournament-reg-review-captain-mobile').textContent = captainMobileInput.value.trim() || '—';
+
+        const players = squadList.querySelectorAll('.mb-tournament-reg-player');
+        const reviewList = document.getElementById('mb-tournament-reg-review-players');
+        reviewList.innerHTML = '';
+        let count = players.length;
+
+        if (captainPlayerCheckbox.checked && captainNameInput.value.trim()) {
+          count++;
+          const li = document.createElement('li');
+          li.innerHTML = `<span>${escapeHtml(captainNameInput.value.trim())} (Captain)</span><span>All-Rounder</span>`;
+          reviewList.appendChild(li);
+        }
+
+        players.forEach(p => {
+          const n = p.getAttribute('data-player');
+          const name = p.querySelector(`[data-player-name="${n}"]`).value.trim() || '—';
+          const pos = p.querySelector(`[data-player-position="${n}"]`);
+          const posLabel = pos.options[pos.selectedIndex]?.text || '—';
+          const li = document.createElement('li');
+          li.innerHTML = `<span>${escapeHtml(name)}</span><span>${escapeHtml(posLabel)}</span>`;
+          reviewList.appendChild(li);
+        });
+
+        document.getElementById('mb-tournament-reg-review-player-count').textContent = count;
+      }
+
+      function updateSummary() {
+        const t = getSelectedTournament();
+        if (t) {
+          summaryTournament.textContent = t.name;
+          summaryTournament.classList.remove('mb-tournament-reg-summary__value--empty');
+          summaryDate.textContent = formatDate(t.date);
+          summaryDate.classList.remove('mb-tournament-reg-summary__value--empty');
+          summaryStatus.textContent = 'Tournament selected';
+          summaryStatus.classList.remove('mb-tournament-reg-summary__value--empty');
+        } else {
+          summaryTournament.textContent = 'Not selected';
+          summaryTournament.classList.add('mb-tournament-reg-summary__value--empty');
+          summaryDate.textContent = '—';
+          summaryDate.classList.add('mb-tournament-reg-summary__value--empty');
+          summaryStatus.textContent = 'Not started';
+          summaryStatus.classList.add('mb-tournament-reg-summary__value--empty');
+        }
+        const tn = teamNameInput.value.trim();
+        summaryTeam.textContent = tn || 'Not entered';
+        summaryTeam.classList.toggle('mb-tournament-reg-summary__value--empty', !tn);
+        const cn = captainNameInput.value.trim();
+        summaryCaptain.textContent = cn || 'Not entered';
+        summaryCaptain.classList.toggle('mb-tournament-reg-summary__value--empty', !cn);
+        summaryPlayers.textContent = squadList.querySelectorAll('.mb-tournament-reg-player').length;
+      }
+
+      captainNameInput?.addEventListener('input', updateSummary);
+
+      teamNameInput?.addEventListener('input', () => clearError(teamNameInput, document.getElementById('mb-tournament-reg-team-name-error')));
+      captainNameInput?.addEventListener('input', () => clearError(captainNameInput, document.getElementById('mb-tournament-reg-captain-name-error')));
+      captainEmailInput?.addEventListener('input', () => clearError(captainEmailInput, document.getElementById('mb-tournament-reg-captain-email-error')));
+      captainMobileInput?.addEventListener('input', () => clearError(captainMobileInput, document.getElementById('mb-tournament-reg-captain-mobile-error')));
+      accurateCheckbox?.addEventListener('change', () => { if (accurateCheckbox.checked) document.getElementById('mb-tournament-reg-accurate-error').classList.remove('visible'); });
+      permissionCheckbox?.addEventListener('change', () => { if (permissionCheckbox.checked) document.getElementById('mb-tournament-reg-permission-error').classList.remove('visible'); });
+      termsCheckbox?.addEventListener('change', () => { if (termsCheckbox.checked) document.getElementById('mb-tournament-reg-terms-error').classList.remove('visible'); });
+      privacyCheckbox?.addEventListener('change', () => { if (privacyCheckbox.checked) document.getElementById('mb-tournament-reg-privacy-error').classList.remove('visible'); });
+
+      form?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let valid = true;
+        if (!selectedTournamentId) { alert('Please select a tournament.'); valid = false; }
+        if (teamNameInput.value.trim().length < 2) { showError(teamNameInput, document.getElementById('mb-tournament-reg-team-name-error')); valid = false; }
+        if (captainNameInput.value.trim().length < 2) { showError(captainNameInput, document.getElementById('mb-tournament-reg-captain-name-error')); valid = false; }
+        if (!validateEmail(captainEmailInput.value)) { showError(captainEmailInput, document.getElementById('mb-tournament-reg-captain-email-error')); valid = false; }
+        if (!validateMobile(captainMobileInput.value)) { showError(captainMobileInput, document.getElementById('mb-tournament-reg-captain-mobile-error')); valid = false; }
+        if (!accurateCheckbox.checked) { document.getElementById('mb-tournament-reg-accurate-error').classList.add('visible'); valid = false; }
+        if (!permissionCheckbox.checked) { document.getElementById('mb-tournament-reg-permission-error').classList.add('visible'); valid = false; }
+        if (!termsCheckbox.checked) { document.getElementById('mb-tournament-reg-terms-error').classList.add('visible'); valid = false; }
+        if (!privacyCheckbox.checked) { document.getElementById('mb-tournament-reg-privacy-error').classList.add('visible'); valid = false; }
+        if (!valid) return;
+
+        errorPanel.classList.remove('visible');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'SUBMITTING…';
+
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'SUBMIT TEAM REGISTRATION';
+          const t = getSelectedTournament();
+          const demoRef = 'MB-TR-' + Date.now().toString(36).toUpperCase().slice(-6);
+          const playerCount = squadList.querySelectorAll('.mb-tournament-reg-player').length + (captainPlayerCheckbox.checked ? 1 : 0);
+          confirmRef.textContent = 'REF: ' + demoRef;
+          confirmTournament.textContent = t ? t.name : '—';
+          confirmTeam.textContent = teamNameInput.value.trim() || '—';
+          confirmCaptain.textContent = captainNameInput.value.trim() || '—';
+          confirmPlayers.textContent = playerCount;
+          confirmStatus.textContent = 'Registration Submitted';
+          form.style.display = 'none';
+          document.getElementById('mb-tournament-reg-progress').style.display = 'none';
+          confirmBox.classList.add('visible');
+          confirmBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 1200);
+      });
+
+      retryBtn?.addEventListener('click', function() {
+        errorPanel.classList.remove('visible');
+        form.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'SUBMIT TEAM REGISTRATION';
+      });
+
+      const faqItems = regMain.querySelectorAll('.mb-tournament-reg-faq__item');
+      faqItems.forEach(item => {
+        const btn = item.querySelector('.mb-tournament-reg-faq__question');
+        btn.addEventListener('click', function() {
+          const isOpen = item.getAttribute('data-open') === 'true';
+          faqItems.forEach(o => { if (o !== item) { o.setAttribute('data-open', 'false'); o.querySelector('.mb-tournament-reg-faq__question').setAttribute('aria-expanded', 'false'); } });
+          item.setAttribute('data-open', String(!isOpen));
+          btn.setAttribute('aria-expanded', String(!isOpen));
+        });
+      });
+
+      const revealTargets = regMain.querySelectorAll('.mb-tournament-reg-reveal');
+      if ('IntersectionObserver' in window && revealTargets.length) {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('mb-tournament-reg-visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        revealTargets.forEach(el => obs.observe(el));
+      } else {
+        revealTargets.forEach(el => el.classList.add('mb-tournament-reg-visible'));
+      }
+
+      renderTournamentCards();
+      populateSelect();
+      updateSummary();
+
+    })();
+  </script>
+</body>
+</html>
